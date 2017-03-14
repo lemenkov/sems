@@ -85,7 +85,7 @@ long g729_create(const char* format_parameters, amci_codec_fmt_info_t* format_de
     struct G729_codec *codec;
 
     codec = calloc(sizeof(struct G729_codec), 1);
-    codec->enc = initBcg729EncoderChannel();
+    codec->enc = initBcg729EncoderChannel(0 /* no VAT/DTX detection */);
     codec->dec = initBcg729DecoderChannel();
 
     return (long) codec;
@@ -123,13 +123,14 @@ static int pcm16_2_g729(unsigned char* out_buf, unsigned char* in_buf, unsigned 
 
     while(size >= 160){
         /* Encode a frame  */
-        bcg729Encoder(codec->enc, in_buf, out_buf);
+        uint8_t olen;
+        bcg729Encoder(codec->enc, in_buf, out_buf, &olen);
 
 	size -= 160;
 	in_buf += 160;
 
-	out_buf += 10;
-	out_size += 10;
+	out_buf += olen;
+	out_size += olen;
     }
 
     return out_size;
@@ -144,17 +145,17 @@ static int g729_2_pcm16(unsigned char* out_buf, unsigned char* in_buf, unsigned 
     if (!h_codec)
       return -1;
 
-    if (size % 10 != 0){
+    if (size % G729_BYTES_PER_FRAME != 0){
        ERROR("g729_2_pcm16: number of blocks should be integral (block size = 10)\n");
        return -1;
     }
 
-    while(size >= 10){
+    while(size >= G729_BYTES_PER_FRAME){
         /* Encode a frame  */
-        bcg729Decoder(codec->dec, in_buf, 0, out_buf);
+        bcg729Decoder(codec->dec, in_buf, G729_BYTES_PER_FRAME, 0 /* no erasure */, 0 /* not SID */, 0 /* not RFC3389 */, out_buf);
 
-	in_buf += 10;
-	size -= 10;
+	in_buf += G729_BYTES_PER_FRAME;
+	size -= G729_BYTES_PER_FRAME;
 
 	out_buf += 160;
 	out_size += 160;
