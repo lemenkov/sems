@@ -49,6 +49,5 @@ codec (patents) licensing.
 
  B. Codec licensing
 
-To use G.729 codec, in some countries you need to get a license to use the
-patents (at least until 2016 or so). The G.729 patent pool is managed by
-[Sipro](http://www.sipro.com/).
+As of January 1, 2017 the patent terms of most Licensed Patents under the G.729
+Consortium have [expired](http://www.sipro.com/G729.html).
