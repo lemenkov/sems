@@ -247,18 +247,18 @@ unsigned int AmInternalResamplerState::resample(unsigned char *samples, unsigned
 #endif
 
 AmAudio::AmAudio()
-  : fmt(new AmAudioFormat(CODEC_PCM16)),
+  : rec_time(0),
     max_rec_time(-1),
-    rec_time(0),
+    fmt(new AmAudioFormat(CODEC_PCM16)),
     input_resampling_state(nullptr),
     output_resampling_state(nullptr)
 {
 }
 
 AmAudio::AmAudio(AmAudioFormat *_fmt)
-  : fmt(_fmt),
+  : rec_time(0),
     max_rec_time(-1),
-    rec_time(0),
+    fmt(_fmt),
     input_resampling_state(nullptr),
     output_resampling_state(nullptr)
 {
