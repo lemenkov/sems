@@ -34,6 +34,7 @@ ADD_DEFINITIONS(-DSEMS_APP_NAME=\\\"sems\\\")
 
 MESSAGE(STATUS "Configuring ${CMAKE_PROJECT_NAME} v. ${SEMS_VERSION}")
 
+OPTION(SEMS_USE_OPUS          "Build with Opus" OFF)
 OPTION(SEMS_USE_SPANDSP       "Build with spandsp" OFF)
 OPTION(SEMS_USE_LIBSAMPLERATE "Build with libsamplerate" OFF)
 OPTION(SEMS_USE_ZRTP          "Build with ZRTP" OFF)
@@ -96,6 +97,14 @@ IF(SEMS_USE_SPANDSP)
 ELSE(SEMS_USE_SPANDSP)
 	MESSAGE(STATUS "Using spandsp: NO (default)")
 ENDIF(SEMS_USE_SPANDSP)
+
+# compile with Opus codec?
+IF(SEMS_USE_OPUS)
+	FIND_PACKAGE(Opus REQUIRED)
+	MESSAGE(STATUS "Using Opus: YES")
+ELSE(SEMS_USE_OPUS)
+	MESSAGE(STATUS "Using Opus: NO (default)")
+ENDIF(SEMS_USE_OPUS)
 
 # compile with sample rate conversion from secret rabbit code?
 # (see http://www.mega-nerd.com/SRC/)
