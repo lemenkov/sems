@@ -261,6 +261,14 @@ ELSE(RTMP_FOUND)
 	MESSAGE(STATUS "Using librtmp: NO")
 ENDIF(RTMP_FOUND)
 
+# Lame MP3 support
+FIND_PACKAGE(Hiredis)
+IF(HIREDIS_FOUND)
+	MESSAGE(STATUS "Using hiredis: YES")
+ELSE(HIREDIS_FOUND)
+	MESSAGE(STATUS "Using hiredis: NO")
+ENDIF(HIREDIS_FOUND)
+
 # Check for res_search in -lresolv
 include(${CMAKE_SOURCE_DIR}/cmake/CheckSymbolExists.cmake)
 SET(CMAKE_REQUIRED_LIBRARIES resolv)
