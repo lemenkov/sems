@@ -18,34 +18,61 @@
 ############################################################
 # Network configuration
 
-# optional parameter: media_ip=<ip_address>|<device>
-# 
-# - this informs SEMS about the IP address or interface that 
-#   SEMS uses to send and receive media.  If not set, defaults 
-#   to first non-loopback interface.
-#
-# Examples: 
-#  media_ip=10.0.0.34
-#  media_ip=eth0
+# If only one signaling (SIP) and media (RTP) interface is
+# to be used, configure the options
+#    sip_ip / sip_port / media_ip/ rtp_low_port /
+#    rtp_high_port / public_ip / sig_sock_opts
+# If more than one interface is to be used, configure the option
+# 'interfaces' and those options for each interface.
 
-# optional parameter: sip_ip=<ip_address>
+############# configuration for single interface ############
+# optional parameter: sip_ip=<ip_address>|<device>
 #
-# - this informs SEMS about the SIP IP where its SIP stack is 
-#   bound to or should be bound to. This also sets 
+# - SIP IP where the SIP stack is bound to. This also sets 
 #   the value used for contact header in outgoing calls and 
-#   registrations. If not set, defaults to first non-loopback
-#   interface.
+#   registrations.
+# - If neither 'media_ip' nor 'sip_ip' are set, defaults 
+#   to first non-loopback interface, and the port configured below
+#   is ignored.
 #
 # Example:
 #  sip_ip=10.0.0.34
+#  sip_ip=en0
+
+# optional parameter: sip_port=<port_number>
 #
+# - port where its SIP stack should be bound to, ignored if sip_ip not set.
+#   default: 5060
+#
+#sip_port=5080
+
+# optional parameter: media_ip=<ip_address>|<device>
+#
+# - IP address or interface that SEMS uses to send and receive media.
+# - If neither 'media_ip' nor 'sip_ip' are set, defaults
+#   to first non-loopback interface. If 'sip_ip' is set,
+#   'media_ip' defaults to 'sip_ip.
+#
+# Examples:
+#  media_ip=10.0.0.34
+#  media_ip=eth0
+
+# optional parameter: rtp_low_port=<port>
+#
+# - sets lowest for RTP used port (Default: 1024)
+rtp_low_port=10000
+
+# optional parameter: rtp_high_port=<port>
+#
+# - sets highest for RTP used port (Default: 0xffff)
+rtp_high_port=60000
 
 # optional parameter: public_ip=<ip_address>
 # 
-# - when running SEMS behind certain simple NAT configurations,
-#   you can use this parameter to inform SEMS of its public IP
+# - near end NAT traversal. when running SEMS behind certain static
+#   NATs, use this parameter to inform SEMS of its public IP
 #   address. If this parameter is set, SEMS will write this value
-#   into SDP bodies.
+#   into SDP bodies and Contact.
 #   If this parameter is not set, the local IP address is used.
 #   N.B., there is no support for port translation; the local 
 #   RTP port is advertised in SDP in either case.
@@ -53,73 +80,47 @@
 # Example:
 #  public_ip=75.101.219.48
 #  
-  
-# optional parameter: sip_port=<port_number>
-#
-# - this informs SEMS about the port where its SIP stack is 
-#   bound to or should be bound to. SEMS needs this information
-#   to correctly set the contact header in outgoing calls 
-#   and registrations. Should be set to equal the 'port' 
-#   configuration option in ser_sems.cfg.
-#  
-#   default: 5060
-#
-sip_port=5080
 
-# optional parameter: outbound_proxy=uri
+# optional parameter: sig_sock_opts=option,option,option,...
 #
-# - this sets an outbound proxy for calls and registrations initiated 
-#   by SEMS. This does not apply to requests in a dialog that 
-#   is initiated by someone else and incoming to SEMS.
-#   If this is not set (default setting), then for dialogs 
-#   initiated by SEMS the r-uri is resolved and the request 
-#   is sent there directly.
-#   This is resolved by the SIP stack with DNS if a name is given.
-#   Warning: If the value set here can not be resolved, no 
-#            requests will be sent out at all!
-#  
-#   default: empty
+# - signaling socket options
+#      o force_via_address         - force sending replies to 1st Via
+#      o no_transport_in_contact   - do not add transport to contact in replies
 #
 # Example:
-#   outbound_proxy=sip:proxy.mydomain.net
+#  sig_sock_opts=force_via_address,no_transport_in_contact
 
-# optional parameter: force_outbound_proxy={yes|no}
-#
-# - forces SEMS to send any request to the outbound proxy in any
-#   situation. This option will only have an effect if the 
-#   outbound_proxy option has been set.
-#
-#   default: no
-#
-# Example:
-#   force_outbound_proxy=yes
+# optional parameter: tcp_connect_timeout=<timeout in millisec>
+# Default: 2000 (2 sec)
 
-# optional parameter: rtp_low_port=<port>
-#
-# - sets lowest for RTP used port
-rtp_low_port=10000
+# optional parameter: tcp_idle_timeout=<timeout in millisec>
+# Default: 3600000 (1 hour)
 
-# optional parameter: rtp_high_port=<port>
+############# configuration for multiple interfaces ############
+#   interfaces = <list of interface names>
 #
-# - sets highest for RTP used port 
-rtp_high_port=60000
-
-# Additional IFs (optional): 
-#   additional_interface = <list of interfaces>
+# 'interfaces' must be set if more than one interface is to be used
+# for the same purpose (e.g. more than one interface for SIP).
+# Configure additional interfaces if networks should be bridged or
+# separate networks should be served.
 #
-# For each additional interface, a set of parameters
-# suffixed with the interface name should be defined.
+# For each interface, a set of parameters suffixed with the
+# interface name should be configured.
 #
 # Please note that for each additional interface,
-# 'sip_ip' is mandatory. The other
-# parameters are optional.
+# 'sip_ip_[if_name]' is mandatory (but can be the interface
+# name, then the first assigned IP is used). The other
+# parameters are optional. 'media_ip_[if_name]'
+# is derived from 'sip_ip_[if_name]' if not set.
+# 'public_ip_[ip_name]' is also based on 'sip_ip_[if_name]'
+# if not set explicitly.
 # 
 # Example:
-#  additional_interfaces=intern,extern
+#  interfaces=intern,extern
 #  
-#  sip_ip_intern=192.168.0.5
+#  sip_ip_intern=eth0
 #  sip_port_intern=5060
-#  media_ip_intern=192.168.10.5
+#  media_ip_intern=eth0
 #  rtp_low_port_intern=2000
 #  rtp_high_port_intern=5000
 #
@@ -128,8 +129,82 @@ rtp_high_port=60000
 #  media_ip_extern=213.192.59.73
 #  rtp_low_port_extern=2000
 #  rtp_high_port_extern=5000
-#  public_ip_extern=213.192.35.73 
+#  public_ip_extern=213.192.35.73
+#  sig_sock_opts_extern=force_via_address
+#  tcp_connect_timeout_extern=1000
+#  tcp_idle_timeout_extern=900000
+############# other network configuration ############################## 
+
+# NAT handling for SIP:sip_nat_handling={yes|no}
 #
+# Learn remote next hop address from the source of the address where
+# requests are received from. This option does not apply to the sbc module.
+#
+# default: no
+#
+#sip_nat_handling=yes
+
+# NAT handling for RTP: force_symmetric_rtp={yes|no}
+#
+# Force comedia style "symmetric RTP" NAT handling, i.e.
+# learn remote RTP address from where RTP packets come from
+# (This option does not apply to the sbc module's RTP relay)
+#
+# default: no
+#
+#force_symmetric_rtp=yes
+
+# optional parameter: outbound_proxy=uri
+#
+# - this sets an outbound proxy for dialogs and registrations initiated 
+#   by SEMS.  A preloaded Route header containing the uri is added to
+#   each initial request.  The request is then sent to destination obtained
+#   by resolving the uri. If outbound_proxy is not set (default setting),
+#   no preloaded Route header is added and request is sent to destination
+#   obtained by resolving r-uri.  Resolving is done by SIP stack with DNS
+#   if uri contains domain name. Warning: If uri can not be resolved, no  
+#   requests will be sent out at all!
+#  
+#   default: empty
+#
+# Example:
+#   outbound_proxy=sip:proxy.mydomain.net
+
+# optional parameter: force_outbound_proxy={yes|no}
+#
+# - forces SEMS to set outbound_proxy for any requests (not just for
+#   registrations and dialog initiating requests). See above what setting
+#   of outbound_proxy means.  This option will only have an effect if the
+#   outbound_proxy option has been set, and it will break 3261 compatibility
+#   in some cases; better use next_hop.
+#
+#   default: no
+#
+# Example:
+#   force_outbound_proxy=yes
+
+# optional parameter: next_hop=address[:port]
+# - if this is set, all outgoing requests will be sent to
+#   this address (IP address or domain name), regardless of R-URI etc.
+#
+# Examples:
+#   next_hop=192.168.5.1
+#   next_hop=foo.example.com:5080
+
+# optional parameter: next_hop_1st_req={yes|no}
+# - if set to yes, next_hop behavior (routing without pre-loaded route set)
+#   applies only to initial request.  Subsequent requests are routed
+#   normally based on route set learned from reply to initial request.
+#
+#   default: no
+#
+# Example:
+#   next_hop_1st_req=yes
+
+# optional parameter:next_hop_for_replies
+# - use next_hop for replies, too?
+#
+#next_hop_for_replies=yes
 
 ############################################################
 # modules and application configuration
@@ -154,6 +229,7 @@ plugin_path=${SEMS_EXEC_PREFIX}/${SEMS_LIBDIR}/sems/plug-in/
 #
 # example for announcement with only g711 and ilbc codecs  
 # load_plugins=wav;ilbc;announcement
+#load_plugins=wav;isac;l16;speex;g722;gsm;ilbc;webconference
 
 # optional parameter: exclude_plugins=<modules list>
 #
@@ -162,13 +238,22 @@ plugin_path=${SEMS_EXEC_PREFIX}/${SEMS_LIBDIR}/sems/plug-in/
 # This has only effect it load_plugins is not set.
 #
 # o precoded_announce: no precoded sample files present
-exclude_plugins=precoded_announce;sw_prepaid_sip;py_sems
+# o py_sems: conflicts with ivr (in some cases)
+# o db_reg_agent: needs DB tables
+# o cc_* : sbc call control modules (loaded from sbc.conf)
+exclude_plugins=precoded_announce;py_sems;db_reg_agent;cc_bl_redis;cc_call_timer;cc_ctl;cc_dsm;cc_pcalls;cc_prepaid;cc_prepaid_xmlrpc;cc_rest;cc_registrar;cc_syslog_cdr
+
+# optional: load_plugins_rtld_global=<modules list>
+#
+# load these plugins with RTLD_GLOBAL (by default py_sems,
+# dsm, ivr, sbc, diameter_client, registrar_client, uac_auth)
+#
+#load_plugins_rtld_global=myapp
 
 # optional parameter: application
 # 
-# This controls which application is to be executed if there 
-# is no explicit application requested from the SIP stack 
-# (i.e. unixsockctrl and second parameter of t_write_unix).
+# This controls which application is to be executed for incoming calls
+# is no explicit application requested (outgoing calls)
 #
 # This can be one of 
 #    $(ruri.user)       - user part of ruri is taken as application,
@@ -187,7 +272,8 @@ exclude_plugins=precoded_announce;sw_prepaid_sip;py_sems
 # application = $(mapping)
 # application = $(ruri.user)
 # application = $(ruri.param)
-application = $(apphdr)
+# application = $(apphdr)
+application=webconference
 
 # parameter: plugin_config_path=<path>
 #
@@ -228,15 +314,6 @@ stderr=no
 #   (same as -D)
 loglevel=2
 
-# optional parameter: max_shutdown_time=<time in seconds>
-#
-# Limit on server shutdown time (time to send/resend BYE
-# to active calls). 0 to disable (infinite).
-#
-# Default: 10
-#
-#max_shutdown_time = 10
-
 # optional parameter: syslog_facility={DAEMON|USER|LOCAL[0-7]}
 #
 # - sets the log facility that is used for syslog. Using this,
@@ -266,6 +343,41 @@ loglevel=2
 #
 # log_events=yes
 
+# optional parameter: max_shutdown_time=<time in seconds>
+#
+# Limit on server shutdown time (time to send/resend BYE
+# to active calls). 0 to disable (infinite).
+#
+# Default: 10
+#
+#max_shutdown_time = 10
+
+# optional parameter: shutdown_mode_reply="<code> <reason>"
+#
+# Error reply that is used as reply to INVITE and OPTION
+# when SEMS is shutting down.
+#
+# Default: shutdown_mode_reply="503 Server shutting down"
+
+# optional parameter: cps_limit=<limit>;<err code>;<err reason>
+# 
+# - this sets a maximum calls per sec limit. If that limit is 
+#   reached, no further calls are accepted, but the error reply 
+#   with err code/err reason is sent out.
+# 
+# Default: 0 (None)
+#
+# Example:
+#  cps_limit="100;503;Server overload"
+
+###########################################################
+# if build with ZRTP support (see Makefile.defs)
+# enable ZRTP support in endpoint calls:
+#enable_zrtp=yes (default: yes)
+#
+
+# enable ZRTP debug log? (prints lots of info)
+#enable_zrtp_debuglog=no (default: yes)
 
 ############################################################
 # tuning
@@ -289,6 +401,13 @@ loglevel=2
 #
 # media_processor_threads=1
 
+# optional parameter: rtp_receiver_threads=<num_value>
+#
+# - controls how many threads should be created that
+#   receive and relay RTP media - on single-processor systems set this
+#   parameter to 1 (default), on MP systems to a higher value.
+#
+# rtp_receiver_threads=1
 
 # optional parameter: session_limit=<limit>;<err code>;<err reason>
 # 
@@ -312,17 +431,6 @@ loglevel=2
 # Example:
 #  options_session_limit="900;503;Warning, server soon overloaded"
 
-# optional parameter: cps_limit=<limit>;<err code>;<err reason>
-# 
-# - this sets a maximum calls per sec limit. If that limit is 
-#   reached, no further calls are accepted, but the error reply 
-#   with err code/err reason is sent out.
-# 
-# Default: 0 (None)
-#
-# Example:
-#  cps_limit="100;503;Server overload"
-
 # optional parameter: dead_rtp_time=<unsigned int>
 #
 # - if != 0, after this time (in seconds) of no RTP
@@ -341,8 +449,6 @@ loglevel=2
 #
 # - use a Server/User-Agent header with the SEMS server 
 #   signature and version.
-#   Set server_signature=0 in ser_sems.cfg if you use SER 
-#   as SIP stack.
 #
 #   default=no
 #
@@ -351,11 +457,8 @@ use_default_signature=yes
 # optional parameter: signature=<signature string>
 #
 # - use a Server/User-Agent header with a custom user agent
-#   signature.
-#   Overridden by default signature if 
+#   signature. Overridden by default signature if
 #   use_default_signature is set.
-#   Set server_signature=0 in ser_sems.cfg if you use it.   
-#
 #
 # signature="SEMS media server 1.0"
 
@@ -416,6 +519,53 @@ use_default_signature=yes
 #   default settings (i.e. leave out) for these should be OK
 #   for most applications
 
+# Force use of the selected interface? (Default: no)
+#
+# Use IP_PKTINFO to force use of the selected interface for sending
+# packets. Useful in situations with overlapping IP address spaces, when
+# the kernel routing table should not be used to determine the sending
+# interface.
+#
+# force_outbound_if=yes
+
+# SIP timers configuration (in milliseconds)
+#
+# sip_timer_a=<n millisec>
+# sip_timer_b=<n millisec>
+# ...
+# sip_timer_m=<n millisec>
+#
+# timers A to J as in RFC3261.
+# Timer L: handle 200 ACKs automatically in INVITE client trans.
+# Timer M: cycle throught multiple addresses in case the R-URI
+#          resolves to multiple addresses
+#
+# Warning: Timer values are not checked whether they are appropriate!
+#          Leave to default values if in doubt.
+#
+# Example:
+#  # equivalent to fr_timer=20 in sip-router
+#  sip_timer_b=20000
+#  sip_timer_f=20000
+
+# sip_timer_t2=<n millisec)   T2 timer configuration
+#  (Cap for re-send request/response backoff)
+#
+# Warning: Timer values are not checked whether they are appropriate!
+#          Leave to default values if in doubt.
+#
+#sip_timer_t2=4000
+
+# skip DNS SRV lookup? [yes, no]
+#
+# according to RFC, if no port is specified, destination IP address
+# should be resolved with a DNS SRV lookup. If SEMS should not do that
+# (only an A record lookup), set disable_dns_srv=yes.
+#
+# Default: no
+#
+#disable_dns_srv=yes
+
 # support 100rel (PRACK) extension (RFC3262)? [disabled|supported|require]
 #
 # disabled - disable support for 100rel
@@ -426,9 +576,34 @@ use_default_signature=yes
 #
 #100rel=require
 
+# force the use of outbound interface? [yes, no]
+#
+# Useful in case of overlapping networks, or if OS routing can/should not be used. 
+# Default: no
+#
+# force_outbound_if=yes
+
+# use raw sockets for sending? [yes, no]
+# faster, requires root or CAP_NET_RAW
+#
+# Default: no
+#
+# use_raw_sockets=yes
+
+#
+# accept forked dialogs on UAS side? [yes|no]
+#
+#  no - INVITE with existing callid+remote_tag is replied with 482.
+# yes - INVITE with existing callid+remote_tag+via_branch is replied with 482.
+#       Forked INVITEs (!= via-branch) are accepted. 
+#
+# Default: yes
+#
+#accept_forked_dialogs=no
+
 # Make SIP authenticated requests sticky to the proxy? [yes | no]
 #
-# If enabled, host of request-URI of out-of-dialog requests that are
+# If enabled, host of request-URI of out-of-dialog requests that are 
 # authenticated with SIP auth is changed to the previously resolved
 # next-hop IP:port.
 #
@@ -436,10 +611,17 @@ use_default_signature=yes
 #
 # proxy_sticky_auth=yes
 
+# Ignore too low CSeq for NOTIFYs? [yes | no]
+#
+# May be necessary to interwork with simplistic/old SIP event notification 
+# implementations.
+#
+#ignore_notify_lower_cseq=yes
+
 #
 # Accept final replies without To-tag? [yes|no]
 #
-#accept_fr_without_totag=yes
+accept_fr_without_totag=yes
 
 #
 # Log raw messages?  [no|debug|info|warn|error]
@@ -468,3 +650,10 @@ use_default_signature=yes
 # Default: 4
 #
 # sip_server_threads=8
+
+# dump conference streams - experimental
+# play with: $play -r <samplerate> -c 1 /tmp/123_1_nnnn.s16 
+#  where <samplerate> is in /tmp/123_1_nnnn.s16.samplerate
+#  (if it hasn't changed in-between...)
+#dump_conference_streams=true
+#dump_conference_path=/tmp/
