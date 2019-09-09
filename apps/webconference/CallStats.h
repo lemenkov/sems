@@ -18,7 +18,7 @@ class WCCCallStats {
   void load();
 
  public:
- 
+
  WCCCallStats(const string& stats_dir);
  ~WCCCallStats();
 

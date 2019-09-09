@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -33,14 +33,14 @@
 #include <stdlib.h>
 
 
-static int pcm16_2_gsm(unsigned char* out_buf, unsigned char* in_buf, unsigned int size, 
+static int pcm16_2_gsm(unsigned char* out_buf, unsigned char* in_buf, unsigned int size,
 		       unsigned int channels, unsigned int rate, long h_codec );
 
-static int gsm_2_pcm16(unsigned char* out_buf, unsigned char* in_buf, unsigned int size, 
+static int gsm_2_pcm16(unsigned char* out_buf, unsigned char* in_buf, unsigned int size,
 		       unsigned int channels, unsigned int rate, long h_codec );
 
 static long gsm_create_if(const char* format_parameters, const char** format_parameters_out,
-			  amci_codec_fmt_info_t** format_description); 
+			  amci_codec_fmt_info_t** format_description);
 
 static void gsm_destroy_if(long h_codec);
 
@@ -57,7 +57,7 @@ BEGIN_EXPORTS( "gsm", AMCI_NO_MODULEINIT, AMCI_NO_MODULEDESTROY )
     CODEC( CODEC_GSM0610, pcm16_2_gsm, gsm_2_pcm16, AMCI_NO_CODEC_PLC,
            gsm_create_if, (amci_codec_destroy_t)gsm_destroy_if, gsm_bytes2samples, gsm_samples2bytes )
   END_CODECS
-    
+
   BEGIN_PAYLOADS
     PAYLOAD( 3, "GSM", 8000, 8000, 1, CODEC_GSM0610, AMCI_PT_AUDIO_FRAME )
   END_PAYLOADS
@@ -77,7 +77,7 @@ static unsigned int gsm_samples2bytes(long h_codec, unsigned int num_samples)
   return 33 * (num_samples / 160);
 }
 
-static int pcm16_2_gsm(unsigned char* out_buf, unsigned char* in_buf, unsigned int size, 
+static int pcm16_2_gsm(unsigned char* out_buf, unsigned char* in_buf, unsigned int size,
 		       unsigned int channels, unsigned int rate, long h_codec )
 {
   int i;
@@ -98,7 +98,7 @@ static int pcm16_2_gsm(unsigned char* out_buf, unsigned char* in_buf, unsigned i
   return blocks.quot * 33;
 }
 
-static int gsm_2_pcm16(unsigned char* out_buf, unsigned char* in_buf, unsigned int size, 
+static int gsm_2_pcm16(unsigned char* out_buf, unsigned char* in_buf, unsigned int size,
 		       unsigned int channels, unsigned int rate, long h_codec )
 {
   int i;
@@ -124,7 +124,7 @@ static int gsm_2_pcm16(unsigned char* out_buf, unsigned char* in_buf, unsigned i
     return -1;
   }
 
-  for (i=0;i<blocks.quot;i++) 
+  for (i=0;i<blocks.quot;i++)
     gsm_decode(h_arr[1],in_buf + i*33,(gsm_signal*)(out_buf + i*320));
 
   return out_size;
@@ -133,9 +133,9 @@ static int gsm_2_pcm16(unsigned char* out_buf, unsigned char* in_buf, unsigned i
 
 static long gsm_create_if(const char* format_parameters, const char** format_parameters_out,
 			  amci_codec_fmt_info_t** format_description)
-{ 
+{
   gsm* h_codec=0;
-    
+
   h_codec = malloc(sizeof(gsm)*2);
   if(!h_codec){
     ERROR("gsm.c: could not create handle array\n");

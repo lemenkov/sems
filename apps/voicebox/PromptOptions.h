@@ -5,12 +5,12 @@ struct PromptOptions {
   bool has_digits;
   bool digits_right;
 
-  PromptOptions(bool has_digits, 
+  PromptOptions(bool has_digits,
 		bool digits_right)
-    : has_digits(has_digits), 
+    : has_digits(has_digits),
       digits_right(digits_right) { }
-  PromptOptions() 
-    : has_digits(false), 
+  PromptOptions()
+    : has_digits(false),
       digits_right(false) { }
 };
 

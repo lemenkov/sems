@@ -164,6 +164,6 @@ int parse_next_hop(const cstring& next_hop,
     dest_list.push_back(dest);
     break;
   }
-  
+
   return 0;
 }

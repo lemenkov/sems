@@ -12,15 +12,15 @@
 
 SystemDSM::SystemDSM(const DSMScriptConfig& config,
 		     const string& startDiagName,
-		     bool reload) 
+		     bool reload)
   : AmEventQueue(this), dummy_session(this),
     stop_requested(false), startDiagName(startDiagName),
     reload(reload)
 {
   config.diags->addToEngine(&engine);
 
-  for (map<string, string>::const_iterator it = 
-	 config.config_vars.begin(); it != config.config_vars.end(); it++) 
+  for (map<string, string>::const_iterator it =
+	 config.config_vars.begin(); it != config.config_vars.end(); it++)
     var["config."+it->first] = it->second;
 
   // register our event queue
@@ -44,7 +44,7 @@ void SystemDSM::run() {
   DBG("SystemDSM thread starting...\n");
 
   DBG("Running init of SystemDSM...\n");
-  if (!engine.init(&dummy_session, this, startDiagName, 
+  if (!engine.init(&dummy_session, this, startDiagName,
 		   reload ? DSMCondition::Reload : DSMCondition::Startup)) {
     WARN("Initialization failed for SystemDSM\n");
     AmEventDispatcher::instance()->delEventQueue(dummy_session.getLocalTag());
@@ -77,23 +77,23 @@ void SystemDSM::process(AmEvent* event) {
 
   if (event->event_id == DSM_EVENT_ID) {
     DSMEvent* dsm_event = dynamic_cast<DSMEvent*>(event);
-    if (dsm_event) {      
+    if (dsm_event) {
       engine.runEvent(&dummy_session, this, DSMCondition::DSMEvent, &dsm_event->params);
       return;
-    }  
+    }
   }
   // todo: give modules the possibility to define/process events
   JsonRpcEvent* jsonrpc_ev = dynamic_cast<JsonRpcEvent*>(event);
-  if (jsonrpc_ev) { 
+  if (jsonrpc_ev) {
     DBG("received jsonrpc event\n");
 
-    JsonRpcResponseEvent* resp_ev = 
+    JsonRpcResponseEvent* resp_ev =
       dynamic_cast<JsonRpcResponseEvent*>(jsonrpc_ev);
     if (resp_ev) {
       map<string, string> params;
       params["ev_type"] = "JsonRpcResponse";
       params["id"] = resp_ev->response.id;
-      params["is_error"] = resp_ev->response.is_error ? 
+      params["is_error"] = resp_ev->response.is_error ?
 	"true":"false";
 
       // decode result for easy use from script
@@ -113,12 +113,12 @@ void SystemDSM::process(AmEvent* event) {
       return;
     }
 
-    JsonRpcRequestEvent* req_ev = 
+    JsonRpcRequestEvent* req_ev =
       dynamic_cast<JsonRpcRequestEvent*>(jsonrpc_ev);
     if (req_ev) {
       map<string, string> params;
       params["ev_type"] = "JsonRpcRequest";
-      params["is_notify"] = req_ev->isNotification() ? 
+      params["is_notify"] = req_ev->isNotification() ?
 	"true" : "false";
       params["method"] = req_ev->method;
       if (!req_ev->id.empty())
@@ -158,7 +158,7 @@ void SystemDSM::process(AmEvent* event) {
 
   if (event->event_id == E_SYSTEM) {
     AmSystemEvent* sys_ev = dynamic_cast<AmSystemEvent*>(event);
-    if(sys_ev){	
+    if(sys_ev){
       DBG("SystemDSM received system Event\n");
       map<string, string> params;
       params["type"] = AmSystemEvent::getDescription(sys_ev->sys_event);

@@ -19,7 +19,7 @@ static PyObject* PySemsAudioFile_new(PyTypeObject *type, PyObject *args, PyObjec
   PySemsAudioFile *self;
 
   self = (PySemsAudioFile *)type->tp_alloc(type, 0);
-	
+
   if (self != NULL) {
 
     self->af = new AmAudioFile();
@@ -147,7 +147,7 @@ static PyObject* PySemsAudioFile_tts(PyObject* cls, PyObject* args)
   char* text;
   if(!PyArg_ParseTuple(args,"s",&text))
     return NULL;
-    
+
   PyObject* constr_args = Py_BuildValue("(O)",Py_None);
   PyObject* tts_file = PyObject_CallObject(cls,constr_args);
   Py_DECREF(constr_args);
@@ -163,7 +163,7 @@ static PyObject* PySemsAudioFile_tts(PyObject* cls, PyObject* args)
   *self->filename = string(TTS_CACHE_PATH) + AmSession::getNewId() + string(".wav");
   self->del_file = true;
   flite_text_to_speech(text,self->tts_voice,self->filename->c_str());
-    
+
   if(self->af->open(self->filename->c_str(),AmAudioFile::Read)){
     Py_DECREF(tts_file);
     PyErr_SetString(PyExc_IOError,"could not open TTS file");
@@ -173,7 +173,7 @@ static PyObject* PySemsAudioFile_tts(PyObject* cls, PyObject* args)
   return tts_file;
 }
 #endif
-    
+
 static PyObject* PySemsAudioFile_close(PySemsAudioFile* self, PyObject*)
 {
   self->af->close();
@@ -193,7 +193,7 @@ static PyObject* PySemsAudioFile_setRecordTime(PySemsAudioFile* self, PyObject* 
     return NULL;
 
   self->af->setRecordTime(rec_time);
-    
+
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -202,7 +202,7 @@ static PyObject* PySemsAudioFile_exportRaw(PySemsAudioFile* self, PyObject*)
 {
   if(self->af->getMode() == AmAudioFile::Write)
     self->af->on_close();
-    
+
   self->af->rewind();
 
   return PyFile_FromFile(self->af->getfp(),"","rwb",NULL);
@@ -256,7 +256,7 @@ static int PySemsAudioFile_setloop(PySemsAudioFile* self, PyObject* value, void*
     PyErr_SetString(PyExc_TypeError, "Cannot delete the first attribute");
     return -1;
   }
-  
+
   if(value == Py_True)
     self->af->loop.set(true);
 
@@ -264,7 +264,7 @@ static int PySemsAudioFile_setloop(PySemsAudioFile* self, PyObject* value, void*
     self->af->loop.set(false);
 
   else {
-    PyErr_SetString(PyExc_TypeError, 
+    PyErr_SetString(PyExc_TypeError,
 		    "The first attribute value must be a boolean");
     return -1;
   }
@@ -273,15 +273,15 @@ static int PySemsAudioFile_setloop(PySemsAudioFile* self, PyObject* value, void*
 }
 
 static PyGetSetDef PySemsAudioFile_getseters[] = {
-  {"loop", 
+  {"loop",
    (getter)PySemsAudioFile_getloop, (setter)PySemsAudioFile_setloop,
    "repeat mode",
    NULL},
   {NULL}  /* Sentinel */
 };
-    
+
 PyTypeObject PySemsAudioFileType = {
-	
+
   PyObject_HEAD_INIT(NULL)
   0,                         /*ob_size*/
   "ivr.PySemsAudioFile",        /*tp_name*/

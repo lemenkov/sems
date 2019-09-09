@@ -17,7 +17,7 @@ class TOXmlRpcClient : public XmlRpc::XmlRpcClient {
 #endif
 		   ) { }
 
-  bool execute(const char* method, XmlRpcValue const& params, 
+  bool execute(const char* method, XmlRpcValue const& params,
 	       XmlRpcValue& result, double timeout);
 };
 

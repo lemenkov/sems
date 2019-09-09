@@ -1235,7 +1235,7 @@ RTMP_ClientPacket(RTMP *r, RTMPPacket *packet)
       RTMP_Log(RTMP_LOGDEBUG, "%s, unknown packet type received: 0x%02x", __FUNCTION__,
 	  packet->m_packetType);
 #ifdef _DEBUG
-      RTMP_LogHex(RTMP_LOGDEBUG, (const uint8_t*)packet->m_body, 
+      RTMP_LogHex(RTMP_LOGDEBUG, (const uint8_t*)packet->m_body,
 		  packet->m_nBodySize);
 #endif
     }
@@ -2648,7 +2648,7 @@ HandleChangeChunkSize(RTMP *r, const RTMPPacket *packet)
   if (packet->m_nBodySize >= 4)
     {
       r->m_inChunkSize = AMF_DecodeInt32(packet->m_body);
-      RTMP_Log(RTMP_LOGDEBUG, "%s, received: chunk size change to %d", 
+      RTMP_Log(RTMP_LOGDEBUG, "%s, received: chunk size change to %d",
 	       __FUNCTION__, r->m_inChunkSize);
     }
 }
@@ -2670,7 +2670,7 @@ HandleCtrl(RTMP *r, const RTMPPacket *packet)
   unsigned int tmp;
   if (packet->m_body && packet->m_nBodySize >= 2)
     nType = AMF_DecodeInt16(packet->m_body);
-  RTMP_Log(RTMP_LOGDEBUG, "%s, received ctrl. type: %d, len: %d", 
+  RTMP_Log(RTMP_LOGDEBUG, "%s, received ctrl. type: %d, len: %d",
 	   __FUNCTION__, nType, packet->m_nBodySize);
   /*RTMP_LogHex(packet.m_body, packet.m_nBodySize);*/
 
@@ -2857,7 +2857,7 @@ int RTMP_ReadPacket(RTMP *r, RTMPPacket *packet)
 
   if (ReadN(r, hbuf, 1) == 0)
     {
-      RTMP_Log(RTMP_LOGERROR, "%s, failed to read RTMP packet header", 
+      RTMP_Log(RTMP_LOGERROR, "%s, failed to read RTMP packet header",
 	       __FUNCTION__);
       return FALSE;
     }
@@ -3132,7 +3132,7 @@ SHandShake(RTMP *r)
   // and check if identical to S1 (should be)
   bMatch = (memcmp(serversig, clientsig, RTMP_SIG_SIZE) == 0);
   if (!bMatch) {
-    RTMP_Log(RTMP_LOGWARNING, "%s, client signature does not match!", 
+    RTMP_Log(RTMP_LOGWARNING, "%s, client signature does not match!",
 	     __FUNCTION__);
   }
   return TRUE;
@@ -3155,7 +3155,7 @@ RTMP_SendChunk(RTMP *r, RTMPChunk *chunk)
       /* save header bytes we're about to overwrite */
       memcpy(hbuf, ptr, chunk->c_headerSize);
       memcpy(ptr, chunk->c_header, chunk->c_headerSize);
-      wrote = WriteN(r, (unsigned char*)ptr, 
+      wrote = WriteN(r, (unsigned char*)ptr,
 		     chunk->c_headerSize + chunk->c_chunkSize);
       memcpy(ptr, hbuf, chunk->c_headerSize);
     }

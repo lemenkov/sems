@@ -14,11 +14,11 @@
 
 #include "AmArg.h"
 
-class MessageDataFile 
+class MessageDataFile
 : public AmObject {
  public:
   FILE* fp;
-  MessageDataFile(FILE* fp) 
+  MessageDataFile(FILE* fp)
     : fp(fp) { }
 };
 

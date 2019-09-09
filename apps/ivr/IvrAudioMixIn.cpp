@@ -9,7 +9,7 @@ static PyObject* IvrAudioMixIn_new(PyTypeObject *type, PyObject *args, PyObject 
   IvrAudioMixIn *self;
 
   self = (IvrAudioMixIn *)type->tp_alloc(type, 0);
-	
+
   if (self != NULL) {
     self->mix = NULL;
   }
@@ -92,9 +92,9 @@ static PyMethodDef IvrAudioMixIn_methods[] = {
 static PyGetSetDef IvrAudioMixIn_getseters[] = {
   {NULL}  /* Sentinel */
 };
-    
+
 PyTypeObject IvrAudioMixInType = {
-	
+
   PyObject_HEAD_INIT(NULL)
   0,                         /*ob_size*/
   "ivr.IvrAudioMixIn",        /*tp_name*/

@@ -40,7 +40,7 @@ using std::map;
 
 struct SBCEventLogHandler
 {
-  virtual void logEvent(long int timestamp, const string& id, 
+  virtual void logEvent(long int timestamp, const string& id,
 			const string& type, const AmArg& ev)=0;
 };
 

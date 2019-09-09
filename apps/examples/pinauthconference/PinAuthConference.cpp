@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -66,7 +66,7 @@ int PinAuthConferenceFactory::onLoad()
   if (!DigitsDir.length()) {
     WARN("No digits_dir specified in configuration.\n");
   }
-  for (int i=0;i<10;i++) 
+  for (int i=0;i<10;i++)
     prompts.setPrompt(int2str(i), DigitsDir+int2str(i)+".wav", APP_NAME);
 
   string playout_type = cfg.getParameter("playout_type");
@@ -111,18 +111,18 @@ PinAuthConferenceDialog::~PinAuthConferenceDialog()
 }
 
 void PinAuthConferenceDialog::connectConference(const string& room) {
-  // set the conference id ('conference room') 
+  // set the conference id ('conference room')
   conf_id = room;
 
-  // disconnect in/out for safety 
+  // disconnect in/out for safety
   setInOut(NULL, NULL);
 
-  // we need to be in the same callgroup as the other 
+  // we need to be in the same callgroup as the other
   // people in the conference (important if we have multiple
   // MediaProcessor threads
   changeCallgroup(conf_id);
 
-  // get a channel from the status 
+  // get a channel from the status
   channel.reset(AmConferenceStatus::getChannel(conf_id,getLocalTag(),RTPStream()->getSampleRate()));
 
   // clear the playlist
@@ -137,7 +137,7 @@ void PinAuthConferenceDialog::connectConference(const string& room) {
 }
 
 void PinAuthConferenceDialog::onSessionStart()
-{ 
+{
   state = EnteringPin;
 
   prompts.addToPlaylist(ENTER_PIN,  (long)this, play_list);
@@ -147,7 +147,7 @@ void PinAuthConferenceDialog::onSessionStart()
 
   AmSession::onSessionStart();
 }
- 
+
 void PinAuthConferenceDialog::onBye(const AmSipRequest& req)
 {
   play_list.flush();
@@ -158,7 +158,7 @@ void PinAuthConferenceDialog::onBye(const AmSipRequest& req)
 
 void PinAuthConferenceDialog::process(AmEvent* ev)
 {
-  // check conference events 
+  // check conference events
   ConferenceEvent* ce = dynamic_cast<ConferenceEvent*>(ev);
   if(ce && (conf_id == ce->conf_id)){
     switch(ce->event_id){
@@ -171,7 +171,7 @@ void PinAuthConferenceDialog::process(AmEvent* ev)
 	prompts.addToPlaylist(JOIN_SOUND, (long)this, play_list, true);
       }
     } break;
-    
+
     case ConfParticipantLeft: {
       DBG("########## participant left ########\n");
       prompts.addToPlaylist(DROP_SOUND, (long)this, play_list, true);
@@ -191,11 +191,11 @@ void PinAuthConferenceDialog::process(AmEvent* ev)
       state = InConference;
       connectConference(pin_str);
       DBG("connectConference. **********************\n");
-    }    
+    }
   }
   // audio events
   AmAudioEvent* audio_ev = dynamic_cast<AmAudioEvent*>(ev);
-  if (audio_ev  && 
+  if (audio_ev  &&
       audio_ev->event_id == AmAudioEvent::noAudio) {
     DBG("received noAudio event. **********************\n");
     return;
@@ -206,14 +206,14 @@ void PinAuthConferenceDialog::process(AmEvent* ev)
 
 void PinAuthConferenceDialog::onDtmf(int event, int duration)
 {
-  DBG("PinAuthConferenceDialog::onDtmf: event %d duration %d\n", 
+  DBG("PinAuthConferenceDialog::onDtmf: event %d duration %d\n",
       event, duration);
 
   if (EnteringPin == state) {
     // not yet in conference
     if (event<10) {
       pin_str += int2str(event);
-      DBG("added '%s': PIN is now '%s'.\n", 
+      DBG("added '%s': PIN is now '%s'.\n",
 	  int2str(event).c_str(), pin_str.c_str());
     } else if (event==10 || event==11) {
       // pound and star key

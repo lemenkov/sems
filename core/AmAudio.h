@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmAudio.h */
@@ -84,12 +84,12 @@ class AmAudioEvent: public AmEvent
 {
 public:
   enum EventType {
-	
+
     noAudio, // Audio class has nothing to play and/or record anymore
 
-    // Audio input & output have been cleared: 
+    // Audio input & output have been cleared:
     // !!! sent only from AmSession !!!
-    cleared  
+    cleared
   };
 
   AmAudioEvent(int id):AmEvent(id){}
@@ -140,7 +140,7 @@ public:
 
   string sdp_format_parameters;
   const char*  sdp_format_parameters_out;
-    
+
   AmAudioFormat(int codec_id = CODEC_PCM16,
 		unsigned int rate = SYSTEM_SAMPLECLOCK_RATE);
 
@@ -254,10 +254,10 @@ public:
 protected:
   /** Sample buffer. */
   DblBuffer samples;
-  
+
   /** Audio format. @see AmAudioFormat */
   unique_ptr<AmAudioFormat> fmt;
-  
+
   /** Resampling states. @see AmResamplingState */
   unique_ptr<AmResamplingState> input_resampling_state;
   unique_ptr<AmResamplingState> output_resampling_state;
@@ -270,8 +270,8 @@ protected:
   /** Puts 'size' bytes directly from stream (Write,Push). */
   virtual int write(unsigned int user_ts, unsigned int size) = 0;
 
-  /** 
-   * Converts a buffer from stereo to mono. 
+  /**
+   * Converts a buffer from stereo to mono.
    * @param size [in,out] size in bytes
    * <ul><li>Before call is size = input size</li><li>After the call is size = output size</li></ul>
    */
@@ -324,7 +324,7 @@ protected:
    * @return new size in bytes
    */
   unsigned int resample(AmResamplingState& rstate, unsigned char *buffer, unsigned int size, int input_sample_rate, int output_sample_rate);
-   
+
   /**
    * Get the number of bytes to read from encoded, depending on the format.
    */
@@ -347,26 +347,26 @@ public:
   /** Closes the audio pipe. */
   virtual void close();
 
-  /** 
+  /**
    * Get some samples from input stream.
    * @warning For packet based payloads / file formats, use:
    * <pre>           nb_sample = input buffer size / sample size of the reference format
    * </pre>           whereby the format with/from which the codec works is the reference one.
-   * @return # bytes read, else -1 if error (0 is OK) 
+   * @return # bytes read, else -1 if error (0 is OK)
    */
-  virtual int get(unsigned long long system_ts, unsigned char* buffer, 
+  virtual int get(unsigned long long system_ts, unsigned char* buffer,
 		  int output_sample_rate, unsigned int nb_samples);
 
-  /** 
+  /**
    * Put some samples to the output stream.
    * @warning For packet based payloads / file formats, use:
    * <pre>           nb_sample = input buffer size / sample size of the reference format
    * </pre>           whereby the format with/from which the codec works is the reference one.
-   * @return # bytes written, else -1 if error (0 is OK) 
+   * @return # bytes written, else -1 if error (0 is OK)
    */
-  virtual int put(unsigned long long system_ts, unsigned char* buffer, 
+  virtual int put(unsigned long long system_ts, unsigned char* buffer,
 		  int input_sample_rate, unsigned int size);
-  
+
   int  getSampleRate();
 
   void setRecordTime(unsigned int ms);

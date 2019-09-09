@@ -26,7 +26,7 @@ public:
 	int m_BC;  //b-channel (addr)
 	mISDNport *m_port;
 	char m_bchannel;
-	
+
 	char m_last_msg[MAX_MSG_SIZE]; 	//we copy here packet from kernel
         int  m_last_msg_s;
         mISDN::iframe_t* m_frame;		//there are pointers to places in m_last_msg buffer
@@ -59,7 +59,7 @@ public:
 	int GetIEchannel_id();
 	int GetCallerNum();
 	int GetCalledNum();
-	
+
 	private:
 	GWSession* m_session;
 

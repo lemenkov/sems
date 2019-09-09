@@ -21,8 +21,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _DSM_CALL_H
@@ -42,7 +42,7 @@ class DSMCall : public AmB2BCallerSession,
 		  public CredentialHolder
 {
   std::unique_ptr<UACAuthCred> cred;
-  
+
   DSMStateEngine engine;
   AmPromptCollection* prompts;
   AmPromptCollection* default_prompts;
@@ -61,7 +61,7 @@ class DSMCall : public AmB2BCallerSession,
 
   // owned by this instance
   std::set<DSMDisposable*> gc_trash;
-  
+
   bool checkVar(const string& var_name, const string& var_val);
   string getVar(const string& var_name);
 
@@ -92,7 +92,7 @@ public:
 
   void onSipRequest(const AmSipRequest& req);
   void onSipReply(const AmSipRequest& req,
-		  const AmSipReply& reply, 
+		  const AmSipReply& reply,
 		  AmBasicSipDialog::Status old_dlg_status);
 
   bool getSdpOffer(AmSdp& offer);
@@ -138,7 +138,7 @@ public:
 
   void transferOwnership(DSMDisposable* d);
   void releaseOwnership(DSMDisposable* d);
-  
+
 protected:
   // AmB2BSession methods
   bool onOtherBye(const AmSipRequest& req);

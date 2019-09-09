@@ -61,8 +61,8 @@ struct ParamReplacerCtx
   const SBCCallProfile* call_profile;
 
   ParamReplacerCtx(const SBCCallProfile* call_profile=NULL)
-    : ruri_modified(false), 
-      from_modified(false), 
+    : ruri_modified(false),
+      from_modified(false),
       to_modified(false),
       call_profile(call_profile)
   {}
@@ -70,7 +70,7 @@ struct ParamReplacerCtx
   string replaceParameters(const string& s,
 			   const char* r_type,
 			   const AmSipRequest& req) {
-    
+
     return ::replaceParameters(s,r_type,req,
 			       call_profile,
 			       app_param,

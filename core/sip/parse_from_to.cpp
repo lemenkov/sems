@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -47,7 +47,7 @@ int parse_from_to(sip_from_to* ft, const char* beg, int len)
     const char* c = beg;
     int ret = parse_nameaddr(&ft->nameaddr,&c,len);
     if(ret) return ret;
-    
+
     if(!ft->nameaddr.params.empty()){
 
 	list<sip_avp*>::iterator it = ft->nameaddr.params.begin();
@@ -56,7 +56,7 @@ int parse_from_to(sip_from_to* ft, const char* beg, int len)
 	    const char* c = (*it)->name.s;
 	    const char* end = c + (*it)->name.len;
 	    int st = FTP_BEG;
-	    
+
 	    for(;c!=end;c++){
 
 #define case_FT_PARAM(st1,ch1,ch2,st2)\
@@ -91,7 +91,7 @@ int parse_from_to(sip_from_to* ft, const char* beg, int len)
 	    continue;
 	}
     }
-    
+
     return ret;
 }
 

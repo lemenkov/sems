@@ -23,18 +23,18 @@ public:
 
 };
 
-class EarlyRecordDialog 
-: public AmSession, 
-  public CredentialHolder // who invented that stupid name? ;) 
+class EarlyRecordDialog
+: public AmSession,
+  public CredentialHolder // who invented that stupid name? ;)
 {
-    
+
   string msg_filename;
   AmAudioFile a_msg;
   std::unique_ptr<UACAuthCred> cred;
-  
+
  protected:
   void process(AmEvent* event);
-    
+
  public:
   EarlyRecordDialog(UACAuthCred* credentials);
   ~EarlyRecordDialog();

@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -49,14 +49,14 @@ class AmObject {
   virtual ~AmObject() { }
 };
 
-struct ArgBlob {  
+struct ArgBlob {
 
   void* data;
   int   len;
-  
-  ArgBlob() 
+
+  ArgBlob()
   : data(NULL),len(0)
-  {  
+  {
   }
 
   ArgBlob(const ArgBlob& a) {
@@ -65,14 +65,14 @@ struct ArgBlob {
     if (data)
       memcpy(data, a.data, len);
   }
-  
+
   ArgBlob(const void* _data, int _len) {
     len = _len;
     data = malloc(len);
     if (data)
       memcpy(data, _data, len);
   }
-  
+
   ~ArgBlob() { if (data) free(data); }
 };
 
@@ -95,7 +95,7 @@ class AmArg
     AObject, // pointer to an object not owned by AmArg
     ADynInv, // pointer to a AmDynInvoke (useful for call backs)
     Blob,
-    
+
     Array,
     Struct
   };
@@ -107,14 +107,14 @@ class AmArg
   struct TypeMismatchException {
     TypeMismatchException() { }
   };
-  
+
   typedef std::vector<AmArg> ValueArray;
-  typedef std::map<std::string, AmArg> ValueStruct; 
+  typedef std::map<std::string, AmArg> ValueStruct;
 
  private:
   // type
   short type;
-    
+
   // value
   union {
     long int       v_int;
@@ -133,12 +133,12 @@ class AmArg
 
  public:
 
- AmArg() 
-   : type(Undef) 
+ AmArg()
+   : type(Undef)
   { }
-  
+
   AmArg(const AmArg& v);
-  
+
  AmArg(const int& v)
    : type(Int),
     v_int(v)
@@ -158,38 +158,38 @@ class AmArg
    : type(Bool),
     v_bool(v)
     { }
-  
+
  AmArg(const double& v)
    : type(Double),
     v_double(v)
     { }
-  
+
  AmArg(const char* v)
    : type(CStr)
   {
     v_cstr = strdup(v);
   }
-  
+
  AmArg(const string &v)
    : type(CStr)
   {
     v_cstr = strdup(v.c_str());
   }
-  
+
  AmArg(const ArgBlob v)
    : type(Blob)
   {
     v_blob = new ArgBlob(v);
   }
 
-  AmArg(AmObject* v) 
+  AmArg(AmObject* v)
     : type(AObject),
-    v_obj(v) 
+    v_obj(v)
    { }
 
-  AmArg(AmDynInvoke* v) 
+  AmArg(AmDynInvoke* v)
     : type(ADynInv),
-    v_inv(v) 
+    v_inv(v)
    { }
 
   // convenience constructors
@@ -198,7 +198,7 @@ class AmArg
   AmArg(const vector<double>& v);
   AmArg(std::map<std::string, std::string>& v);
   AmArg(std::map<std::string, AmArg>& v);
-  
+
   ~AmArg() { invalidate(); }
 
   void assertArray();
@@ -227,7 +227,7 @@ class AmArg
 	do { \
 		ERROR("type mismatch: expected: %d; received: %d.\n", AmArg::exp, got.getType()); \
 		throw AmArg::TypeMismatchException(); \
-	} while (0) 
+	} while (0)
 
 #define assertArgArray(a)			\
   if (!isArgArray(a))				\
@@ -277,12 +277,12 @@ class AmArg
   ArgBlob*    asBlob()   const { return v_blob; }
   ValueStruct* asStruct() const { return v_struct; }
 
-  vector<string>     asStringVector()    const; 
-  vector<int>        asIntVector()       const; 
-  vector<bool>       asBoolVector()      const; 
-  vector<double>     asDoubleVector()    const; 
-  vector<AmObject*> asAmObjectVector() const; 
-  vector<ArgBlob>    asArgBlobVector()   const; 
+  vector<string>     asStringVector()    const;
+  vector<int>        asIntVector()       const;
+  vector<bool>       asBoolVector()      const;
+  vector<double>     asDoubleVector()    const;
+  vector<AmObject*> asAmObjectVector() const;
+  vector<ArgBlob>    asArgBlobVector()   const;
 
   // operations on arrays
   void assertArray(size_t s);
@@ -294,7 +294,7 @@ class AmArg
   void pop_back();
 
   void concat(const AmArg& a);
-  
+
   size_t size() const;
 
   /** throws OutOfBoundsException if array too small */
@@ -337,9 +337,9 @@ class AmArg
   /** remove struct member */
   void erase(const std::string& name);
 
-  /** 
-   * throws exception if arg array does not conform to spec 
-   *   i  - int 
+  /**
+   * throws exception if arg array does not conform to spec
+   *   i  - int
    *   l  - long long
    *   t  - bool
    *   f  - double

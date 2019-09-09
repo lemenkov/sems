@@ -37,8 +37,8 @@ void ConferenceRoomParticipant::setMuted(int mute) {
   muted = mute;
 }
 
-void ConferenceRoomParticipant::updateStatus(ConferenceRoomParticipant::ParticipantStatus 
-					     new_status, 
+void ConferenceRoomParticipant::updateStatus(ConferenceRoomParticipant::ParticipantStatus
+					     new_status,
 					     const string& reason,
 					     struct timeval& now) {
   status = new_status;
@@ -54,21 +54,21 @@ ConferenceRoom::ConferenceRoom()
 
 void ConferenceRoom::cleanExpired() {
   struct timeval now;
-  gettimeofday(&now, NULL);  
+  gettimeofday(&now, NULL);
   bool is_updated = false;
 
-  list<ConferenceRoomParticipant>::iterator it=participants.begin(); 
+  list<ConferenceRoomParticipant>::iterator it=participants.begin();
   while (it != participants.end()) {
     if (it->expired(now)) {
       participants.erase(it);
       it=participants.begin();
       is_updated = true;
-    } else 
+    } else
       it++;
   }
 
   if (is_updated)
-    memcpy(&last_access_time, &now, sizeof(struct timeval)); 
+    memcpy(&last_access_time, &now, sizeof(struct timeval));
 }
 
 AmArg ConferenceRoom::asArgArray() {
@@ -76,7 +76,7 @@ AmArg ConferenceRoom::asArgArray() {
   AmArg res;
   res.assertArray(0); // make array from it
 
-  for (list<ConferenceRoomParticipant>::iterator it=participants.begin(); 
+  for (list<ConferenceRoomParticipant>::iterator it=participants.begin();
        it != participants.end(); it++) {
     res.push(it->asArgArray());
   }
@@ -86,21 +86,21 @@ AmArg ConferenceRoom::asArgArray() {
 vector<string> ConferenceRoom::participantLtags() {
   cleanExpired();
   vector<string> res;
-  for (list<ConferenceRoomParticipant>::iterator it=participants.begin(); 
+  for (list<ConferenceRoomParticipant>::iterator it=participants.begin();
        it != participants.end(); it++) {
     res.push_back(it->localtag);
   }
   return res;
 }
 
-void ConferenceRoom::newParticipant(const string& localtag, 
+void ConferenceRoom::newParticipant(const string& localtag,
 				    const string& number,
 				    const string& participant_id) {
   gettimeofday(&last_access_time, NULL);
 
   if (!participant_id.empty()) {
     // search for participant with id and localtag empty
-    for (list<ConferenceRoomParticipant>::iterator it=participants.begin(); 
+    for (list<ConferenceRoomParticipant>::iterator it=participants.begin();
 	 it != participants.end(); it++) {
       if (it->participant_id == participant_id && it->localtag.empty()) {
 	DBG("found invited participant with ID '%s'\n", participant_id.c_str());
@@ -109,7 +109,7 @@ void ConferenceRoom::newParticipant(const string& localtag,
 	return;
       }
     }
-    
+
   }
 
   participants.push_back(ConferenceRoomParticipant());
@@ -120,7 +120,7 @@ void ConferenceRoom::newParticipant(const string& localtag,
 
 bool ConferenceRoom::hasParticipant(const string& localtag) {
   for (list<ConferenceRoomParticipant>::iterator it =
-	 participants.begin(); it != participants.end();it++) { 
+	 participants.begin(); it != participants.end();it++) {
     if (it->localtag == localtag)
       return true;
   }
@@ -130,7 +130,7 @@ bool ConferenceRoom::hasParticipant(const string& localtag) {
 
 bool ConferenceRoom::hasInvitedParticipant(const string& participant_id) {
   for (list<ConferenceRoomParticipant>::iterator it =
-	 participants.begin(); it != participants.end();it++) { 
+	 participants.begin(); it != participants.end();it++) {
     if (it->participant_id == participant_id)
       return true;
   }
@@ -141,20 +141,20 @@ void ConferenceRoom::setMuted(const string& localtag, int mute) {
   gettimeofday(&last_access_time, NULL);
 
   for (list<ConferenceRoomParticipant>::iterator it =participants.begin();
-       it != participants.end();it++) 
+       it != participants.end();it++)
     if (it->localtag == localtag) {
       it->setMuted(mute);
       break;
     }
 }
 
-bool ConferenceRoom::updateStatus(const string& part_tag, 
-				  ConferenceRoomParticipant::ParticipantStatus newstatus, 
+bool ConferenceRoom::updateStatus(const string& part_tag,
+				  ConferenceRoomParticipant::ParticipantStatus newstatus,
 				  const string& reason) {
   gettimeofday(&last_access_time, NULL);
 
   bool res = false;
-  for (list<ConferenceRoomParticipant>::iterator it=participants.begin(); 
+  for (list<ConferenceRoomParticipant>::iterator it=participants.begin();
        it != participants.end(); it++) {
     if (it->localtag == part_tag) {
       it->updateStatus(newstatus, reason, last_access_time);

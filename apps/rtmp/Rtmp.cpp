@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -89,7 +89,7 @@ int RtmpFactory::onLoad()
     }
 
     if(cfg_file.hasParameter("allow_external_register")){
-      cfg.AllowExternalRegister = 
+      cfg.AllowExternalRegister =
 	cfg_file.getParameter("allow_external_register") == string("yes");
     }
 
@@ -99,7 +99,7 @@ int RtmpFactory::onLoad()
   }
 
   RtmpServer* rtmp_server = RtmpServer::instance();
-  
+
   if(rtmp_server->listen(cfg.ListenAddress.c_str(),cfg.ListenPort) < 0) {
     ERROR("could not start RTMP server at <%s:%u>\n",
 	  cfg.ListenAddress.c_str(),cfg.ListenPort);
@@ -107,7 +107,7 @@ int RtmpFactory::onLoad()
     return -1;
   }
   rtmp_server->start();
-  
+
   AmDynInvokeFactory* di_reg_client_f = AmPlugIn::instance()->
     getFactory4Di("registrar_client");
   if(di_reg_client_f)
@@ -116,7 +116,7 @@ int RtmpFactory::onLoad()
   if(di_reg_client) {
     // start the event processing
     AmEventDispatcher::instance()->addEventQueue(FACTORY_Q_NAME,this);
-    start(); 
+    start();
   }
   else {
     INFO("'registrar_client' not found: registration disabled.\n");
@@ -125,7 +125,7 @@ int RtmpFactory::onLoad()
   return 0;
 }
 
-AmSession* RtmpFactory::onInvite(const AmSipRequest& req, 
+AmSession* RtmpFactory::onInvite(const AmSipRequest& req,
 				 const string& app_name,
 				 const map<string,string>& app_params)
 {
@@ -142,7 +142,7 @@ AmSession* RtmpFactory::onInvite(const AmSipRequest& req,
     m_connections.unlock();
     AmSipDialog::reply_error(req,404,"Not found");
   }
-  
+
   return sess;
 }
 
@@ -158,7 +158,7 @@ int RtmpFactory::addConnection(const string& ident, RtmpConnection* conn)
     connections[ident] = conn;
   }
   m_connections.unlock();
-  
+
   return res;
 }
 

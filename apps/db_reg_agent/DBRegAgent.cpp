@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -276,12 +276,12 @@ bool DBRegAgent::loadRegistrations() {
 
     query << query_string;
     mysqlpp::UseQueryResult res = query.use();
-    
+
     // mysqlpp::Row::size_type row_count = res.num_rows();
     // DBG("got %zd subscriptions\n", row_count);
 
     while (mysqlpp::Row row = res.fetch_row()) {
-      int status = 0; 
+      int status = 0;
       long subscriber_id = row[COLNAME_SUBSCRIBER_ID];
 
       string contact_uri;
@@ -299,7 +299,7 @@ bool DBRegAgent::loadRegistrations() {
 
       DBG("got subscriber '%s@%s' status %i\n",
 	  string(row[COLNAME_USER]).c_str(), string(row[COLNAME_REALM]).c_str(),
-	  status);      
+	  status);
 
       switch (status) {
       case REG_STATUS_INACTIVE:
@@ -350,7 +350,7 @@ bool DBRegAgent::loadRegistrations() {
 	  } else {
 	    setRegistrationTimer(subscriber_id, dt_expiry, dt_registration_ts, now_time);
 	  }
-	  
+
 	}; break;
       case REG_STATUS_REMOVED:
 	{
@@ -422,21 +422,21 @@ void DBRegAgent::createRegistration(long subscriber_id,
 
     if (NULL != uac_auth_i) {
       DBG("enabling UAC Auth for new registration.\n");
-      
+
       // get a sessionEventHandler from uac_auth
       AmArg di_args,ret;
       AmArg a;
       a.setBorrowedPointer(reg);
       di_args.push(a);
       di_args.push(a);
-      
+
       uac_auth_i->invoke("getHandler", di_args, ret);
       if (!ret.size()) {
 	ERROR("Can not add auth handler to new registration!\n");
       } else {
 	AmObject* p = ret.get(0).asObject();
 	if (p != NULL) {
-	  AmSessionEventHandler* h = dynamic_cast<AmSessionEventHandler*>(p);	
+	  AmSessionEventHandler* h = dynamic_cast<AmSessionEventHandler*>(p);
 	  if (h != NULL)
 	    reg->setSessionEventHandler(h);
 	}
@@ -570,7 +570,7 @@ void DBRegAgent::process(AmEvent* ev) {
 
   if (ev->event_id == E_SYSTEM) {
     AmSystemEvent* sys_ev = dynamic_cast<AmSystemEvent*>(ev);
-    if(sys_ev){	
+    if(sys_ev){
       DBG("Session received system Event\n");
       if (sys_ev->sys_event == AmSystemEvent::ServerShutdown) {
 	running = false;
@@ -751,7 +751,7 @@ void DBRegAgent::updateDBRegistration(mysqlpp::Connection& db_connection,
 void DBRegAgent::onSipReplyEvent(AmSipReplyEvent* ev) {
   if (!ev) return;
 
-  DBG("received SIP reply event for '%s'\n", 
+  DBG("received SIP reply event for '%s'\n",
 #ifdef HAS_OFFER_ANSWER
       ev->reply.from_tag.c_str()
 #else
@@ -766,7 +766,7 @@ void DBRegAgent::onSipReplyEvent(AmSipReplyEvent* ev) {
 #else
     ev->reply.local_tag;
 #endif
-    
+
   map<string, long>::iterator it=registration_ltags.find(local_tag);
   if (it!=registration_ltags.end()) {
     long subscriber_id = it->second;
@@ -785,7 +785,7 @@ void DBRegAgent::onSipReplyEvent(AmSipReplyEvent* ev) {
       registration->getDlg()->updateStatus(ev->reply);
 #endif
 
-      //update registrations set 
+      //update registrations set
       bool update_status = false;
       int status = 0;
       bool update_ts = false;
@@ -886,7 +886,7 @@ void DBRegAgent::run() {
 
   DBG("DBRegAgent thread: waiting 2 sec for server startup ...\n");
   sleep(2);
-  
+
   mysqlpp::Connection::thread_start();
 
   if (enable_ratelimiting) {
@@ -1009,7 +1009,7 @@ void DBRegAgent::setRegistrationTimer(long subscriber_id,
 	  "minimum_reregister_interval=%f)\n",
 	  t_expiry_min, t_expiry_max, reg_start_ts, expiry,
 	  reregister_interval, minimum_reregister_interval);
-  
+
       registration_scheduler.insert_timer_leastloaded(timer, t_expiry_min, t_expiry_max);
     }
   } else {
@@ -1026,7 +1026,7 @@ void DBRegAgent::setRegistrationTimer(long subscriber_id,
 	"(reg_start_ts=%ld, reg_expiry=%ld, reregister_interval=%f)\n",
 	t_expiry, reg_start_ts, expiry, reregister_interval);
 
-    timer->expires = t_expiry;    
+    timer->expires = t_expiry;
     registration_scheduler.insert_timer(timer);
   }
 }
@@ -1081,7 +1081,7 @@ void DBRegAgent::timer_cb(RegTimer* timer, long subscriber_id, int reg_action) {
 }
 
 
-void DBRegAgent::DIcreateRegistration(int subscriber_id, const string& user, 
+void DBRegAgent::DIcreateRegistration(int subscriber_id, const string& user,
 				      const string& pass, const string& realm,
 				      const string& contact,
 				      AmArg& ret) {
@@ -1095,7 +1095,7 @@ void DBRegAgent::DIcreateRegistration(int subscriber_id, const string& user,
   ret.push("OK");
 }
 
-void DBRegAgent::DIupdateRegistration(int subscriber_id, const string& user, 
+void DBRegAgent::DIupdateRegistration(int subscriber_id, const string& user,
 				      const string& pass, const string& realm,
 				      const string& contact,
 				      AmArg& ret) {
@@ -1147,7 +1147,7 @@ void DBRegAgent::invoke(const string& method,
       assertArgCStr(args.get(4));
       contact = args.get(4).asCStr();
     }
-    DIcreateRegistration(args.get(0).asInt(), args.get(1).asCStr(), 
+    DIcreateRegistration(args.get(0).asInt(), args.get(1).asCStr(),
 			 args.get(2).asCStr(),args.get(3).asCStr(),
 			 contact, ret);
   } else if (method == "updateRegistration"){
@@ -1200,7 +1200,7 @@ void DBRegAgentProcessorThread::rateLimitWait() {
   memcpy(&last_check, &current, sizeof(struct timeval));
   double seconds_passed = (double)time_passed.tv_sec +
     (double)time_passed.tv_usec / 1000000.0;
-  allowance += seconds_passed * 
+  allowance += seconds_passed *
     (double) DBRegAgent::ratelimit_rate / (double)DBRegAgent::ratelimit_per;
 
   if (allowance > (double)DBRegAgent::ratelimit_rate)
@@ -1221,7 +1221,7 @@ void DBRegAgentProcessorThread::rateLimitWait() {
 
 void DBRegAgentProcessorThread::run() {
   DBG("DBRegAgentProcessorThread thread started\n");
-  
+
   // register us as SIP event receiver for MOD_NAME_processor
   AmEventDispatcher::instance()->addEventQueue(MOD_NAME "_processor",this);
 
@@ -1245,14 +1245,14 @@ void DBRegAgentProcessorThread::run() {
 
   mysqlpp::Connection::thread_end();
 
- DBG("DBRegAgentProcessorThread thread stopped\n"); 
+ DBG("DBRegAgentProcessorThread thread stopped\n");
 }
 
 void DBRegAgentProcessorThread::process(AmEvent* ev) {
 
   if (ev->event_id == E_SYSTEM) {
     AmSystemEvent* sys_ev = dynamic_cast<AmSystemEvent*>(ev);
-    if(sys_ev){	
+    if(sys_ev){
       DBG("Session received system Event\n");
       if (sys_ev->sys_event == AmSystemEvent::ServerShutdown) {
 	DBG("stopping processor thread\n");
@@ -1287,32 +1287,32 @@ void DBRegAgent::run_tests() {
   gettimeofday(&now, 0);
 
   RegTimer rt;
-  rt.expires = now.tv_sec + 10; 
+  rt.expires = now.tv_sec + 10;
   rt.cb=test_cb;
   registration_scheduler.insert_timer(&rt);
 
   RegTimer rt2;
-  rt2.expires = now.tv_sec + 5; 
+  rt2.expires = now.tv_sec + 5;
   rt2.cb=test_cb;
   registration_scheduler.insert_timer(&rt2);
 
   RegTimer rt3;
-  rt3.expires = now.tv_sec + 15; 
+  rt3.expires = now.tv_sec + 15;
   rt3.cb=test_cb;
   registration_scheduler.insert_timer(&rt3);
 
   RegTimer rt4;
-  rt4.expires = now.tv_sec - 1; 
+  rt4.expires = now.tv_sec - 1;
   rt4.cb=test_cb;
   registration_scheduler.insert_timer(&rt4);
 
   RegTimer rt5;
-  rt5.expires = now.tv_sec + 100000; 
+  rt5.expires = now.tv_sec + 100000;
   rt5.cb=test_cb;
   registration_scheduler.insert_timer(&rt5);
 
   RegTimer rt6;
-  rt6.expires = now.tv_sec + 100; 
+  rt6.expires = now.tv_sec + 100;
   rt6.cb=test_cb;
   registration_scheduler.insert_timer_leastloaded(&rt6, now.tv_sec+5, now.tv_sec+50);
 
@@ -1321,7 +1321,7 @@ void DBRegAgent::run_tests() {
   gettimeofday(&now, 0);
 
   RegTimer rt7;
-  rt6.expires = now.tv_sec + 980; 
+  rt6.expires = now.tv_sec + 980;
   rt6.cb=test_cb;
   registration_scheduler.insert_timer_leastloaded(&rt6, now.tv_sec+9980, now.tv_sec+9990);
 

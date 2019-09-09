@@ -10,14 +10,14 @@ class GWSession : public AmSession,  public CredentialHolder
  public:
   GWSession(const string& auth_realm, const string& auth_user, const string& auth_pwd);
   ~GWSession();
-  
+
   inline UACAuthCred* getCredentials();  //auth interface
   AmSipRequest invite_req;
 
 static    GWSession* CallFromOutside(std::string &fromnumber, std::string &tonumber, int backend, AmAudio* device);
   void setOtherLeg(AmAudio *otherleg);
   void onProgress(const AmSipReply& reply);
-  
+
 //Parent methods
 //virtual  void process(AmEvent* ev);
 //virtual AmPayloadProviderInterface* getPayloadProvider();
@@ -37,7 +37,7 @@ static    GWSession* CallFromOutside(std::string &fromnumber, std::string &tonum
 //virtual void onRtpTimeout();
 //virtual void onSendRequest(const string& method, const string& content_type, const string& body, string& hdrs, int flags, unsigned int cseq);
 //virtual void onSendReply(const AmSipRequest& req, unsigned int code,const string& reason,const string& content_type, const string& body,string& hdrs,int flags)
-void on_stop();        
+void on_stop();
 
  private:
   UACAuthCred credentials;

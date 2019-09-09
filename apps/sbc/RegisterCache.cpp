@@ -47,11 +47,11 @@ AorEntry* AorBucket::get(const string& aor)
   value_map::iterator it = find(aor);
   if(it == elmts.end())
     return NULL;
-  
+
   return it->second;
 }
 
-void AorBucket::dump_elmt(const string& aor, 
+void AorBucket::dump_elmt(const string& aor,
 			  const AorEntry* p_aor_entry) const
 {
   DBG("'%s' ->", aor.c_str());
@@ -68,7 +68,7 @@ void AorBucket::dump_elmt(const string& aor,
   }
 }
 
-void AorBucket::gbc(RegCacheStorageHandler* h, long int now, 
+void AorBucket::gbc(RegCacheStorageHandler* h, long int now,
 		    list<string>& alias_list)
 {
   for(value_map::iterator it = elmts.begin(); it != elmts.end();) {
@@ -172,7 +172,7 @@ struct RegCacheLogHandler
 	aor.c_str(),uri.c_str(),alias.c_str());
   }
 
-  void onUpdate(const string& canon_aor, const string& alias, 
+  void onUpdate(const string& canon_aor, const string& alias,
 		long int expires, const AliasEntry& alias_update) {
     DBG("update: aor='%s';alias='%s';expires=%li",
 	canon_aor.c_str(),alias.c_str(),expires);
@@ -244,7 +244,7 @@ void _RegisterCache::run()
     gbc_bucket_id = (gbc_bucket_id+1);
     gbc_bucket_id &= (REG_CACHE_TABLE_ENTRIES-1);
     nanosleep(&tick,&rem);
-  }  
+  }
 }
 
 /**
@@ -283,7 +283,7 @@ string _RegisterCache::canonicalize_aor(const string& uri)
   return canon_uri;
 }
 
-string 
+string
 _RegisterCache::compute_alias_hash(const string& aor, const string& contact_uri,
 				   const string& public_ip)
 {
@@ -455,7 +455,7 @@ void _RegisterCache::update(const string& alias, long int reg_expires,
     setAliasUATimer(alias_e);
   }
 #endif
-  
+
   if(storage_handler.get())
     storage_handler->onUpdate(canon_aor,alias,reg_expires,*alias_e);
 
@@ -504,7 +504,7 @@ void _RegisterCache::update(long int reg_expires, const AliasEntry& alias_update
 	if(findAliasEntry(alias,ae)) {
 
 	  // change contact index
-	  ContactBucket* ct_bucket = 
+	  ContactBucket* ct_bucket =
 	    getContactBucket(ae.contact_uri,ae.source_ip,ae.source_port);
 	  ct_bucket->lock();
 	  ct_bucket->remove(ae.contact_uri,ae.source_ip,ae.source_port);
@@ -525,14 +525,14 @@ void _RegisterCache::update(long int reg_expires, const AliasEntry& alias_update
 	aor_e->erase(binding_it);
       }
     }
-  } 
+  }
   else {
     // insert AorEntry if none
     aor_e = new AorEntry();
     bucket->insert(canon_aor,aor_e);
     DBG("inserted new AOR '%s'",canon_aor.c_str());
   }
-  
+
   if(!binding) {
     // insert one if none exist
     binding = new RegBinding();
@@ -583,7 +583,7 @@ void _RegisterCache::update(long int reg_expires, const AliasEntry& alias_update
     setAliasUATimer(alias_e);
   }
 #endif
-  
+
   if(storage_handler.get())
     storage_handler->onUpdate(canon_aor,binding->alias,
 			      reg_expires,*alias_e);
@@ -696,7 +696,7 @@ void _RegisterCache::removeAlias(const string& alias, bool generate_event)
     if(ae->ua_expire)
       removeAliasUATimer(ae);
 #endif
-    
+
     if(generate_event) {
       AmArg ev;
       ev["aor"]      = ae->aor;
@@ -705,7 +705,7 @@ void _RegisterCache::removeAlias(const string& alias, bool generate_event)
       ev["source"]   = ae->source_ip;
       ev["src_port"] = ae->source_port;
       ev["from-ua"]  = ae->remote_ua;
-    
+
       DBG("Alias expired @registrar (UA/%li): '%s' -> '%s'\n",
 	  (long)(AmAppTimer::instance()->unix_clock.get() - ae->ua_expire),
 	  ae->alias.c_str(),ae->aor.c_str());
@@ -731,7 +731,7 @@ void _RegisterCache::removeAlias(const string& alias, bool generate_event)
   alias_bucket->unlock();
 }
 
-bool _RegisterCache::getAorAliasMap(const string& canon_aor, 
+bool _RegisterCache::getAorAliasMap(const string& canon_aor,
 				    map<string,string>& alias_map)
 {
   if(canon_aor.empty()) {
@@ -767,7 +767,7 @@ bool _RegisterCache::findAliasEntry(const string& alias, AliasEntry& alias_entry
 
   AliasBucket* bucket = getAliasBucket(alias);
   bucket->lock();
-  
+
   AliasEntry* a = bucket->getContact(alias);
   if(a) {
     alias_entry = *a;
@@ -836,7 +836,7 @@ int _RegisterCache::parseContacts(RegisterCacheCtx& ctx,
 
   if ((RegisterDialog::parseContacts(req.contact, ctx.contacts) < 0) ||
       (ctx.contacts.size() == 0)) {
-    AmBasicSipDialog::reply_error(req, 400, "Bad Request", 
+    AmBasicSipDialog::reply_error(req, 400, "Bad Request",
 				  "Warning: Malformed contact\r\n", logger);
     return -1;
   }
@@ -854,7 +854,7 @@ int _RegisterCache::parseExpires(RegisterCacheCtx& ctx,
   // move Expires as separate header to contact parameter
   string expires_str = getHeader(req.hdrs, "Expires");
   if (!expires_str.empty() && str2i(expires_str, ctx.requested_expires)) {
-    AmBasicSipDialog::reply_error(req, 400, "Bad Request", 
+    AmBasicSipDialog::reply_error(req, 400, "Bad Request",
 				  "Warning: Malformed expires\r\n", logger);
     return true; // error reply sent
   }
@@ -894,7 +894,7 @@ bool _RegisterCache::throttleRegister(RegisterCacheCtx& ctx,
   for(vector<AmUriParser>::iterator contact_it = ctx.contacts.begin();
       contact_it != ctx.contacts.end(); contact_it++) {
 
-    map<string, string>::iterator expires_it = 
+    map<string, string>::iterator expires_it =
       contact_it->params.find("expires");
 
     long int contact_expires=0;
@@ -941,12 +941,12 @@ bool _RegisterCache::throttleRegister(RegisterCacheCtx& ctx,
     gettimeofday(&now,NULL);
     contact_expires += now.tv_sec;
 
-    if(contact_expires + 4 /* 4 seconds buffer */ 
+    if(contact_expires + 4 /* 4 seconds buffer */
        >= reg_binding.reg_expire) {
       DBG("%li + 4 >= %li",contact_expires,reg_binding.reg_expire);
       return false; // fwd
     }
-    
+
     AliasEntry alias_entry;
     if(!findAliasEntry(reg_binding.alias, alias_entry) ||
        (alias_entry.source_ip != req.remote_ip) ||
@@ -961,7 +961,7 @@ bool _RegisterCache::throttleRegister(RegisterCacheCtx& ctx,
 
   // reply 200 w/ contacts
   vector<AmUriParser>::iterator it = ctx.contacts.begin();
-  vector<pair<string, long int> >::iterator alias_update_it = 
+  vector<pair<string, long int> >::iterator alias_update_it =
     alias_updates.begin();
 
   string contact_hdr = SIP_HDR_COLSP(SIP_HDR_CONTACT) + it->print();
@@ -1020,11 +1020,11 @@ bool _RegisterCache::saveSingleContact(RegisterCacheCtx& ctx,
 
 	unsigned int exp = alias_entry.ua_expire - now.tv_sec;
 	contact_hdr = SIP_HDR_COLSP(SIP_HDR_CONTACT)
-	  + alias_entry.contact_uri + ";expires=" 
+	  + alias_entry.contact_uri + ";expires="
 	  + int2str(exp) + CRLF;
       }
     }
-    
+
     AmBasicSipDialog::reply_error(req, 200, "OK", contact_hdr);
     return true;
   }
@@ -1056,7 +1056,7 @@ bool _RegisterCache::saveSingleContact(RegisterCacheCtx& ctx,
     return true; // error reply sent
   }
   else {
-    
+
     contact = &ctx.contacts[0];
     if(contact->params.find("expires") != contact->params.end()) {
       DBG("contact->params[\"expires\"] = '%s'",
@@ -1079,15 +1079,15 @@ bool _RegisterCache::saveSingleContact(RegisterCacheCtx& ctx,
     AmBasicSipDialog::reply_error(req, 200, "OK", "", logger);
     return true;
   }
-  assert(contact);  
+  assert(contact);
 
   // throttle contact_expires
   unsigned int reg_expires = contact_expires;
   if(reg_expires && (reg_expires < ctx.min_reg_expires))
     reg_expires = ctx.min_reg_expires;
-  
+
   unsigned int ua_expires = contact_expires;
-  if(ua_expires && ctx.max_ua_expires && 
+  if(ua_expires && ctx.max_ua_expires &&
      (ua_expires > ctx.max_ua_expires))
     ua_expires = ctx.max_ua_expires;
 

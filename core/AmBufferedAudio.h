@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -48,12 +48,12 @@ class AmBufferedAudio : public AmAudio {
  protected:
   AmBufferedAudio(size_t output_buffer_size, size_t low_buffer_thresh, size_t full_buffer_thresh);
   ~AmBufferedAudio();
-  
+
   void clearBufferEOF();
   void setBufferSize(size_t _output_buffer_size, size_t _low_buffer_thresh, size_t _full_buffer_thresh);
 
  public:
-  virtual int get(unsigned long long system_ts, unsigned char* buffer, 
+  virtual int get(unsigned long long system_ts, unsigned char* buffer,
 		  int output_sample_rate, unsigned int nb_samples);
 
 };

@@ -44,7 +44,7 @@ namespace XmlRpc {
   static const char STRUCT_ETAG[]   = "</struct>";
 
 
-      
+
   // Format strings
   std::string XmlRpcValue::_doubleFormat("%f");
 
@@ -65,7 +65,7 @@ namespace XmlRpc {
     _value.asBinary = 0;
   }
 
-  
+
   // Type checking
   void XmlRpcValue::assertTypeOrInvalid(Type t)
   {
@@ -166,7 +166,7 @@ namespace XmlRpc {
         {
           if (_value.asStruct->size() != other._value.asStruct->size())
             return false;
-          
+
           ValueStruct::const_iterator it1=_value.asStruct->begin();
           ValueStruct::const_iterator it2=other._value.asStruct->begin();
           while (it1 != _value.asStruct->end()) {
@@ -210,7 +210,7 @@ namespace XmlRpc {
     return _type == TypeStruct && _value.asStruct->find(name) != _value.asStruct->end();
   }
 
-  // Set the value from xml. The chars at *offset into valueXml 
+  // Set the value from xml. The chars at *offset into valueXml
   // should be the start of a <value> tag. Destroys any existing value.
   bool XmlRpcValue::fromXml(std::string const& valueXml, int* offset)
   {
@@ -402,7 +402,7 @@ namespace XmlRpc {
   {
     struct tm* t = _value.asTime;
     char buf[20];
-    snprintf(buf, sizeof(buf)-1, "%04d%02d%02dT%02d:%02d:%02d", 
+    snprintf(buf, sizeof(buf)-1, "%04d%02d%02dT%02d:%02d:%02d",
       1900+t->tm_year,t->tm_mon,t->tm_mday,t->tm_hour,t->tm_min,t->tm_sec);
     buf[sizeof(buf)-1] = 0;
 
@@ -554,7 +554,7 @@ namespace XmlRpc {
         {
           struct tm* t = _value.asTime;
           char buf[20];
-          snprintf(buf, sizeof(buf)-1, "%4d%02d%02dT%02d:%02d:%02d", 
+          snprintf(buf, sizeof(buf)-1, "%4d%02d%02dT%02d:%02d:%02d",
             t->tm_year,t->tm_mon,t->tm_mday,t->tm_hour,t->tm_min,t->tm_sec);
           buf[sizeof(buf)-1] = 0;
           os << buf;
@@ -593,9 +593,9 @@ namespace XmlRpc {
           os << ']';
           break;
         }
-      
+
     }
-    
+
     return os;
   }
 
@@ -603,10 +603,10 @@ namespace XmlRpc {
 
 
 // ostream
-std::ostream& operator<<(std::ostream& os, XmlRpc::XmlRpcValue& v) 
-{ 
+std::ostream& operator<<(std::ostream& os, XmlRpc::XmlRpcValue& v)
+{
   // If you want to output in xml format:
-  //return os << v.toXml(); 
+  //return os << v.toXml();
   return v.write(os);
 }
 

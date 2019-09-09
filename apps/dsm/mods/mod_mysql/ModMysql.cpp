@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2009 TelTech Systems Inc.
- * 
+ *
  * This file is part of SEMS, a free SIP media server.
  *
  * SEMS is free software; you can redistribute it and/or modify
@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -143,28 +143,28 @@ sql::ResultSet* getMyDSMQueryResult(DSMSession* sc_sess) {
   return res;
 }
 
-string replaceQueryParams(const string& q, DSMSession* sc_sess, 
+string replaceQueryParams(const string& q, DSMSession* sc_sess,
 			  map<string,string>* event_params) {
   string res = q;
   size_t repl_pos = 0;
   while (repl_pos<res.length()) {
     size_t rstart = res.find_first_of("$#", repl_pos);
     repl_pos = rstart+1;
-    if (rstart == string::npos) 
+    if (rstart == string::npos)
       break;
     if (rstart && res[rstart-1] == '\\') // escaped
       continue;
-    
+
     size_t rend = res.find_first_of(" ,()$#\t;'\"", rstart+1);
     if (rend==string::npos)
       rend = res.length();
     switch(res[rstart]) {
-    case '$': 
-      res.replace(rstart, rend-rstart, 
+    case '$':
+      res.replace(rstart, rend-rstart,
 		  sc_sess->var[res.substr(rstart+1, rend-rstart-1)]); break;
     case '#':
       if (NULL!=event_params) {
-	res.replace(rstart, rend-rstart, 
+	res.replace(rstart, rend-rstart,
 		    (*event_params)[res.substr(rstart+1, rend-rstart-1)]); break;
       }
     default: break;
@@ -195,7 +195,7 @@ EXEC_ACTION_START(SCMyConnectAction) {
     return false;
   }
   // split url
-  db_url = db_url.substr(8); 
+  db_url = db_url.substr(8);
   string db_user = str_between(db_url, '\0', ':');
   string db_pwd  = str_between(db_url,  ':', '@');
   string db_host = str_between(db_url,  '@', '/');
@@ -238,7 +238,7 @@ EXEC_ACTION_START(SCMyConnectAction) {
     sc_sess->avar[MY_AKEY_CONNECTION] = c_arg_con;
     // for garbage collection
     sc_sess->transferOwnership(conn);
-    sc_sess->CLR_ERRNO;    
+    sc_sess->CLR_ERRNO;
   } catch (const sql::SQLException& e) {
     ERROR("DB connection failed with error %d: '%s'\n", e.getErrorCode(),
 	  e.what());
@@ -252,7 +252,7 @@ EXEC_ACTION_START(SCMyConnectAction) {
 
 EXEC_ACTION_START(SCMyDisconnectAction) {
   sql::Connection* conn = getMyDSMSessionConnection(sc_sess);
-  if (NULL == conn) 
+  if (NULL == conn)
     return false;
 
   try {
@@ -269,7 +269,7 @@ EXEC_ACTION_START(SCMyDisconnectAction) {
 } EXEC_ACTION_END;
 
 EXEC_ACTION_START(SCMyResolveQueryParams) {
-  sc_sess->var["db.qstr"] = 
+  sc_sess->var["db.qstr"] =
     replaceQueryParams(arg, sc_sess, event_params);
 } EXEC_ACTION_END;
 
@@ -294,7 +294,7 @@ unsigned long getInsertId(sql::Connection* conn) {
 
 EXEC_ACTION_START(SCMyExecuteAction) {
   sql::Connection* conn = getMyDSMSessionConnection(sc_sess);
-  if (NULL == conn) 
+  if (NULL == conn)
     return false;
   string qstr = replaceQueryParams(arg, sc_sess, event_params);
 
@@ -315,7 +315,7 @@ EXEC_ACTION_START(SCMyExecuteAction) {
     delete res;
   } catch (const sql::SQLException& e) {
     ERROR("DB query '%s' failed: '%s'\n", qstr.c_str(), e.what());
-    sc_sess->SET_ERRNO(DSM_ERRNO_MY_QUERY);    
+    sc_sess->SET_ERRNO(DSM_ERRNO_MY_QUERY);
     sc_sess->SET_STRERROR(e.what());
     sc_sess->var["db.ereason"] = e.what();
   }
@@ -347,7 +347,7 @@ EXEC_ACTION_START(SCMyQueryAction) {
     delete stmt;
   } catch (const sql::SQLException& e) {
     ERROR("DB query '%s' failed: '%s'\n", qstr.c_str(), e.what());
-    sc_sess->SET_ERRNO(DSM_ERRNO_MY_QUERY);    
+    sc_sess->SET_ERRNO(DSM_ERRNO_MY_QUERY);
     sc_sess->SET_STRERROR(e.what());
     sc_sess->var["db.ereason"] = e.what();
   }
@@ -356,7 +356,7 @@ EXEC_ACTION_START(SCMyQueryAction) {
 CONST_ACTION_2P(SCMyQueryGetResultAction, ',', true);
 EXEC_ACTION_START(SCMyQueryGetResultAction) {
   sql::Connection* conn = getMyDSMSessionConnection(sc_sess);
-  if (NULL == conn) 
+  if (NULL == conn)
     return false;
   string qstr = replaceQueryParams(par1, sc_sess, event_params);
 
@@ -391,7 +391,7 @@ EXEC_ACTION_START(SCMyQueryGetResultAction) {
 	  (res->getString(i)).asStdString();
       }
 
-      sc_sess->CLR_ERRNO;    
+      sc_sess->CLR_ERRNO;
       sc_sess->var["db.rows"] = int2str((int)num_rows);
       delete res;
     } else {
@@ -400,7 +400,7 @@ EXEC_ACTION_START(SCMyQueryGetResultAction) {
     delete stmt;
   } catch (const sql::SQLException& e) {
     ERROR("DB query '%s' failed: '%s'\n", qstr.c_str(), e.what());
-    sc_sess->SET_ERRNO(DSM_ERRNO_MY_QUERY);    
+    sc_sess->SET_ERRNO(DSM_ERRNO_MY_QUERY);
     sc_sess->SET_STRERROR(e.what());
     sc_sess->var["db.ereason"] = e.what();
   }
@@ -465,7 +465,7 @@ EXEC_ACTION_START(SCMyGetClientVersion) {
   if (NULL == conn)
     return false;
 
-  sc_sess->var[resolveVars(arg, sess, sc_sess, event_params)] = 
+  sc_sess->var[resolveVars(arg, sess, sc_sess, event_params)] =
     (conn->getClientInfo()).asStdString();
   sc_sess->CLR_ERRNO;
 } EXEC_ACTION_END;
@@ -484,7 +484,7 @@ MATCH_CONDITION_START(MyHasResultCondition) {
 
 MATCH_CONDITION_START(MyConnectedCondition) {
   sql::Connection* conn = getMyDSMSessionConnection(sc_sess);
-  if (NULL == conn) 
+  if (NULL == conn)
     return false;
 
   return conn->isValid() && !conn->isClosed();
@@ -535,7 +535,7 @@ bool playDBAudio(AmSession* sess, DSMSession* sc_sess, DSMCondition::EventType e
       fwrite(s.data(), 1, s.length(), t_file);
       rewind(t_file);
       delete res;
-      
+
       DSMDisposableAudioFile* a_file = new DSMDisposableAudioFile();
       if (a_file->fpopen(par2, AmAudioFile::Read, t_file)) {
 	sc_sess->SET_ERRNO(DSM_ERRNO_FILE);
@@ -548,15 +548,15 @@ bool playDBAudio(AmSession* sess, DSMSession* sc_sess, DSMCondition::EventType e
       sc_sess->addToPlaylist(new AmPlaylistItem(a_file, NULL), front);
       sc_sess->transferOwnership(a_file);
 
-      sc_sess->CLR_ERRNO;    
+      sc_sess->CLR_ERRNO;
     } else {
       sc_sess->SET_ERRNO(DSM_ERRNO_MY_QUERY);
-      sc_sess->SET_STRERROR("query does not have result"); 
+      sc_sess->SET_STRERROR("query does not have result");
     }
     delete stmt;
   } catch (const sql::SQLException& e) {
     ERROR("DB query '%s' failed: '%s'\n", qstr.c_str(), e.what());
-    sc_sess->SET_ERRNO(DSM_ERRNO_MY_QUERY);    
+    sc_sess->SET_ERRNO(DSM_ERRNO_MY_QUERY);
     sc_sess->SET_STRERROR(e.what());
     sc_sess->var["db.ereason"] = e.what();
   }
@@ -584,7 +584,7 @@ EXEC_ACTION_START(SCMyPlayDBAudioLoopedAction) {
 CONST_ACTION_2P(SCMyGetFileFromDBAction, ',', true);
 EXEC_ACTION_START(SCMyGetFileFromDBAction) {
   sql::Connection* conn = getMyDSMSessionConnection(sc_sess);
-  if (NULL == conn) 
+  if (NULL == conn)
     return false;
   string qstr = replaceQueryParams(par1, sc_sess, event_params);
   string fname = resolveVars(par2, sess, sc_sess, event_params);
@@ -614,10 +614,10 @@ EXEC_ACTION_START(SCMyGetFileFromDBAction) {
       fclose(t_file);
       delete res;
 
-      sc_sess->CLR_ERRNO;    
+      sc_sess->CLR_ERRNO;
     } else {
       sc_sess->SET_ERRNO(DSM_ERRNO_MY_QUERY);
-      sc_sess->SET_STRERROR("query does not have result"); 
+      sc_sess->SET_STRERROR("query does not have result");
     }
     delete stmt;
   } catch (const sql::SQLException& e) {
@@ -631,7 +631,7 @@ EXEC_ACTION_START(SCMyGetFileFromDBAction) {
 CONST_ACTION_2P(SCMyPutFileToDBAction, ',', true);
 EXEC_ACTION_START(SCMyPutFileToDBAction) {
   sql::Connection* conn = getMyDSMSessionConnection(sc_sess);
-  if (NULL == conn) 
+  if (NULL == conn)
     return false;
   string qstr = replaceQueryParams(par1, sc_sess, event_params);
 
@@ -639,13 +639,13 @@ EXEC_ACTION_START(SCMyPutFileToDBAction) {
 
   size_t fpos = qstr.find("__FILE__");
   if (fpos == string::npos) {
-    ERROR("missing __FILE__ in query string '%s'\n", 
+    ERROR("missing __FILE__ in query string '%s'\n",
 	  par1.c_str());
     sc_sess->SET_ERRNO(DSM_ERRNO_UNKNOWN_ARG);
     sc_sess->SET_STRERROR("missing __FILE__ in query string '"+par1+"'\n");
     return false;
   }
-  
+
   try {
     std::ifstream data_file(fname.c_str(), std::ios::in | std::ios::binary);
     if (!data_file) {
@@ -656,9 +656,9 @@ EXEC_ACTION_START(SCMyPutFileToDBAction) {
     }
     // that one is clever...
     // (see http://www.gamedev.net/community/forums/topic.asp?topic_id=353162 )
-    string file_data((std::istreambuf_iterator<char>(data_file)), 
+    string file_data((std::istreambuf_iterator<char>(data_file)),
 		     std::istreambuf_iterator<char>());
-       
+
     if (file_data.empty()) {
       DBG("could not read file '%s'\n", fname.c_str());
       sc_sess->SET_ERRNO(DSM_ERRNO_FILE);
@@ -689,7 +689,7 @@ EXEC_ACTION_START(SCMyPutFileToDBAction) {
     delete stmt;
   } catch (const sql::SQLException& e) {
     ERROR("DB query '%s' failed: '%s'\n", par1.c_str(), e.what());
-    sc_sess->SET_ERRNO(DSM_ERRNO_MY_QUERY);    
+    sc_sess->SET_ERRNO(DSM_ERRNO_MY_QUERY);
     sc_sess->SET_STRERROR(e.what());
     sc_sess->var["db.ereason"] = e.what();
   }

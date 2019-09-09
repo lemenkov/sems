@@ -49,4 +49,4 @@ class CCCtl : public AmDynInvoke
   int onLoad();
 };
 
-#endif 
+#endif

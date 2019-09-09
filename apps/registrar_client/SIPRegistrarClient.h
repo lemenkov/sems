@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -51,14 +51,14 @@ class SIPRegistrarClient  : public AmThread,
   AmMutex                       reg_mut;
   std::map<std::string, AmSIPRegistration*> registrations;
 
-  void add_reg(const string& reg_id, 
+  void add_reg(const string& reg_id,
 	       AmSIPRegistration* new_reg);
   AmSIPRegistration* remove_reg(const string& reg_id);
   AmSIPRegistration* remove_reg_unsafe(const string& reg_id);
   AmSIPRegistration* get_reg(const string& reg_id);
   AmSIPRegistration* get_reg_unsafe(const string& reg_id);
 
-  void onSipReplyEvent(AmSipReplyEvent* ev);	
+  void onSipReplyEvent(AmSipReplyEvent* ev);
   void onNewRegistration(SIPNewRegistrationEvent* new_reg);
   void onRemoveRegistration(SIPRemoveRegistrationEvent* new_reg);
   void listRegistrations(AmArg& res);
@@ -76,19 +76,19 @@ class SIPRegistrarClient  : public AmThread,
   AmDynInvoke* getInstance() { return instance(); }
   // DI API
   static SIPRegistrarClient* instance();
-  void invoke(const string& method, 
+  void invoke(const string& method,
 	      const AmArg& args, AmArg& ret);
-	
+
   bool onSipReply(const AmSipReply& rep, AmSipDialog::Status old_dlg_status);
   int onLoad();
-	
+
   void run();
   void on_stop();
   void process(AmEvent* ev);
 
 
   // API
-  string createRegistration(const string& domain, 
+  string createRegistration(const string& domain,
 			    const string& user,
 			    const string& name,
 			    const string& auth_user,
@@ -101,7 +101,7 @@ class SIPRegistrarClient  : public AmThread,
 
   bool hasRegistration(const string& handle);
 
-  bool getRegistrationState(const string& handle, unsigned int& state, 
+  bool getRegistrationState(const string& handle, unsigned int& state,
 			    unsigned int& expires_left);
 
   enum {
@@ -112,9 +112,9 @@ class SIPRegistrarClient  : public AmThread,
 };
 
 struct SIPNewRegistrationEvent : public AmEvent {
- 
+
   SIPNewRegistrationEvent(const SIPRegistrationInfo& info,
-			  const string& handle, 
+			  const string& handle,
 			  const string& sess_link)
     : AmEvent(SIPRegistrarClient::AddRegistration),
       handle(handle), sess_link(sess_link), info(info) { }
@@ -128,7 +128,7 @@ struct SIPNewRegistrationEvent : public AmEvent {
 class SIPRemoveRegistrationEvent : public AmEvent {
  public:
   string handle;
-  SIPRemoveRegistrationEvent(const string& handle) 
+  SIPRemoveRegistrationEvent(const string& handle)
     : AmEvent(SIPRegistrarClient::RemoveRegistration),
     handle(handle) { }
 };

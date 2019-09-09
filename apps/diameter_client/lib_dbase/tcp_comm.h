@@ -10,7 +10,7 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version
- * 
+ *
  * For a license to use the SEMS software under conditions
  * other than those described here, or to purchase support for this
  * software, please contact iptel.org by e-mail at the following addresses:
@@ -21,14 +21,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * History:
  * -------
- *  
- *  
+ *
+ *
  */
 
 #ifndef TCP_COMM_H
@@ -48,7 +48,7 @@
 
 #define MAX_AAA_MSG_SIZE  65536
 
-#define CONN_SUCCESS	 1 
+#define CONN_SUCCESS	 1
 #define CONN_ERROR	-1
 #define CONN_CLOSED	-2
 
@@ -72,10 +72,10 @@ extern "C" {
 
   typedef  struct dia_tcp_conn_t dia_tcp_conn;
 
-  /* initializes the lib/module */ 
+  /* initializes the lib/module */
   int tcp_init_tcp();
 
-  /* initializes the TCP connection */ 
+  /* initializes the TCP connection */
   dia_tcp_conn* tcp_create_connection(const char* host, int port,
 				      const char* CA_file, const char* client_cert_file);
 
@@ -84,7 +84,7 @@ extern "C" {
 
   /* receive reply
    */
-  int tcp_recv_msg(dia_tcp_conn* conn_st, rd_buf_t* rb,  
+  int tcp_recv_msg(dia_tcp_conn* conn_st, rd_buf_t* rb,
 		     time_t wait_sec, suseconds_t wait_usec);
 
   void tcp_close_connection(dia_tcp_conn* conn_st);

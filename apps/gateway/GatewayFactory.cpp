@@ -68,7 +68,7 @@ AmSession* GatewayFactory::onInvite(const AmSipRequest& req)
 // this is session creator for incoming calls
 //call actually starts in isdn module as CC_SETUP, and there GWSession::CallFromOutSide is executed
 // which calls AmUac::dialout which in turn calls this function
-//session pointer is returned back so we can finish filling object with data there 
+//session pointer is returned back so we can finish filling object with data there
 AmSession* GatewayFactory::onInvite(const AmSipRequest& req, AmArg& session_params)
 {
     INFO("GatewayFactory::onInvite(with args)\n");

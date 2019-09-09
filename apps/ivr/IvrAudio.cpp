@@ -18,7 +18,7 @@ static PyObject* IvrAudioFile_new(PyTypeObject *type, PyObject *args, PyObject *
   IvrAudioFile *self;
 
   self = (IvrAudioFile *)type->tp_alloc(type, 0);
-	
+
   if (self != NULL) {
 
     self->af = new AmAudioFile();
@@ -175,7 +175,7 @@ static PyObject* IvrAudioFile_tts(PyObject* cls, PyObject* args)
   char* text;
   if(!PyArg_ParseTuple(args,"s",&text))
     return NULL;
-    
+
   PyObject* constr_args = Py_BuildValue("(O)",Py_None);
   PyObject* tts_file = PyObject_CallObject(cls,constr_args);
   Py_DECREF(constr_args);
@@ -205,7 +205,7 @@ static PyObject* IvrAudioFile_tts(PyObject* cls, PyObject* args)
   return tts_file;
 }
 #endif
-    
+
 static PyObject* IvrAudioFile_close(IvrAudioFile* self, PyObject*)
 {
   Py_BEGIN_ALLOW_THREADS;
@@ -227,7 +227,7 @@ static PyObject* IvrAudioFile_setRecordTime(IvrAudioFile* self, PyObject* args)
     return NULL;
 
   self->af->setRecordTime(rec_time);
-    
+
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -237,7 +237,7 @@ static PyObject* IvrAudioFile_exportRaw(IvrAudioFile* self, PyObject*)
   Py_BEGIN_ALLOW_THREADS;
   if(self->af->getMode() == AmAudioFile::Write)
     self->af->on_close();
-    
+
   self->af->rewind();
   Py_END_ALLOW_THREADS;
   return PyFile_FromFile(self->af->getfp(),(char*)"",(char*)"rwb",NULL);
@@ -289,7 +289,7 @@ static int IvrAudioFile_setloop(IvrAudioFile* self, PyObject* value, void*)
     PyErr_SetString(PyExc_TypeError, "Cannot delete the first attribute");
     return -1;
   }
-  
+
   if(value == Py_True)
     self->af->loop.set(true);
 
@@ -297,7 +297,7 @@ static int IvrAudioFile_setloop(IvrAudioFile* self, PyObject* value, void*)
     self->af->loop.set(false);
 
   else {
-    PyErr_SetString(PyExc_TypeError, 
+    PyErr_SetString(PyExc_TypeError,
 		    "The first attribute value must be a boolean");
     return -1;
   }
@@ -306,15 +306,15 @@ static int IvrAudioFile_setloop(IvrAudioFile* self, PyObject* value, void*)
 }
 
 static PyGetSetDef IvrAudioFile_getseters[] = {
-  {(char*)"loop", 
+  {(char*)"loop",
    (getter)IvrAudioFile_getloop, (setter)IvrAudioFile_setloop,
    (char*)"repeat mode",
    NULL},
   {NULL}  /* Sentinel */
 };
-    
+
 PyTypeObject IvrAudioFileType = {
-	
+
   PyObject_HEAD_INIT(NULL)
   0,                         /*ob_size*/
   "ivr.IvrAudioFile",        /*tp_name*/

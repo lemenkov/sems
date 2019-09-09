@@ -8,7 +8,7 @@
 /*
 As the sampling theorem shows, a bandlimited signal can be fully reconstructed
 using a reconstruction low-pass.
-This reconstruction at real point t across the time domain can be viewed as a 
+This reconstruction at real point t across the time domain can be viewed as a
 superposition of an infinite number of sinc functions scaled by the sample
 values and shifted in time to the sample time.
 This resampling code takes 14 sample values (seven before the actual point,

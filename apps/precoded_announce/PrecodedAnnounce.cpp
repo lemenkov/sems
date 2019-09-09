@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -71,18 +71,18 @@ PrecodedDialog::~PrecodedDialog()
 
 void PrecodedDialog::onSessionStart()
 {
-  AmPrecodedFileInstance* file = 
+  AmPrecodedFileInstance* file =
     file_def->getFileInstance(RTPStream()->getPayloadType());
   if (!file) {
     ERROR("no payload\n");
   }
-  if (!file || file->open()) { 
+  if (!file || file->open()) {
     ERROR("PrecodedDialog::onSessionStart: Cannot open file\n");
     dlg->bye();
     setStopped();
     return;
   }
- 
+
   setOutput(file);
   setReceiving(false);
 

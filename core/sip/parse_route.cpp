@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "parse_route.h"
@@ -47,23 +47,23 @@ bool is_loose_route(const sip_uri* fr_uri)
     bool is_lr = false;
 
     if(!fr_uri->params.empty()){
-	
+
 	list<sip_avp*>::const_iterator it = fr_uri->params.begin();
 	for(;it != fr_uri->params.end(); it++){
-	    
-	    if( ((*it)->name.len == 2) && 
+
+	    if( ((*it)->name.len == 2) &&
 		(!memcmp((*it)->name.s,"lr",2)) ) {
-		
+
 		is_lr = true;
 		break;
 	    }
-	}	
+	}
     }
 
     return is_lr;
 }
 
-static int skip_2_next_route(const char*& c, 
+static int skip_2_next_route(const char*& c,
 			     const char*& eor,
 			     const char*  end)
 {
@@ -81,7 +81,7 @@ static int skip_2_next_route(const char*& c,
     int st = RR_BEGIN;
     eor = NULL;
     for(;c<end;c++){
-		
+
 	switch(st){
 	case RR_BEGIN:
 	    switch(*c){
@@ -144,7 +144,7 @@ static int skip_2_next_route(const char*& c,
 
  nxt_route:
  error:
-	    
+
     switch(st){
     case RR_QUOTED:
 	DBG("Malformed route header\n");
@@ -205,12 +205,12 @@ int parse_first_route_uri(sip_header* fr)
 	    fr->value.len,fr->value.s);
         return -1;
     }
-    
+
     sip_route* route = (sip_route*)fr->p;
     assert(route);
 
     if(route->elmts.empty()) {
-      
+
         DBG("No first route\n");
 	return -1;
     }
@@ -224,13 +224,13 @@ int parse_first_route_uri(sip_header* fr)
 
     unique_ptr<sip_nameaddr> na(new sip_nameaddr());
     if(parse_nameaddr(na.get(), &c, route_str.len)<0) {
-      
+
       DBG("Parsing name-addr failed\n");
       return -1;
     }
-    
+
     if(parse_uri(&na->uri,na->addr.s,na->addr.len) < 0) {
-	
+
 	DBG("Parsing route uri failed\n");
 	return -1;
     }
@@ -248,7 +248,7 @@ sip_uri* get_first_route_uri(sip_header* fr)
   err = parse_first_route_uri(fr);
   if(err < 0)
     return NULL;
-    
+
   sip_route* route = (sip_route*)(fr->p);
   if(!route || route->elmts.empty()){
     DBG("No first route\n");

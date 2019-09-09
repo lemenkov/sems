@@ -11,7 +11,7 @@ FCTMF_SUITE_BGN(test_sdp) {
 
     FCT_TEST_BGN(normal_sdp_ok) {
       AmSdp s;
-      string sdp = 
+      string sdp =
 	"v=0" CRLF
 	"o=- 3615077380 3615077398 IN IP4 178.66.14.5" CRLF
 	"s=-" CRLF
@@ -50,7 +50,7 @@ FCTMF_SUITE_BGN(test_sdp) {
 
     FCT_TEST_BGN(sdp_LF_no_CRLF) {
       AmSdp s;
-      string sdp = 
+      string sdp =
 	"v=0" LF
 	"o=- 3615077380 3615077398 IN IP4 178.66.14.5" LF
 	"s=-" LF

@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -49,9 +49,9 @@ public:
 
     ht_bucket(unsigned long id) : id(id) {}
     virtual ~ht_bucket() {}
-    
+
     /**
-     * Caution: The bucket MUST be locked before you can 
+     * Caution: The bucket MUST be locked before you can
      * do anything with it.
      */
 
@@ -65,7 +65,7 @@ public:
     bool exist(Value* t) {
 	return find(t) != elmts.end();
     }
-    
+
     /**
      * Remove the value from this bucket,
      * if it was still present.
@@ -92,11 +92,11 @@ public:
 
 	if(elmts.empty())
 	    return;
-	
+
 	DBG("*** Bucket ID: %i ***\n",(int)get_id());
-	
+
 	for(typename value_list::const_iterator it = elmts.begin(); it != elmts.end(); ++it) {
-	    
+
 	    (*it)->dump();
 	}
     }
@@ -115,7 +115,7 @@ protected:
 	for(;it!=elmts.end();++it)
 	    if(*it == t)
 		break;
-	
+
 	return it;
     }
 
@@ -148,7 +148,7 @@ public:
     }
 };
 
-template<class Key, class Value, 
+template<class Key, class Value,
 	 class ElmtAlloc = ht_delete<Value>,
 	 class ElmtCompare = less<Key> >
 class ht_map_bucket: public AmMutex
@@ -159,9 +159,9 @@ public:
 
     ht_map_bucket(unsigned long id) : id(id) {}
     virtual ~ht_map_bucket() {}
-    
+
     /**
-     * Caution: The bucket MUST be locked before you can 
+     * Caution: The bucket MUST be locked before you can
      * do anything with it.
      */
 
@@ -222,10 +222,10 @@ public:
 
 	if(elmts.empty())
 	    return;
-	
+
 	DBG("*** Bucket ID: %i ***\n",(int)get_id());
-	
-	for(typename value_map::const_iterator it = elmts.begin(); 
+
+	for(typename value_map::const_iterator it = elmts.begin();
 	    it != elmts.end(); ++it) {
 	    dump_elmt(it->first,it->second);
 	}

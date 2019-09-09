@@ -99,10 +99,10 @@ int SyslogCDR::onLoad() {
     return 0;
   }
 
-  syslog_prefix = cfg.hasParameter("cdr_prefix") ? 
+  syslog_prefix = cfg.hasParameter("cdr_prefix") ?
     cfg.getParameter("cdr_prefix") : syslog_prefix;
 
-  level = cfg.hasParameter("loglevel") ? 
+  level = cfg.hasParameter("loglevel") ?
     cfg.getParameterInt("loglevel") : level;
 
   if (cfg.hasParameter("cdr_format")) {
@@ -206,7 +206,7 @@ string getTimeDiffString(int from_ts_sec, int from_ts_usec,
       msecs = "0"+msecs;
 
     res+=int2str((unsigned int)diff.tv_sec)+"."+ msecs;
-      
+
   } else {
     if (diff.tv_usec>=500000)
       diff.tv_sec++;
@@ -256,7 +256,7 @@ void SyslogCDR::end(const string& ltag, SBCCallProfile* call_profile,
 
   AmArg d;
   AmArg& values = d;
-  
+
   SBCVarMapIteratorT vars_it = call_profile->cc_vars.find(CDR_VARS);
   if (vars_it != call_profile->cc_vars.end()) {
     values = vars_it->second;

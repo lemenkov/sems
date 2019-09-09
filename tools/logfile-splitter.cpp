@@ -10,7 +10,7 @@
 #include <limits.h>
 using namespace std;
 
-std::vector<string> explode(const string& s, const string& delim, 
+std::vector<string> explode(const string& s, const string& delim,
 			    const bool keep_empty = false);
 
 #include <iostream>
@@ -20,10 +20,10 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-  
+
   if (argc<4) {
     cerr << "usage: " << argv[0] << " <infile> <callid> <threadid_position>" << endl;
- 
+
     cerr << " where <infile> is the log file to process" << endl;
     cerr << "       <callid> the Call-ID to extract" << endl;
     cerr << "       <threadid_position> the column of the thread ID in the "
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
   string callid = argv[2];
   f.open(argv[1]);
   if (!f.good()) {
-    cerr << "error opening file " << fname << endl; 
+    cerr << "error opening file " << fname << endl;
     exit(1);
   }
 
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
   string app_thread;
   string ltag;
 
-  // threadid  log     
+  // threadid  log
   map<string, string> udprecv_log;
   map<string, string> appthread_log;
 
@@ -67,17 +67,17 @@ int main(int argc, char *argv[])
     getline(f,s);
 
     vector<string> v = explode(s, " ");
-    
+
     if (v.size() < (unsigned)log_offset+1)
       continue;
 
     string t = v[log_offset + 0]; // thread
     string delim;
-    if (v.size() > (unsigned)log_offset + 4) 
+    if (v.size() > (unsigned)log_offset + 4)
       delim = v[log_offset + 4]; // vv or ^^
     string ptype;
-    if (v.size() > (unsigned)log_offset + 5) 
-      ptype = v[log_offset + 5]; // M or S 
+    if (v.size() > (unsigned)log_offset + 5)
+      ptype = v[log_offset + 5]; // M or S
 
     // cout << "thread " << t << " delim " << delim << " ptype " << ptype << endl;
 
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
 	if (!ci_cid.empty() && ci_cid != callid)
 	  continue; // other call
 
-	appthread_log[t] = s+"\n"; 	  
+	appthread_log[t] = s+"\n";
       } else {
 	cerr << "unknown ptype " << ptype << " in '" << s << "'" << endl;
 	continue;
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
 	if (it != appthread_log.end()) {
 	  appthread_log.erase(it);
 	}
- 
+
       } else {
 	cerr << "unknown ptype " << ptype << " in '" << s << "'" << endl;
 	continue;
@@ -147,14 +147,14 @@ int main(int argc, char *argv[])
 	it->second+=s+"\n";
 	continue;
       }
-    }   
+    }
   }
 }
 
 
 // Explode string by a separator to a vector
 // see http://stackoverflow.com/questions/236129/c-how-to-split-a-string
-std::vector<string> explode(const string& s, const string& delim, 
+std::vector<string> explode(const string& s, const string& delim,
 			    const bool keep_empty) {
   vector<string> result;
   if (delim.empty()) {

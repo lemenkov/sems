@@ -23,7 +23,7 @@ static bool str2bool(const char *s)
   if (strcasecmp(s, "yes") == 0) return true;
   if (strcasecmp(s, "true") == 0) return true;
   if (strcmp(s, "1") == 0) return true;
-  
+
   return false;
 }
 
@@ -65,14 +65,14 @@ void RestParams::handleParamLine(const string &line, size_t begin, size_t end)
     params.push(name, AmArg(value));
   }
 }
-    
+
 bool RestParams::readFromText(const string &data)
 {
   size_t first = 0;
   size_t last;
 
   params.assertStruct();
-  while (true) { 
+  while (true) {
     last = data.find('\n', first);
     if (last == string::npos) {
       handleParamLine(data, first, data.size());
@@ -101,7 +101,7 @@ bool RestParams::readFromXML(const string &data)
 bool RestParams::retrieve(const string &url, Format fmt)
 {
   string data;
-    
+
   DBG("REST: reading from url %s\n", url.c_str());
 
   if (!get(url, data)) return false;
@@ -147,7 +147,7 @@ bool RestParams::get(const string &url, string &data)
   curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&data);
   curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "REST-in-peace/0.1");
   CURLcode res = curl_easy_perform(curl_handle);
-  
+
   curl_easy_cleanup(curl_handle);
 
   if (res != 0) {

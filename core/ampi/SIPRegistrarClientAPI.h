@@ -29,7 +29,7 @@ struct SIPRegistrationEvent : public AmEvent {
   string handle;
   unsigned int code;
   string reason;
-	
+
  SIPRegistrationEvent(int t, const string& handle,
 		      unsigned int code=0, const string& reason="")
    : AmEvent(t), handle(handle), code(code), reason(reason) {}

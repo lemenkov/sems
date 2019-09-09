@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2002-2003 Fhg Fokus
  *
  * This file is part of SEMS, a free SIP media server.
@@ -63,10 +63,10 @@ EXPORT_SESSION_FACTORY(PySemsFactory,MOD_NAME);
 
 PyMODINIT_FUNC initpy_sems_lib();
 
-/** 
+/**
  * \brief gets python global interpreter lock (GIL)
- * 
- * structure to acquire the python global interpreter lock (GIL) 
+ *
+ * structure to acquire the python global interpreter lock (GIL)
  * while the structure is allocated.
  */
 struct PythonGIL
@@ -78,7 +78,7 @@ struct PythonGIL
 };
 
 
-// This must be the first declaration of every 
+// This must be the first declaration of every
 // function using Python C-API.
 // But this is not necessary in function which
 // will get called from Python
@@ -95,7 +95,7 @@ extern "C" {
       return NULL;
 
     _LOG(level, "%s", msg);
-	
+
     Py_INCREF(Py_None);
     return Py_None;
   }
@@ -190,14 +190,14 @@ PyObject* PySemsFactory::import_module(const char* modname)
   PyObject* py_mod_name = PyString_FromString(modname);
   PyObject* py_mod = PyImport_Import(py_mod_name);
   Py_DECREF(py_mod_name);
-    
+
   if(!py_mod){
     PyErr_Print();
     ERROR("PySemsFactory: could not find python module '%s'.\n",modname);
     ERROR("PySemsFactory: please check your installation.\n");
     return NULL;
   }
-    
+
   return py_mod;
 }
 
@@ -229,12 +229,12 @@ AmSession* PySemsFactory::newDlg(const string& name)
 
   PyObject* dlg_inst = PyObject_Call(mod_desc.dlg_class,PyTuple_New(0),NULL);
   if(!dlg_inst){
-	
+
     PyErr_Print();
     ERROR("PySemsFactory: while loading \"%s\": could not create instance\n",
 	  name.c_str());
     throw AmSession::Exception(500,"Internal error in PY_SEMS plug-in.");
-	
+
     return NULL;
   }
 
@@ -303,7 +303,7 @@ AmSession* PySemsFactory::newDlg(const string& name)
 bool PySemsFactory::loadScript(const string& path)
 {
   PYLOCK;
-    
+
   PyObject *modName,*mod,*dict, *dlg_class, *config=NULL;
   PySemsScriptDesc::DialogType dt = PySemsScriptDesc::None;
 
@@ -339,7 +339,7 @@ bool PySemsFactory::loadScript(const string& path)
   }
 
   Py_INCREF(dlg_class);
-    
+
   if(PyObject_IsSubclass(dlg_class,(PyObject *)sipClass_PySemsDialog)) {
     dt = PySemsScriptDesc::Dialog;
     DBG("Loaded a Dialog Script.\n");
@@ -369,8 +369,8 @@ bool PySemsFactory::loadScript(const string& path)
 
   for(map<string,string>::const_iterator it = cfg.begin();
       it != cfg.end(); it++){
-	
-    PyDict_SetItem(config, 
+
+    PyDict_SetItem(config,
 		   PyString_FromString(it->first.c_str()),
 		   PyString_FromString(it->second.c_str()));
   }
@@ -475,8 +475,8 @@ AmSession* PySemsFactory::onInvite(const AmSipRequest& req)
 }
 
 // PySemsDialogBase - base class for all possible PySemsDialog classes
-PySemsDialogBase::PySemsDialogBase() 
-  :  py_mod(NULL), 
+PySemsDialogBase::PySemsDialogBase()
+  :  py_mod(NULL),
      py_dlg(NULL)
 {
 }
@@ -522,6 +522,6 @@ bool PySemsDialogBase::callPyEventHandler(char* name, char* fmt, ...)
 
     Py_DECREF(o);
   }
-    
+
   return ret;
 }

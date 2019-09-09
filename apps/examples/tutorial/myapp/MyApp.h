@@ -15,7 +15,7 @@ public:
 
 class MyAppDialog : public AmSession
 {
-    
+
  public:
     MyAppDialog();
     ~MyAppDialog();

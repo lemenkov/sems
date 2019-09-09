@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -44,13 +44,13 @@ inline void copy_hdr_wr(char** c, const sip_header* hdr)
 {
     memcpy(*c,hdr->name.s,hdr->name.len);
     *c += hdr->name.len;
-    
+
     *((*c)++) = ':';
     *((*c)++) = SP;
-    
+
     memcpy(*c,hdr->value.s,hdr->value.len);
     *c += hdr->value.len;
-    
+
     *((*c)++) = CR;
     *((*c)++) = LF;
 }
@@ -65,15 +65,15 @@ inline void contact_wr(char** c,const cstring& contact)
 {
     memcpy(*c,"Contact: ",9);
     *c += 9/*'Contact: '*/;
-    
+
     memcpy(*c,contact.s,contact.len);
     *c += contact.len;
-    
+
     *((*c)++) = CR;
     *((*c)++) = LF;
 }
 
-inline int via_len(const cstring& trsp, const cstring& addr, 
+inline int via_len(const cstring& trsp, const cstring& addr,
 		   const cstring& branch, bool rport)
 {
     return 16/* 'Via: SIP/2.0/' + SP + CRLF */
@@ -84,7 +84,7 @@ inline int via_len(const cstring& trsp, const cstring& addr,
         + (rport ? 6/*;rport*/ : 0 );
 }
 
-inline void via_wr(char** c, const cstring& trsp, const cstring& addr, 
+inline void via_wr(char** c, const cstring& trsp, const cstring& addr,
 		   const cstring& branch, bool rport)
 {
     memcpy(*c,"Via: SIP/2.0/",13);
@@ -94,7 +94,7 @@ inline void via_wr(char** c, const cstring& trsp, const cstring& addr,
       if(trsp.s[i] >= 'a' && trsp.s[i] <= 'z')
 	*((*c)++) = trsp.s[i] - 'a' + 'A';
     }
-    
+
     *((*c)++) = SP;
 
     memcpy(*c,addr.s,addr.len);
@@ -105,7 +105,7 @@ inline void via_wr(char** c, const cstring& trsp, const cstring& addr,
 
     memcpy(*c,branch.s,branch.len);
     *c += branch.len;
-    
+
     if(rport){
       memcpy(*c,";rport",6);
       *c += 6;
@@ -133,7 +133,7 @@ inline void cseq_wr(char** c, const cstring& num, const cstring& method)
 
     memcpy(*c,method.s,method.len);
     *c += method.len;
-    
+
     *((*c)++) = CR;
     *((*c)++) = LF;
 }

@@ -7,7 +7,7 @@
 
 AmRingTone::AmRingTone(int length, int on, int off, int f, int f2)
   : AmAudio(),
-    on_period(on), 
+    on_period(on),
     off_period(off),
     freq(f),freq2(f2),
     length(length)

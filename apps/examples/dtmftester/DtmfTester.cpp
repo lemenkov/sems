@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -53,7 +53,7 @@ int DtmfTesterFactory::onLoad()
   configureModule(cfg);
 
   AnnouncePath = cfg.getParameter("announce_path",ANNOUNCE_PATH);
-  if( !AnnouncePath.empty() 
+  if( !AnnouncePath.empty()
       && AnnouncePath[AnnouncePath.length()-1] != '/' )
     AnnouncePath += "/";
 
@@ -71,7 +71,7 @@ int DtmfTesterFactory::onLoad()
 
 string DtmfTesterFactory::getAnnounceFile(const AmSipRequest& req) {
   string announce_path = AnnouncePath;
-  string announce_file = announce_path + req.domain 
+  string announce_file = announce_path + req.domain
     + "/" + req.user + ".wav";
 
   DBG("trying '%s'\n",announce_file.c_str());
@@ -84,7 +84,7 @@ string DtmfTesterFactory::getAnnounceFile(const AmSipRequest& req) {
     goto end;
 
   announce_file = AnnouncePath + AnnounceFile;
-    
+
  end:
   return announce_file;
 }
@@ -100,8 +100,8 @@ AmSession* DtmfTesterFactory::onInvite(const AmSipRequest& req, const string& ap
 {
   UACAuthCred* cred = AmUACAuth::unpackCredentials(session_params);
 
-  AmSession* s = new DtmfTesterDialog(getAnnounceFile(req), cred); 
-  
+  AmSession* s = new DtmfTesterDialog(getAnnounceFile(req), cred);
+
   if (NULL == cred) {
     WARN("discarding unknown session parameters.\n");
   } else {
@@ -111,7 +111,7 @@ AmSession* DtmfTesterFactory::onInvite(const AmSipRequest& req, const string& ap
   return s;
 }
 
-DtmfTesterDialog::DtmfTesterDialog(const string& filename, 
+DtmfTesterDialog::DtmfTesterDialog(const string& filename,
 				       UACAuthCred* credentials)
   : filename(filename), play_list(this), cred(credentials)
 {
@@ -120,8 +120,8 @@ DtmfTesterDialog::DtmfTesterDialog(const string& filename,
 }
 
 DtmfTesterDialog::~DtmfTesterDialog()
-{  
-  for (vector<AmAudioFile*>::iterator it=del_files.begin(); 
+{
+  for (vector<AmAudioFile*>::iterator it=del_files.begin();
        it != del_files.end(); it++)
     delete *it;
 
@@ -131,12 +131,12 @@ void DtmfTesterDialog::onSessionStart()
 {
   DBG("DtmfTesterDialog::onSessionStart\n");
   startSession();
-  
+
   AmSession::onSessionStart();
 }
 
 void DtmfTesterDialog::startSession(){
- 
+
   if(wav_file.open(filename,AmAudioFile::Read))
     throw string("DtmfTesterDialog::onSessionStart: Cannot open file\n");
 
@@ -174,9 +174,9 @@ inline UACAuthCred* DtmfTesterDialog::getCredentials() {
 
 void DtmfTesterDialog::onDtmf(int event, int duration) {
   AmAudioFile* f = new AmAudioFile();
-  if(f->open(DtmfTesterFactory::AnnouncePath+"/"+int2str(event)+".wav", 
+  if(f->open(DtmfTesterFactory::AnnouncePath+"/"+int2str(event)+".wav",
 		   AmAudioFile::Read)) {
-    ERROR("Cannot open file %s\n", 
+    ERROR("Cannot open file %s\n",
 	  (DtmfTesterFactory::AnnouncePath+"/"+int2str(event)+".wav").c_str());
   }
 

@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -53,7 +53,7 @@ struct AmZRTPProtocolEvent : public AmEvent {
 };
 
 
-struct AmZRTP { 
+struct AmZRTP {
   static int zrtp_cache_save_cntr;
   static std::string cache_path;
   static std::string entropy_path;
@@ -68,7 +68,7 @@ struct AmZRTP {
   static void on_zrtp_secure(zrtp_stream_t *stream);
   static void on_zrtp_security_event(zrtp_stream_t *stream, zrtp_security_event_t event);
   static void on_zrtp_protocol_event(zrtp_stream_t *stream, zrtp_protocol_event_t event);
-}; 
+};
 
 struct AmZRTPSessionState {
 

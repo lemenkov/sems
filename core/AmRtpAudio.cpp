@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -70,7 +70,7 @@ void AmAudioRtpFormat::initCodec()
   sdp_format_parameters_out = NULL; // reset
 
   if( codec && codec->init ) {
-    if ((h_codec = (*codec->init)(sdp_format_parameters.c_str(), 
+    if ((h_codec = (*codec->init)(sdp_format_parameters.c_str(),
 				  &sdp_format_parameters_out, &fmt_i)) == -1) {
       ERROR("could not initialize codec %i\n",codec->id);
     } else {
@@ -79,18 +79,18 @@ void AmAudioRtpFormat::initCodec()
 	log_demangled_stacktrace(L_DBG, 30);
       }
 
-      if (NULL != fmt_i) {	
+      if (NULL != fmt_i) {
 	unsigned int i=0;
 	while (i<4 && fmt_i[i].id) {
 	  switch (fmt_i[i].id) {
 	  case AMCI_FMT_FRAME_LENGTH : {
-	    //frame_length=fmt_i[i].value; // ignored 
+	    //frame_length=fmt_i[i].value; // ignored
 	  } break;
 	  case AMCI_FMT_FRAME_SIZE: {
-	    frame_size=fmt_i[i].value; 
+	    frame_size=fmt_i[i].value;
 	  } break;
 	  case AMCI_FMT_ENCODED_FRAME_SIZE: {
-	    //   frame_encoded_size=fmt_i[i].value;  // ignored 
+	    //   frame_encoded_size=fmt_i[i].value;  // ignored
 	  } break;
 	  default: {
 	    DBG("Unknown codec format descriptor: %d\n", fmt_i[i].id);
@@ -101,12 +101,12 @@ void AmAudioRtpFormat::initCodec()
 	}
       }
     }
-  } 
+  }
 }
 
 
 AmRtpAudio::AmRtpAudio(AmSession* _s, int _if)
-  : AmRtpStream(_s,_if), AmAudio(0), 
+  : AmRtpStream(_s,_if), AmAudio(0),
     m_playout_type(SIMPLE_PLAYOUT),
     playout_buffer(nullptr),
     /*last_ts_i(false),*/ use_default_plc(true),
@@ -159,10 +159,10 @@ unsigned int AmRtpAudio::bytes2samples(unsigned int bytes) const
 {
   return AmAudio::bytes2samples(bytes);
 }
-/* 
-   @param wallclock_ts [in]    the current ts in the audio buffer 
+/*
+   @param wallclock_ts [in]    the current ts in the audio buffer
 */
-int AmRtpAudio::receive(unsigned long long system_ts) 
+int AmRtpAudio::receive(unsigned long long system_ts)
 {
   int size;
   unsigned int rtp_ts;
@@ -184,7 +184,7 @@ int AmRtpAudio::receive(unsigned long long system_ts)
       switch(size){
 
       case 0: break;
-	
+
       case RTP_DTMF:
       case RTP_UNKNOWN_PL:
       case RTP_PARSE_ERROR:
@@ -204,7 +204,7 @@ int AmRtpAudio::receive(unsigned long long system_ts)
         return -1;
         break;
       }
-      
+
       break;
     }
 
@@ -251,7 +251,7 @@ int AmRtpAudio::receive(unsigned long long system_ts)
   return size;
 }
 
-int AmRtpAudio::get(unsigned long long system_ts, unsigned char* buffer, 
+int AmRtpAudio::get(unsigned long long system_ts, unsigned char* buffer,
 		    int output_sample_rate, unsigned int nb_samples)
 {
   if (!(receiving || getPassiveMode())) return 0; // like nothing received
@@ -275,13 +275,13 @@ int AmRtpAudio::get(unsigned long long system_ts, unsigned char* buffer,
     size = resampleOutput((unsigned char*)samples, size,
 			  getSampleRate(), output_sample_rate);
   }
-  
+
   memcpy(buffer,(unsigned char*)samples,size);
 
   return size;
 }
 
-int AmRtpAudio::put(unsigned long long system_ts, unsigned char* buffer, 
+int AmRtpAudio::put(unsigned long long system_ts, unsigned char* buffer,
 		    int input_sample_rate, unsigned int size)
 {
   last_send_ts_i = true;
@@ -294,7 +294,7 @@ int AmRtpAudio::put(unsigned long long system_ts, unsigned char* buffer,
   if (mute) return 0;
 
   memcpy((unsigned char*)samples,buffer,size);
-  size = resampleInput((unsigned char*)samples, size, 
+  size = resampleInput((unsigned char*)samples, size,
 		       input_sample_rate, getSampleRate());
 
   int s = encode(size);
@@ -320,8 +320,8 @@ void AmRtpAudio::getSdpOffer(unsigned int index, SdpMedia& offer)
   AmRtpStream::getSdpOffer(index,offer);
 }
 
-void AmRtpAudio::getSdpAnswer(unsigned int index, 
-			      const SdpMedia& offer, 
+void AmRtpAudio::getSdpAnswer(unsigned int index,
+			      const SdpMedia& offer,
 			      SdpMedia& answer)
 {
   answer.type = MT_AUDIO;
@@ -376,14 +376,14 @@ int AmRtpAudio::setCurrentPayload(int payload)
       ERROR("Could not set current payload: payload %i unknown to this stream\n",payload);
       return -1;
     }
-    
+
     unsigned char index = pmt_it->second.index;
     if(index >= payloads.size()){
       ERROR("Could not set current payload: payload %i maps to invalid index %i\n",
 	    payload, index);
       return -1;
     }
-    
+
     this->payload = payload;
     int res = ((AmAudioRtpFormat*)fmt.get())->setCurrentPayload(payloads[index]);
 
@@ -422,7 +422,7 @@ unsigned int AmRtpAudio::conceal_loss(unsigned int ts_diff, unsigned char *buffe
 
     DBG("default PLC (ts_diff = %i; s = %i)\n",ts_diff,s);
   }
-    
+
   return s;
 }
 

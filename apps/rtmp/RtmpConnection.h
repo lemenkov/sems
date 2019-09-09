@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -73,7 +73,7 @@ class RtmpConnection
 
   // Stream ID with publish() invoke
   unsigned int publish_stream_id;
-  
+
   // Owned by the connection
   // used also by the session
   //
@@ -125,7 +125,7 @@ private:
 			  const string& auth_user = "",
 			  const string& passwd = "");
   void removeRegistration();
-  
+
 
   void stopStream(unsigned int stream_id);
 

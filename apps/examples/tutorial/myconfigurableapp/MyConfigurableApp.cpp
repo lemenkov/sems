@@ -49,7 +49,7 @@ MyConfigurableAppDialog::~MyConfigurableAppDialog()
 
 void MyConfigurableAppDialog::onSessionStart()
 {
-    DBG("MyConfigurableAppDialog::onSessionStart - file is '%s'\n", 
+    DBG("MyConfigurableAppDialog::onSessionStart - file is '%s'\n",
 	MyConfigurableAppFactory::AnnouncementFile.c_str());
 
     AmSession::onSessionStart();

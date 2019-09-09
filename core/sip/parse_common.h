@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -198,17 +198,17 @@ inline int lower_cmp_n(const cstring& l, const cstring& r)
 
 int parse_sip_version(const char* beg, int len);
 
-/** 
- * Parse a list of Attribute-Value pairs beginning with 
- * and separated by semi-colons until stop_char or the 
+/**
+ * Parse a list of Attribute-Value pairs beginning with
+ * and separated by semi-colons until stop_char or the
  * end of the string is reached.
  */
-int parse_gen_params_sc(list<sip_avp*>* params, const char** c, 
+int parse_gen_params_sc(list<sip_avp*>* params, const char** c,
 			int len, char stop_char);
 
-/** 
- * Parse a list of Attribute-Value pairs separated 
- * by semi-colons until stop_char or the end of 
+/**
+ * Parse a list of Attribute-Value pairs separated
+ * by semi-colons until stop_char or the end of
  * the string is reached.
  */
 int parse_gen_params(list<sip_avp*>* params, const char** c, int len, char stop_char);

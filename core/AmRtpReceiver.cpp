@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -77,13 +77,13 @@ void AmRtpReceiverThread::stop_and_wait()
 {
   if(!is_stopped()) {
     stop();
-    
-    while(!is_stopped()) 
+
+    while(!is_stopped())
       usleep(10000);
   }
 }
 
-void _AmRtpReceiver::dispose() 
+void _AmRtpReceiver::dispose()
 {
   for(unsigned int i=0; i<n_receivers; i++){
     receivers[i].stop_and_wait();
@@ -112,7 +112,7 @@ void AmRtpReceiverThread::run()
   close(fake_fds[1]);
 }
 
-void AmRtpReceiverThread::_rtp_receiver_read_cb(evutil_socket_t sd, 
+void AmRtpReceiverThread::_rtp_receiver_read_cb(evutil_socket_t sd,
 						short what, void* arg)
 {
   AmRtpReceiverThread::StreamInfo* p_si =
@@ -128,7 +128,7 @@ void AmRtpReceiverThread::_rtp_receiver_read_cb(evutil_socket_t sd,
   p_si->thread->streams_mut.unlock();
 }
 
-void AmRtpReceiverThread::_rtp_receiver_buf_cb(evutil_socket_t sd, 
+void AmRtpReceiverThread::_rtp_receiver_buf_cb(evutil_socket_t sd,
 					       short what, void* arg)
 {
   AmRtpReceiverThread::RtpPacket* r_pkt =
@@ -164,7 +164,7 @@ void AmRtpReceiverThread::addStream(int sd, AmRtpStream* stream)
   streams_ports[stream->getLocalPort()] = stream;
   streams_mut.unlock();
 
-  // This must be done when 
+  // This must be done when
   // streams_mut is NOT locked
   event_add(ev_read,NULL);
 }

@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -86,7 +86,7 @@ void _wheeltimer::run()
 
   tick.tv_sec = 0;
   tick.tv_usec = TIMER_RESOLUTION;
-  
+
   gettimeofday(&now, NULL);
   timeradd(&tick,&now,&next_tick);
 
@@ -98,11 +98,11 @@ void _wheeltimer::run()
 
       struct timespec sdiff,rem;
       timersub(&next_tick, &now,&diff);
-      
+
       sdiff.tv_sec = diff.tv_sec;
       sdiff.tv_nsec = diff.tv_usec * 1000;
 
-      if(sdiff.tv_nsec > 2000000) // 2 ms 
+      if(sdiff.tv_nsec > 2000000) // 2 ms
 	nanosleep(&sdiff,&rem);
     }
     //else {
@@ -124,15 +124,15 @@ void _wheeltimer::update_wheel(int wheel)
     // do not try do update wheel 0
     if(!wheel)
 	return;
-    
+
     for(;wheel;wheel--){
 
 	int pos = (wall_clock >> (wheel*BITS_PER_WHEEL))
 	    & ((1<<BITS_PER_WHEEL)-1);
-	
+
 	timer *t = (timer*)wheels[wheel][pos].next;
 	while( t ) {
-	    
+
 	    timer* t1 = (timer*)t->next;
 	    place_timer(t,wheel-1);
 	    t = t1;
@@ -146,7 +146,7 @@ void _wheeltimer::turn_wheel()
 {
     u_int32_t mask = ((1<<BITS_PER_WHEEL)-1); // 0x00 00 00 FF
     int i=0;
-	
+
     //determine which wheel should be updated
     for(;i<WHEELS;i++){
 	if((wall_clock & mask) ^ mask)
@@ -156,10 +156,10 @@ void _wheeltimer::turn_wheel()
 
     //increment time
     wall_clock++;
-		
+
     // Update existing timer entries
     update_wheel(i);
-	
+
     // Swap the lists for timer insertion/deletion requests
     reqs_m.lock();
     reqs_process.swap(reqs_backlog);
@@ -176,7 +176,7 @@ void _wheeltimer::turn_wheel()
 	    delete_timer(rq.t);
 	}
     }
-	
+
     //check for expired timer to process
     process_current_timers();
 }
@@ -184,7 +184,7 @@ void _wheeltimer::turn_wheel()
 void _wheeltimer::process_current_timers()
 {
     timer *t = (timer *)wheels[0][wall_clock & 0xFF].next;
-    
+
     while(t){
 
 	timer* t1 = (timer*)t->next;
@@ -196,7 +196,7 @@ void _wheeltimer::process_current_timers()
 
 	t = t1;
     }
-    
+
     wheels[0][wall_clock & 0xFF].next = NULL;
 }
 
@@ -212,7 +212,7 @@ void _wheeltimer::place_timer(timer* t)
 
 	// we put the late ones at the beginning of next wheel turn
 	add_timer_to_wheel(t,0,((1<<BITS_PER_WHEEL)-1) & wall_clock);
-	
+
  	return;
     }
 

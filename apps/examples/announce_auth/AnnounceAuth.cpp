@@ -19,8 +19,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -57,7 +57,7 @@ int AnnounceAuthFactory::onLoad()
   configureModule(cfg);
 
   AnnouncePath = cfg.getParameter("announce_path",ANNOUNCE_PATH);
-  if( !AnnouncePath.empty() 
+  if( !AnnouncePath.empty()
       && AnnouncePath[AnnouncePath.length()-1] != '/' )
     AnnouncePath += "/";
 
@@ -89,7 +89,7 @@ AmSession* AnnounceAuthFactory::onInvite(const AmSipRequest& req, const string& 
 					 const map<string,string>& app_params)
 {
   string announce_path = AnnouncePath;
-  string announce_file = announce_path + req.domain 
+  string announce_file = announce_path + req.domain
     + "/" + req.user + ".wav";
 
   DBG("trying '%s'\n",announce_file.c_str());
@@ -102,7 +102,7 @@ AmSession* AnnounceAuthFactory::onInvite(const AmSipRequest& req, const string& 
     goto end;
 
   announce_file = AnnouncePath + AnnounceFile;
-    
+
  end:
   AnnounceAuthDialog* dlg =
     new AnnounceAuthDialog(announce_file,auth_realm, auth_user, auth_pwd);
@@ -143,7 +143,7 @@ void AnnounceAuthDialog::startSession()
 
   if(wav_file.open(filename,AmAudioFile::Read))
     throw string("AnnounceAuthDialog::onSessionStart: Cannot open file\n");
-    
+
   setOutput(&wav_file);
 }
 
@@ -167,7 +167,7 @@ void AnnounceAuthDialog::process(AmEvent* event)
   AmSession::process(event);
 }
 
-void DialerThread::set_dial(const string& r, const string& f, 
+void DialerThread::set_dial(const string& r, const string& f,
 			    const string& fu, const string& t) {
   r_uri = r;
   from = f;
@@ -177,14 +177,14 @@ void DialerThread::set_dial(const string& r, const string& f,
 
 void DialerThread::run() {
   sleep(15); // wait for sems to completely start up
-  while (!is_stopped()) {		
+  while (!is_stopped()) {
     DBG("dialing...");
-    AmUAC::dialout("blibla", "announce_auth", 
+    AmUAC::dialout("blibla", "announce_auth",
 		   r_uri, from, from_uri, to);
     // every 10 minutes
     sleep(100);
 
-  } 
+  }
 }
 
 void DialerThread::on_stop() {

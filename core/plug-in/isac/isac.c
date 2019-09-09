@@ -5,12 +5,12 @@
   This code is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation.
-  
+
   This code is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   Lesser General Public License for more details.
-  
+
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -47,18 +47,18 @@ BEGIN_EXPORTS("isac", AMCI_NO_MODULEINIT, AMCI_NO_MODULEDESTROY)
 BEGIN_CODECS
 #if SYSTEM_SAMPLECLOCK_RATE >= 16000
 CODEC(CODEC_iSAC_WB, Pcm16_2_iSAC, iSAC_2_Pcm16, AMCI_NO_CODEC_PLC,
-      iSAC_create, iSAC_destroy, 
+      iSAC_create, iSAC_destroy,
       iSAC_bytes2samples, iSAC_samples2bytes)
 #endif
 END_CODECS
-  
+
 BEGIN_PAYLOADS
 #if SYSTEM_SAMPLECLOCK_RATE >=16000
-PAYLOAD(-1, "isac", iSAC_SAMPLE_RATE, iSAC_SAMPLE_RATE, 1, 
+PAYLOAD(-1, "isac", iSAC_SAMPLE_RATE, iSAC_SAMPLE_RATE, 1,
 	CODEC_iSAC_WB, AMCI_PT_AUDIO_FRAME)
 #endif
 END_PAYLOADS
-  
+
 BEGIN_FILE_FORMATS
 END_FILE_FORMATS
 
@@ -69,7 +69,7 @@ static long iSAC_create(const char* format_parameters, const char** format_param
 {
   ISACStruct *iSAC_st=NULL;
   int err = WebRtcIsac_Create(&iSAC_st);
-  if (err < 0) 
+  if (err < 0)
     return 0;
 
   WebRtcIsac_SetEncSampRate(iSAC_st, kIsacWideband);

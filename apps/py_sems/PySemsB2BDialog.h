@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2002-2003 Fhg Fokus
  * Copyright (C) 2006 iptego GmbH
  *
@@ -27,7 +27,7 @@
 #include "AmPlaylist.h"
 
 /** \brief IVR wrapper of AmB2BSession */
-class PySemsB2BDialog : public AmB2BCallerSession, 
+class PySemsB2BDialog : public AmB2BCallerSession,
   public PySemsDialogBase
 {
  public:

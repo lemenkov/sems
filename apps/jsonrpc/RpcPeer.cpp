@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 TelTech Systems Inc.
- * 
+ *
  * This file is part of SEMS, a free SIP media server.
  *
  * SEMS is free software; you can redistribute it and/or modify
@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -48,23 +48,23 @@ void JsonrpcPeerConnection::notifyDisconnect() {
   DBG("notifying event receivers about broken connection\n");
   if (!notificationReceiver.empty())
     AmEventDispatcher::instance()->
-      post(notificationReceiver, 
+      post(notificationReceiver,
 	   new JsonRpcConnectionEvent(JsonRpcConnectionEvent::DISCONNECT, id));
   if (!requestReceiver.empty())
     AmEventDispatcher::instance()->
-      post(requestReceiver, 
+      post(requestReceiver,
 	   new JsonRpcConnectionEvent(JsonRpcConnectionEvent::DISCONNECT, id));
-  
+
   for (std::map<std::string, std::pair<std::string, AmArg > > ::iterator it=
 	 replyReceivers.begin(); it != replyReceivers.end(); it++) {
     AmEventDispatcher::instance()->
       post(it->second.first,
-	   new JsonRpcConnectionEvent(JsonRpcConnectionEvent::DISCONNECT, id));	
+	   new JsonRpcConnectionEvent(JsonRpcConnectionEvent::DISCONNECT, id));
   }
 }
 
-JsonrpcNetstringsConnection::JsonrpcNetstringsConnection(const std::string& id) 
-  : JsonrpcPeerConnection(id), 
+JsonrpcNetstringsConnection::JsonrpcNetstringsConnection(const std::string& id)
+  : JsonrpcPeerConnection(id),
     fd(0), msg_size(0), rcvd_size(0), in_msg(false), msg_recv(true)
 {
 }
@@ -117,9 +117,9 @@ int JsonrpcNetstringsConnection::connect(const string& host, int port,
     res_str = "error in setsockopt: "+string(strerror(errno));
     ::close(fd);
     return 300;
-  }  
+  }
 #endif
-  
+
   if (::connect(fd, (const struct sockaddr *)&sa,
               sizeof(sa)) ==-1 && errno != EINPROGRESS) {
     ::close(fd);
@@ -130,10 +130,10 @@ int JsonrpcNetstringsConnection::connect(const string& host, int port,
   fd_set wfds;
   struct timeval tv;
   int retval;
-  
+
   FD_ZERO(&wfds);
   FD_SET(fd, &wfds);
-  
+
   /* Wait up to five seconds. */
   tv.tv_sec = 5;
   tv.tv_usec = 0;
@@ -165,8 +165,8 @@ int JsonrpcNetstringsConnection::connect(const string& host, int port,
   if (optval) {
     res_str = "error in connect ("+int2str(optval)+")";
     ::close(fd);
-    return 300;    
-  } 
+    return 300;
+  }
 
   return 0;
 }
@@ -195,17 +195,17 @@ int JsonrpcNetstringsConnection::netstringsRead() {
 	return REMOVE;
       }
 
-      if ((r<0 && errno == EAGAIN) || 
+      if ((r<0 && errno == EAGAIN) ||
 	  (r<0 && errno == EWOULDBLOCK))
 	return CONTINUE;
-     
+
       if (r != 1) {
 	INFO("socket error on connection [%p/%d]: %s\n",
 	     this, fd, strerror(errno));
 	close();
 	return REMOVE;
       }
-      
+
       DBG("received '%c'\n", msgbuf[rcvd_size]);
       if (msgbuf[rcvd_size] == ':') {
 	msgbuf[rcvd_size] = '\0';
@@ -219,7 +219,7 @@ int JsonrpcNetstringsConnection::netstringsRead() {
 	rcvd_size = read(fd,msgbuf,msg_size+1);
 	// DBG("received '%.*s'\n", rcvd_size, msgbuf);
 
-	if (rcvd_size == msg_size+1) { 
+	if (rcvd_size == msg_size+1) {
 	  if (msgbuf[msg_size] == ',') {
 	    msgbuf[msg_size+1] = '\0';
 	    return DISPATCH;
@@ -236,7 +236,7 @@ int JsonrpcNetstringsConnection::netstringsRead() {
 	  return REMOVE;
 	}
 
-	if (((ssize_t)rcvd_size<0 && errno == EAGAIN) || 
+	if (((ssize_t)rcvd_size<0 && errno == EAGAIN) ||
 	    ((ssize_t)rcvd_size<0 && errno == EWOULDBLOCK))
 	  return CONTINUE; // necessary?
 
@@ -246,9 +246,9 @@ int JsonrpcNetstringsConnection::netstringsRead() {
 	  close();
 	  return REMOVE;
 	}
-	       
-	return CONTINUE; 	
-      } 
+
+	return CONTINUE;
+      }
 
       if (msgbuf[rcvd_size] < '0' || msgbuf[rcvd_size] > '9') {
 	INFO("Protocol error on connection [%p/%d]: invalid character in size\n",
@@ -256,7 +256,7 @@ int JsonrpcNetstringsConnection::netstringsRead() {
 	close();
 	return REMOVE;
       }
-    
+
       rcvd_size++;
     }
   } else {
@@ -264,7 +264,7 @@ int JsonrpcNetstringsConnection::netstringsRead() {
     if (r>0) {
       rcvd_size += r;
       DBG("msgbuf='%.*s'\n", msg_size+1,msgbuf);
-      if (rcvd_size == msg_size+1) { 
+      if (rcvd_size == msg_size+1) {
 	DBG("msg_size = %d, rcvd_size = %d, <%c> \n", msg_size, rcvd_size, msgbuf[msg_size-1]);
 	if (msgbuf[msg_size] == ',')
 	  return DISPATCH;
@@ -282,7 +282,7 @@ int JsonrpcNetstringsConnection::netstringsRead() {
       return REMOVE;
     }
 
-    if ((r<0 && errno == EAGAIN) || 
+    if ((r<0 && errno == EAGAIN) ||
 	(r<0 && errno == EWOULDBLOCK))
       return CONTINUE; // necessary?
 
@@ -309,16 +309,16 @@ int JsonrpcNetstringsConnection::netstringsBlockingWrite() {
     return REMOVE;
   }
   char* ns_begin = msgbuf-(msg_size_s.length()+1);
-  memcpy(ns_begin, 
+  memcpy(ns_begin,
 	 msg_size_s.c_str(),
 	 msg_size_s.length());
   ns_begin[msg_size_s.length()]=':';
   msgbuf[msg_size]=',';
-  
+
   rcvd_size = 0;
   size_t ns_total_len = msg_size+msg_size_s.length()+2;
   while (rcvd_size != ns_total_len) {
-    size_t written = send(fd, &ns_begin[rcvd_size], ns_total_len - rcvd_size, 
+    size_t written = send(fd, &ns_begin[rcvd_size], ns_total_len - rcvd_size,
 #ifdef MSG_NOSIGNAL
 			  MSG_NOSIGNAL
 #else
@@ -359,6 +359,6 @@ bool JsonrpcNetstringsConnection::messagePending() {
   return msg_size != 0;
 }
 
-bool JsonrpcNetstringsConnection::messageIsRecv() { 
-  return msg_recv; 
+bool JsonrpcNetstringsConnection::messageIsRecv() {
+  return msg_recv;
 }

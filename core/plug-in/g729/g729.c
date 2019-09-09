@@ -5,7 +5,7 @@
  Copyright (c) 2007, Vadim Lebedev
  Copyright (c) 2010, Stefan Sayer
  All rights reserved.
- 
+
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
      * Redistributions of source code must retain the above copyright
@@ -39,10 +39,10 @@
 #include <bcg729/decoder.h>
 #include <bcg729/encoder.h>
 
-static int pcm16_2_g729(unsigned char* out_buf, unsigned char* in_buf, unsigned int size, 
+static int pcm16_2_g729(unsigned char* out_buf, unsigned char* in_buf, unsigned int size,
 			unsigned int channels, unsigned int rate, long h_codec );
 
-static int g729_2_pcm16(unsigned char* out_buf, unsigned char* in_buf, unsigned int size, 
+static int g729_2_pcm16(unsigned char* out_buf, unsigned char* in_buf, unsigned int size,
 		       unsigned int channels, unsigned int rate, long h_codec );
 
 static long g729_create(const char* format_parameters, const char** format_parameters_out,
@@ -118,7 +118,7 @@ g729_destroy(long h_codec)
 
 
 
-static int pcm16_2_g729(unsigned char* out_buf, unsigned char* in_buf, unsigned int size, 
+static int pcm16_2_g729(unsigned char* out_buf, unsigned char* in_buf, unsigned int size,
 			unsigned int channels, unsigned int rate, long h_codec )
 {
     struct G729_codec *codec = (struct G729_codec *) h_codec;

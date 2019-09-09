@@ -73,7 +73,7 @@ bool SBCCallRegistry::lookupCall(const string& ltag, SBCCallRegistryEntry& other
 void SBCCallRegistry::removeCall(const string& ltag) {
   registry_mutex.lock();
   registry.erase(ltag);
-  registry_mutex.unlock();  
+  registry_mutex.unlock();
 
   DBG("SBCCallRegistry: removed entry for call '%s'\n", ltag.c_str());
 }

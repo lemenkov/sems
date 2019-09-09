@@ -178,7 +178,7 @@ bool SBCCallProfile::readFromConfiguration(const string& name,
 
   if (!readFilter(cfg, "header_filter", "header_list", headerfilter, false))
     return false;
-  
+
   if (!readFilter(cfg, "message_filter", "message_list", messagefilter, false))
     return false;
 
@@ -197,7 +197,7 @@ bool SBCCallProfile::readFromConfiguration(const string& name,
   anonymize_sdp = cfg.getParameter("sdp_anonymize", "no") == "yes";
 
   // SDP alines filter
-  if (!readFilter(cfg, "sdp_alines_filter", "sdp_alinesfilter_list", 
+  if (!readFilter(cfg, "sdp_alines_filter", "sdp_alinesfilter_list",
 		  sdpalinesfilter, false))
     return false;
 
@@ -247,7 +247,7 @@ bool SBCCallProfile::readFromConfiguration(const string& name,
 
   fix_replaces_inv = cfg.getParameter("fix_replaces_inv");
   fix_replaces_ref = cfg.getParameter("fix_replaces_ref");;
-  
+
   auth_enabled = cfg.getParameter("enable_auth", "no") == "yes";
   auth_credentials.user = cfg.getParameter("auth_user");
   auth_credentials.pwd = cfg.getParameter("auth_pwd");
@@ -273,7 +273,7 @@ bool SBCCallProfile::readFromConfiguration(const string& name,
       AmArg mandatory_values;
 
       // check if module is loaded and if, get mandatory config values
-      if (cc_if.cc_module.find('$') == string::npos && 
+      if (cc_if.cc_module.find('$') == string::npos &&
 	  cc_if.cc_name.find('$') == string::npos) {
 	AmDynInvokeFactory* df = AmPlugIn::instance()->getFactory4Di(cc_if.cc_module);
 	if (NULL == df) {
@@ -437,7 +437,7 @@ bool SBCCallProfile::readFromConfiguration(const string& name,
     if (!outbound_interface.empty()) {
       INFO("SBC:      outbound interface = '%s'\n", outbound_interface.c_str());
     }
-    
+
     if (!aleg_outbound_interface.empty()) {
       INFO("SBC:      A leg outbound interface = '%s'\n", aleg_outbound_interface.c_str());
     }
@@ -489,7 +489,7 @@ bool SBCCallProfile::readFromConfiguration(const string& name,
     filter_elems = sdpalinesfilter.size() ? sdpalinesfilter.back().filter_list.size() : 0;
     INFO("SBC:      SDP alines-filter is %sabled, %s, %zd items in list\n",
 	 sdpalinesfilter.size()?"en":"dis", filter_type.c_str(), filter_elems);
-    
+
     filter_type = mediafilter.size() ?
       FilterType2String(mediafilter.back().filter_type) : "disabled";
     filter_elems = mediafilter.size() ? mediafilter.back().filter_list.size() : 0;
@@ -671,7 +671,7 @@ string stringset_print(const set<string>& s) {
 }
 
 string SBCCallProfile::print() const {
-  string res = 
+  string res =
     "SBC call profile dump: ~~~~~~~~~~~~~~~~~\n";
   res += "ruri:                 " + ruri + "\n";
   res += "ruri_host:            " + ruri_host + "\n";
@@ -707,7 +707,7 @@ string SBCCallProfile::print() const {
   res += "rtprelay_enabled:     " + rtprelay_enabled + "\n";
   res += "force_symmetric_rtp:  " + force_symmetric_rtp;
   res += "msgflags_symmetric_rtp: " + string(msgflags_symmetric_rtp?"true":"false") + "\n";
-  
+
   res += codec_prefs.print();
   res += transcoder.print();
 
@@ -738,13 +738,13 @@ static bool isTranscoderNeeded(const AmSipRequest& req, vector<PayloadDesc> &cap
     DBG("SDP parsing failed!\n");
     return default_value;
   }
-  
+
   // not nice, but we need to compare codec names and thus normalized SDP is
   // required
   normalizeSDP(sdp, false, "");
 
   // go through payloads and try find one of the supported ones
-  for (vector<SdpMedia>::iterator m = sdp.media.begin(); m != sdp.media.end(); ++m) { 
+  for (vector<SdpMedia>::iterator m = sdp.media.begin(); m != sdp.media.end(); ++m) {
     for (vector<SdpPayload>::iterator p = m->payloads.begin(); p != m->payloads.end(); ++p) {
       for (vector<PayloadDesc>::iterator i = caps.begin(); i != caps.end(); ++i) {
         if (i->match(*p)) return false; // found compatible codec
@@ -761,7 +761,7 @@ void SBCCallProfile::eval_sst_config(ParamReplacerCtx& ctx,
 {
 
 #define SST_CFG_PARAM_COUNT 5  // Change if you add/remove params in below
-  
+
   static const char* _sst_cfg_params[] = {
     "session_expires",
     "minimum_timer",
@@ -772,7 +772,7 @@ void SBCCallProfile::eval_sst_config(ParamReplacerCtx& ctx,
 
   for(unsigned int i=0; i<SST_CFG_PARAM_COUNT; i++) {
     if (sst_cfg.hasParameter(_sst_cfg_params[i])) {
-      string newval = 
+      string newval =
 	ctx.replaceParameters(sst_cfg.getParameter(_sst_cfg_params[i]),
 			      _sst_cfg_params[i],req);
       if (newval.empty()) {
@@ -837,16 +837,16 @@ bool SBCCallProfile::evaluate(ParamReplacerCtx& ctx,
   REPLACE_NONEMPTY_STR(append_headers);
 
   if (auth_enabled) {
-    auth_credentials.user = ctx.replaceParameters(auth_credentials.user, 
+    auth_credentials.user = ctx.replaceParameters(auth_credentials.user,
 						  "auth_user", req);
-    auth_credentials.pwd = ctx.replaceParameters(auth_credentials.pwd, 
+    auth_credentials.pwd = ctx.replaceParameters(auth_credentials.pwd,
 						 "auth_pwd", req);
   }
-  
+
   if (auth_aleg_enabled) {
     auth_aleg_credentials.user = ctx.replaceParameters(auth_aleg_credentials.user,
 						       "auth_aleg_user", req);
-    auth_aleg_credentials.pwd = ctx.replaceParameters(auth_aleg_credentials.pwd, 
+    auth_aleg_credentials.pwd = ctx.replaceParameters(auth_aleg_credentials.pwd,
 						      "auth_aleg_pwd", req);
   }
 
@@ -922,7 +922,7 @@ static int apply_outbound_interface(const string& oi, AmBasicSipDialog& dlg)
 	    "Please check the 'interfaces' "
 	    "parameter in the main configuration file.",
 	    oi.c_str());
-      
+
       return -1;
     }
   }
@@ -936,7 +936,7 @@ int SBCCallProfile::apply_a_routing(ParamReplacerCtx& ctx,
 {
   if (!aleg_outbound_interface.empty()) {
     string aleg_oi =
-      ctx.replaceParameters(aleg_outbound_interface, 
+      ctx.replaceParameters(aleg_outbound_interface,
 			    "aleg_outbound_interface", req);
 
     if(apply_outbound_interface(aleg_oi,dlg) < 0)
@@ -945,7 +945,7 @@ int SBCCallProfile::apply_a_routing(ParamReplacerCtx& ctx,
 
   if (!aleg_next_hop.empty()) {
 
-    string aleg_nh = ctx.replaceParameters(aleg_next_hop, 
+    string aleg_nh = ctx.replaceParameters(aleg_next_hop,
 					   "aleg_next_hop", req);
 
     DBG("set next hop ip to '%s'\n", aleg_nh.c_str());
@@ -963,7 +963,7 @@ int SBCCallProfile::apply_a_routing(ParamReplacerCtx& ctx,
   }
 
   if (!aleg_outbound_proxy.empty()) {
-    string aleg_op = 
+    string aleg_op =
       ctx.replaceParameters(aleg_outbound_proxy, "aleg_outbound_proxy", req);
     dlg.outbound_proxy = aleg_op;
     dlg.force_outbound_proxy = aleg_force_outbound_proxy;
@@ -977,7 +977,7 @@ int SBCCallProfile::apply_b_routing(ParamReplacerCtx& ctx,
 				    AmBasicSipDialog& dlg) const
 {
   if (!outbound_interface.empty()) {
-    string oi = 
+    string oi =
       ctx.replaceParameters(outbound_interface, "outbound_interface", req);
 
     if(apply_outbound_interface(oi,dlg) < 0)
@@ -1053,11 +1053,11 @@ void SBCCallProfile::replace_cc_values(ParamReplacerCtx& ctx,
        cc_it != cc_interfaces.end(); cc_it++) {
 
     CCInterface& cc_if = *cc_it;
-    
-    DBG("processing replacements for call control interface '%s'\n", 
+
+    DBG("processing replacements for call control interface '%s'\n",
 	cc_if.cc_name.c_str());
 
-    for (map<string, string>::iterator it = cc_if.cc_values.begin(); 
+    for (map<string, string>::iterator it = cc_if.cc_values.begin();
 	 it != cc_if.cc_values.end(); it++) {
 
       it->second = ctx.replaceParameters(it->second, it->first.c_str(), req);
@@ -1124,24 +1124,24 @@ static void fixupCCInterface(const string& val, CCInterface& cc_if)
       if (epos + 1 == last) {
 	cc_if.cc_values.insert(make_pair(val.substr(spos+1, epos-spos-1), ""));
 
-	DBG("    '%s'='%s'\n", 
+	DBG("    '%s'='%s'\n",
 	    val.substr(spos+1, epos-spos-1).c_str(), "");
 	return;
       }
       size_t qpos = val.find('"', epos + 2);
       if (qpos == string::npos) {
-	cc_if.cc_values.insert(make_pair(val.substr(spos+1, epos-spos-1), 
+	cc_if.cc_values.insert(make_pair(val.substr(spos+1, epos-spos-1),
 					 val.substr(epos + 2)));
-	DBG("    '%s'='%s'\n", 
-	    val.substr(spos+1, epos-spos-1).c_str(), 
+	DBG("    '%s'='%s'\n",
+	    val.substr(spos+1, epos-spos-1).c_str(),
 	    val.substr(epos + 2).c_str());
 
 	return;
       }
-      cc_if.cc_values.insert(make_pair(val.substr(spos+1, epos-spos-1), 
+      cc_if.cc_values.insert(make_pair(val.substr(spos+1, epos-spos-1),
 				       val.substr(epos+2, qpos-epos-2)));
-      DBG("    '%s'='%s'\n", 
-	  val.substr(spos+1, epos-spos-1).c_str(), 
+      DBG("    '%s'='%s'\n",
+	  val.substr(spos+1, epos-spos-1).c_str(),
 	  val.substr(epos+2, qpos-epos-2).c_str());
 
       if (qpos < last) {
@@ -1152,21 +1152,21 @@ static void fixupCCInterface(const string& val, CCInterface& cc_if)
     } else {
       size_t new_spos = val.find(";", epos + 1);
       if (new_spos == string::npos) {
-	cc_if.cc_values.insert(make_pair(val.substr(spos+1, epos-spos-1), 
+	cc_if.cc_values.insert(make_pair(val.substr(spos+1, epos-spos-1),
 					 val.substr(epos+1)));
 
-	DBG("    '%s'='%s'\n", 
-	    val.substr(spos+1, epos-spos-1).c_str(), 
+	DBG("    '%s'='%s'\n",
+	    val.substr(spos+1, epos-spos-1).c_str(),
 	    val.substr(epos+1).c_str());
 
 	return;
       }
 
-      cc_if.cc_values.insert(make_pair(val.substr(spos+1, epos-spos-1), 
+      cc_if.cc_values.insert(make_pair(val.substr(spos+1, epos-spos-1),
 				       val.substr(epos+1, new_spos-epos-1)));
 
-      DBG("    '%s'='%s'\n", 
-	  val.substr(spos+1, epos-spos-1).c_str(), 
+      DBG("    '%s'='%s'\n",
+	  val.substr(spos+1, epos-spos-1).c_str(),
 	  val.substr(epos+1, new_spos-epos-1).c_str());
 
       spos = new_spos;
@@ -1185,7 +1185,7 @@ void SBCCallProfile::eval_cc_list(ParamReplacerCtx& ctx, const AmSipRequest& req
     cc_rit++;
     //      CCInterfaceListIteratorT next_cc = cc_rit+1;
     if (curr_if->cc_name.find('$') != string::npos) {
-      curr_if->cc_name = ctx.replaceParameters(curr_if->cc_name, 
+      curr_if->cc_name = ctx.replaceParameters(curr_if->cc_name,
 					       "cc_interfaces", req);
       vector<string> dyn_ccinterfaces = explode(curr_if->cc_name, ",");
       if (!dyn_ccinterfaces.size()) {
@@ -1270,15 +1270,15 @@ void SBCCallProfile::fix_reg_contact(ParamReplacerCtx& ctx,
   string port = contact.uri_port;
 
   if (!this->contact.displayname.empty()) {
-    contact.display_name = 
+    contact.display_name =
       ctx.replaceParameters(this->contact.displayname, "Contact DN", req);
   }
   if (!this->contact.user.empty()) {
-    contact.uri_user = 
+    contact.uri_user =
       ctx.replaceParameters(this->contact.user, "Contact User", req);
   }
   if (!this->contact.host.empty()) {
-    contact.uri_host = 
+    contact.uri_host =
       ctx.replaceParameters(this->contact.host, "Contact host", req);
   }
   if (!this->contact.port.empty()) {
@@ -1363,7 +1363,7 @@ static bool readPayload(SdpPayload &p, const string &src)
   if (elems.size() > 1) str2int(elems[1], p.clock_rate);
   else p.clock_rate = 8000; // default value
   p.encoding_name = elems[0];
-  
+
   string pname = p.encoding_name;
   transform(pname.begin(), pname.end(), pname.begin(), ::tolower);
 
@@ -1372,9 +1372,9 @@ static bool readPayload(SdpPayload &p, const string &src)
   for (int i = 0; i < IANA_RTP_PAYLOADS_SIZE; i++) {
     string s = IANA_RTP_PAYLOADS[i].payload_name;
     transform(s.begin(), s.end(), s.begin(), ::tolower);
-    if (p.encoding_name == s && 
-        (unsigned)p.clock_rate == IANA_RTP_PAYLOADS[i].clock_rate && 
-        (p.encoding_param == -1 || ((unsigned)p.encoding_param == IANA_RTP_PAYLOADS[i].channels))) 
+    if (p.encoding_name == s &&
+        (unsigned)p.clock_rate == IANA_RTP_PAYLOADS[i].clock_rate &&
+        (p.encoding_param == -1 || ((unsigned)p.encoding_param == IANA_RTP_PAYLOADS[i].channels)))
       p.payload_type = i;
   }
 
@@ -1438,7 +1438,7 @@ void SBCCallProfile::CodecPreferences::orderSDP(AmSdp& sdp, bool a_leg)
     // TODO: optimize
     // for each predefined payloads in their order
     for (vector<PayloadDesc>::iterator i = payload_order.begin(); i != payload_order.end(); ++i) {
-      // try to find this payload in SDP 
+      // try to find this payload in SDP
       // (not needed to go through already sorted members)
       for (idx = pos; idx < cnt; idx++) {
         if (i->match(media.payloads[idx])) {
@@ -1449,7 +1449,7 @@ void SBCCallProfile::CodecPreferences::orderSDP(AmSdp& sdp, bool a_leg)
             media.payloads.insert(media.payloads.begin() + pos, media.payloads[idx]);
             media.payloads.erase(media.payloads.begin() + idx + 1);
           }
-	
+
 	  ++pos; // next payload index
           // do not terminate the inner loop because one PayloadDesc can match
           // more payloads!
@@ -1472,7 +1472,7 @@ bool SBCCallProfile::CodecPreferences::readConfig(AmConfigReader &cfg)
   // store string values for later evaluation
   bleg_payload_order_str = cfg.getParameter("codec_preference");
   bleg_prefer_existing_payloads_str = cfg.getParameter("prefer_existing_codecs");
-  
+
   aleg_payload_order_str = cfg.getParameter("codec_preference_aleg");
   aleg_prefer_existing_payloads_str = cfg.getParameter("prefer_existing_codecs_aleg");
 
@@ -1506,9 +1506,9 @@ string SBCCallProfile::CodecPreferences::print() const
     res += i->print();
   }
   res += "\n";
-  
+
   res += "prefer_existing_codecs: ";
-  if (bleg_prefer_existing_payloads) res += "yes\n"; 
+  if (bleg_prefer_existing_payloads) res += "yes\n";
   else res += "no\n";
 
   res += "codec_preference_aleg:    ";
@@ -1517,9 +1517,9 @@ string SBCCallProfile::CodecPreferences::print() const
     res += i->print();
   }
   res += "\n";
-  
+
   res += "prefer_existing_codecs_aleg: ";
-  if (aleg_prefer_existing_payloads) res += "yes\n"; 
+  if (aleg_prefer_existing_payloads) res += "yes\n";
   else res += "no\n";
 
   return res;
@@ -1530,7 +1530,7 @@ bool SBCCallProfile::CodecPreferences::evaluate(ParamReplacerCtx& ctx,
 {
   REPLACE_BOOL(aleg_prefer_existing_payloads_str, aleg_prefer_existing_payloads);
   REPLACE_BOOL(bleg_prefer_existing_payloads_str, bleg_prefer_existing_payloads);
-  
+
   REPLACE_NONEMPTY_STR(aleg_payload_order_str);
   REPLACE_NONEMPTY_STR(bleg_payload_order_str);
 
@@ -1613,7 +1613,7 @@ string SBCCallProfile::TranscoderSettings::print() const
   }
 
   res += "\ncallee codec capabilities:";
-  for (vector<PayloadDesc>::const_iterator i = callee_codec_capabilities.begin(); 
+  for (vector<PayloadDesc>::const_iterator i = callee_codec_capabilities.begin();
       i != callee_codec_capabilities.end(); ++i)
   {
     res += " ";
@@ -1627,14 +1627,14 @@ string SBCCallProfile::TranscoderSettings::print() const
     case OnMissingCompatible: s = "on_missing_compatible"; break;
   }
   res += "\nenable transcoder: " + s;
-  
+
   res += "\ntranscoder currently enabled: ";
   if (enabled) res += "yes\n";
   else res += "no\n";
-  
+
   return res;
 }
-  
+
 bool SBCCallProfile::TranscoderSettings::evaluate(ParamReplacerCtx& ctx,
 						  const AmSipRequest& req)
 {
@@ -1643,15 +1643,15 @@ bool SBCCallProfile::TranscoderSettings::evaluate(ParamReplacerCtx& ctx,
   REPLACE_NONEMPTY_STR(audio_codecs_norelay_str);
   REPLACE_NONEMPTY_STR(audio_codecs_norelay_aleg_str);
   REPLACE_NONEMPTY_STR(callee_codec_capabilities_str);
-  REPLACE_NONEMPTY_STR(lowfi_codecs_str);  
+  REPLACE_NONEMPTY_STR(lowfi_codecs_str);
 
   if (!read(audio_codecs_str, audio_codecs)) return false;
   if (!read(audio_codecs_norelay_str, audio_codecs_norelay)) return false;
   if (!read(audio_codecs_norelay_aleg_str, audio_codecs_norelay_aleg)) return false;
 
-  if (!readPayloadList(callee_codec_capabilities, callee_codec_capabilities_str)) 
+  if (!readPayloadList(callee_codec_capabilities, callee_codec_capabilities_str))
     return false;
-  
+
   if (!readTranscoderMode(transcoder_mode_str)) return false;
 
   if (!readDTMFMode(dtmf_mode_str)) return false;
@@ -1662,9 +1662,9 @@ bool SBCCallProfile::TranscoderSettings::evaluate(ParamReplacerCtx& ctx,
   switch (transcoder_mode) {
     case Always: enabled = true; break;
     case Never: enabled = false; break;
-    case OnMissingCompatible: 
-      enabled = isTranscoderNeeded(req, callee_codec_capabilities, 
-                                 true /* if SDP can't be analyzed, enable transcoder */); 
+    case OnMissingCompatible:
+      enabled = isTranscoderNeeded(req, callee_codec_capabilities,
+                                 true /* if SDP can't be analyzed, enable transcoder */);
       break;
   }
 
@@ -1710,7 +1710,7 @@ bool PayloadDesc::match(const SdpPayload &p) const
 {
   string enc_name = p.encoding_name;
   transform(enc_name.begin(), enc_name.end(), enc_name.begin(), ::tolower);
-      
+
   if ((name.size() > 0) && (name != enc_name)) return false;
   if (clock_rate && (p.clock_rate > 0) && clock_rate != (unsigned)p.clock_rate) return false;
   return true;
@@ -1733,13 +1733,13 @@ bool PayloadDesc::read(const std::string &s)
 
 string PayloadDesc::print() const
 {
-    std::string s(name); 
-    s += " / "; 
+    std::string s(name);
+    s += " / ";
     if (!clock_rate) s += "whatever rate";
-    else s += int2str(clock_rate); 
-    return s; 
+    else s += int2str(clock_rate);
+    return s;
 }
-    
+
 bool PayloadDesc::operator==(const PayloadDesc &other) const
 {
   if (name != other.name) return false;

@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -111,8 +111,8 @@ class sip_trans
  public:
     /** Transaction type */
     unsigned int type;
-    
-    /** Request that initiated 
+
+    /** Request that initiated
 	the transaction */
     sip_msg* msg;
 
@@ -135,7 +135,7 @@ class sip_trans
 
     /** Destination list for requests */
     sip_target_set* targets;
-    
+
     /**
      * Retransmission buffer
      *  - UAC transaction: ACK
@@ -172,15 +172,15 @@ class sip_trans
      * @param timer_type @see sip_timer_type
      */
     trans_timer* get_timer(unsigned int timer_type);
-    
+
     /**
      * Resets a specfic timer with a delay value
      *
      * @param timer_type @see sip_timer_type
      * @param expires_delay delay before expiration in millisecond
-     * @param bucket_id id of the transaction's bucket 
+     * @param bucket_id id of the transaction's bucket
      */
-    void reset_timer(unsigned int timer_type, 
+    void reset_timer(unsigned int timer_type,
 		     unsigned int expire_delay /* ms */,
 		     unsigned int bucket_id);
 

@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _DSM_MODULE_H
@@ -45,7 +45,7 @@ class DSMModule {
  public:
   DSMModule();
   virtual ~DSMModule();
-  
+
   virtual DSMAction* getAction(const string& from_str) = 0;
   virtual DSMCondition* getCondition(const string& from_str) = 0;
 
@@ -83,12 +83,12 @@ typedef void* (*SCFactoryCreate)();
 #define SC_EXPORT(class_name)			\
   EXPORT_SC_FACTORY(SC_FACTORY_EXPORT,class_name)
 
-class SCStrArgAction   
+class SCStrArgAction
 : public DSMAction {
  protected:
   string arg;
  public:
-  SCStrArgAction(const string& m_arg); 
+  SCStrArgAction(const string& m_arg);
 };
 
 #define DEF_ACTION_1P(CL_Name)						\
@@ -100,7 +100,7 @@ class SCStrArgAction
 		 DSMCondition::EventType event,				\
 		 map<string,string>* event_params);			\
   };									\
-  
+
 
 #define DEF_SCModSEStrArgAction(CL_Name)				\
   class CL_Name								\
@@ -221,7 +221,7 @@ string resolveVars(const string s, AmSession* sess,
 		   DSMSession* sc_sess, map<string,string>* event_params,
 		   bool eval_ops = false);
 
-void splitCmd(const string& from_str, 
+void splitCmd(const string& from_str,
 		string& cmd, string& params);
 
 
@@ -294,7 +294,7 @@ void splitCmd(const string& from_str,
  ~mod_cls_name() { }					\
 							\
  DSMAction* getAction(const string& from_str);		\
- DSMCondition* getCondition(const string& from_str);	
+ DSMCondition* getCondition(const string& from_str);
 
 
 
@@ -305,11 +305,11 @@ void splitCmd(const string& from_str,
   DSMAction* mod_cls_name::getAction(const string& from_str) {		\
   string cmd;								\
   string params;							\
-  splitCmd(from_str, cmd, params);					
+  splitCmd(from_str, cmd, params);
 
 #define MOD_ACTIONEXPORT_END			\
   return NULL;					\
-  }						
+  }
 
 #define MOD_CONDITIONEXPORT_NONE(mod_cls_name)				\
   DSMCondition* mod_cls_name::getCondition(const string& from_str) {	\

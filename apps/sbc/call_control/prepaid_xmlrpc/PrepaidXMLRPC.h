@@ -77,4 +77,4 @@ class PrepaidXMLRPC : public AmDynInvoke
   int onLoad();
 };
 
-#endif 
+#endif

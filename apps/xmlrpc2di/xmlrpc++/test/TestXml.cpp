@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 
   std::string raw("<>&'\"");
   assert(XmlRpcUtil::xmlDecode(XmlRpcUtil::xmlEncode(raw)) == raw);
-  
+
   std::cout << "Basic tests passed.\n";
 
   // Interactive tests

@@ -27,7 +27,7 @@ static PyObject* IvrUAC_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
   IvrUAC *self;
 
   self = (IvrUAC *)type->tp_alloc(type, 0);
-	
+
   return (PyObject *)self;
 }
 
@@ -37,7 +37,7 @@ static void IvrUAC_dealloc(IvrUAC* self)
 }
 
 static PyObject* IvrUAC_dialout(IvrUAC* self, PyObject* args)
-{ 
+{
   char* user;
   char* app_name;
   char* r_uri;
@@ -83,7 +83,7 @@ static PyObject* IvrUAC_dialout(IvrUAC* self, PyObject* args)
   Py_INCREF(Py_None);
   return Py_None;
 }
-    
+
 static PyMethodDef IvrUAC_methods[] = {
   {"dialout", (PyCFunction)IvrUAC_dialout, METH_VARARGS,
    "place a new call"
@@ -91,7 +91,7 @@ static PyMethodDef IvrUAC_methods[] = {
   {NULL}  /* Sentinel */
 };
 
-PyTypeObject IvrUACType = {	
+PyTypeObject IvrUACType = {
   PyObject_HEAD_INIT(NULL)
   0,                         /*ob_size*/
   "ivr.IvrUAC",              /*tp_name*/

@@ -13,8 +13,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -45,9 +45,9 @@ inline void set_avp_fields( AAA_AVPCode code, AAA_AVP *avp)
   case 293: /*AVP Destination Host*/
   case 264: /*AVP_Origin_Host*/
   case 296: /*AVP Origin_Realm*/
-  case 400: /* AVP_Resource */	
-  case 401: /* AVP_Response */	
-  case 402: /* AVP_Chalenge */	
+  case 400: /* AVP_Resource */
+  case 401: /* AVP_Response */
+  case 402: /* AVP_Chalenge */
   case 403: /* AVP_Method */
   case 404: /* Service_Type AVP */
   case 405: /* User_Group AVP*/
@@ -98,11 +98,11 @@ AAA_AVP* AAAAddGroupedAVP(AAA_AVP* grouped, AAA_AVP* avp) {
   // insert at head
   avp->next = grouped->groupedHead;
   grouped->groupedHead = avp;
-  
+
   // recompute total length
   grouped->data.len = 0;
   for(mem=grouped->groupedHead;mem;mem=mem->next) {
-    grouped->data.len += AVP_HDR_SIZE(mem->flags) + 
+    grouped->data.len += AVP_HDR_SIZE(mem->flags) +
       to_32x_len( mem->data.len );
   }
 
@@ -122,7 +122,7 @@ AAA_AVP*  AAACreateAVP(
   AAA_AVP *avp;
 
   /* first check the params */
-  if(( data==0 || length==0)  && 
+  if(( data==0 || length==0)  &&
      (( data_status==AVP_DUPLICATE_DATA )||
       ( data_status==AVP_FREE_DATA ))){
     ERROR("ERROR:AAACreateAVP: NULL value received for"
@@ -328,7 +328,7 @@ AAAReturnCode  AAAFreeAVP(AAA_AVP **avp)
   /* free all the mem */
   if ( (*avp)->free_it && (*avp)->data.s )
     ad_free((*avp)->data.s);
-  
+
   /* free group members if any */
   member_it = (*avp)->groupedHead;
   while (member_it != NULL) {

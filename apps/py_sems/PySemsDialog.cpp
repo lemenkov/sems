@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2002-2003 Fhg Fokus
  * Copyright (C) 2006 iptego GmbH
  *
@@ -38,7 +38,7 @@ void PySemsDialog::onSessionStart(const AmSipRequest& req)
   AmSession::onSessionStart(req);
 }
 
-void PySemsDialog::process(AmEvent* event) 
+void PySemsDialog::process(AmEvent* event)
 {
   DBG("PySemsDialog::process\n");
 
@@ -48,7 +48,7 @@ void PySemsDialog::process(AmEvent* event)
     callPyEventHandler("onEmptyQueue", NULL);
     event->processed = true;
   }
-    
+
   AmPluginEvent* plugin_event = dynamic_cast<AmPluginEvent*>(event);
   if(plugin_event && plugin_event->name == "timer_timeout") {
 

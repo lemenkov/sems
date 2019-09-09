@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "AmConfigReader.h"
@@ -50,8 +50,8 @@ static int fifo_get_line(FILE* fifo_stream, char* str, size_t len)
 
   if(!len)
     return 0;
-    
-  l=len; 
+
+  l=len;
 
   while( l && (c=fgetc(fifo_stream)) && !ferror(fifo_stream) && c!=EOF && c!='\n' ){
     if(c!='\r'){
@@ -82,7 +82,7 @@ int  AmConfigReader::loadFile(const string& path)
 	   path.c_str(),strerror(errno));
       return -1;
   }
-  
+
   int  lc = 0;
   int  ls = 0;
   char lb[MAX_CONFIG_LINE] = {'\0'};
@@ -91,7 +91,7 @@ int  AmConfigReader::loadFile(const string& path)
 
   c=key_beg=key_end=val_beg=val_end=inc_beg=inc_end=0;
   while(!feof(fp) && ((ls = fifo_get_line(fp, lb, MAX_CONFIG_LINE)) != -1)){
-	
+
     c=key_beg=key_end=val_beg=val_end=0;
     lc++;
 
@@ -116,7 +116,7 @@ int  AmConfigReader::loadFile(const string& path)
 
     key_beg = c;
     while( (*c != '=') && !IS_SPACE(*c) ) c++;
-    
+
     key_end = c;
     if(IS_SPACE(*c))
       TRIM(c);
@@ -157,7 +157,7 @@ int  AmConfigReader::loadFile(const string& path)
       if (hasParameter(keyname)) {
 	WARN("while loading '%s': overwriting configuration "
 	     "'%s' value '%s' with  '%s'\n",
-	     path.c_str(), keyname.c_str(), 
+	     path.c_str(), keyname.c_str(),
 	     getParameter(keyname).c_str(), val.c_str());
       }
 
@@ -205,7 +205,7 @@ static int str_get_line(const char** c, const char* end, char* line_buf, size_t 
     case '\r': st = SGL_CR; break;
     case '\n': st = SGL_LF; break;
     case '#':  st = SGL_COMMENT; break;
-      
+
     default:
       *out = **c;
       out++;
@@ -218,13 +218,13 @@ static int str_get_line(const char** c, const char* end, char* line_buf, size_t 
 
   if(st == SGL_COMMENT) {
     while((*c < end) && (st == SGL_COMMENT)){
-      
+
       switch(*((*c)++)) {
       case '\r': st = SGL_CR; break;
       case '\n': st = SGL_LF; break;
       default: break;
       }
-      
+
       (*c)++;
     }
   }
@@ -263,9 +263,9 @@ int AmConfigReader::loadString(const char* cfg_lines, size_t cfg_len)
   const char* cfg_end = cursor + cfg_len;
 
   c=key_beg=key_end=val_beg=val_end=inc_beg=inc_end=0;
-  while((cursor < cfg_end) && 
+  while((cursor < cfg_end) &&
 	((ls = str_get_line(&cursor, cfg_end, lb, MAX_CONFIG_LINE)) != -1)){
-	
+
     c=key_beg=key_end=val_beg=val_end=0;
     lc++;
 
@@ -276,7 +276,7 @@ int AmConfigReader::loadString(const char* cfg_lines, size_t cfg_len)
 
     key_beg = c;
     while( (*c != '=') && !IS_SPACE(*c) ) c++;
-    
+
     key_end = c;
     if(IS_SPACE(*c))
       TRIM(c);
@@ -317,7 +317,7 @@ int AmConfigReader::loadString(const char* cfg_lines, size_t cfg_len)
       if (hasParameter(keyname)) {
 	WARN("while loading string: overwriting configuration "
 	     "'%s' value '%s' with  '%s'\n",
-	     keyname.c_str(), getParameter(keyname).c_str(), 
+	     keyname.c_str(), getParameter(keyname).c_str(),
 	     val.c_str());
       }
 
@@ -402,7 +402,7 @@ void AmConfigReader::dump()
 {
   for(map<string,string>::iterator it = keys.begin();
       it != keys.end(); it++) {
-    
+
     DBG("\t%s = %s",it->first.c_str(),it->second.c_str());
   }
 }

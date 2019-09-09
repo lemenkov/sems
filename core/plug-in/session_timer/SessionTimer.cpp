@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -85,11 +85,11 @@ bool SessionTimer::onSipRequest(const AmSipRequest& req)
   return false;
 }
 
-bool SessionTimer::onSipReply(const AmSipRequest& req, const AmSipReply& reply, 
+bool SessionTimer::onSipReply(const AmSipRequest& req, const AmSipReply& reply,
 			      AmBasicSipDialog::Status old_dlg_status)
 {
   if (session_timer_conf.getEnableSessionTimer() &&
-      ((reply.cseq_method == SIP_METH_INVITE) || 
+      ((reply.cseq_method == SIP_METH_INVITE) ||
        (reply.cseq_method == SIP_METH_UPDATE))) {
     if ((reply.code == 422) &&
 	(s->dlg->getStatus() != AmSipDialog::Connected)) {
@@ -107,7 +107,7 @@ bool SessionTimer::onSipReply(const AmSipRequest& req, const AmSipReply& reply,
 	    DBG("old dialog status is: %s\n",
 		AmBasicSipDialog::getStatusStr(old_dlg_status));
 	    // resend request with interval i_minse
-	    std::map<unsigned int, SIPRequestInfo>::iterator ri = 
+	    std::map<unsigned int, SIPRequestInfo>::iterator ri =
 	      sent_requests.find(reply.cseq);
 	    if (ri != sent_requests.end()) {
 	      s->dlg->setRemoteTag("");
@@ -146,8 +146,8 @@ bool SessionTimer::onSipReply(const AmSipRequest& req, const AmSipReply& reply,
       sent_requests.erase(reply.cseq);
     }
   }
-  
-  if ((reply.cseq_method == SIP_METH_INVITE) || 
+
+  if ((reply.cseq_method == SIP_METH_INVITE) ||
       (reply.cseq_method == SIP_METH_UPDATE)) {
     updateTimer(s,reply);
   }
@@ -187,7 +187,7 @@ bool SessionTimer::onSendReply(const AmSipRequest& req,
 			       AmSipReply& reply, int& flags)
 {
   // only in 2xx responses to INV/UPD
-  if  (((reply.cseq_method != SIP_METH_INVITE) && 
+  if  (((reply.cseq_method != SIP_METH_INVITE) &&
 	(reply.cseq_method != SIP_METH_UPDATE)) ||
        (reply.code < 200) || (reply.code >= 300))
     return false;
@@ -221,7 +221,7 @@ int SessionTimer::configure(AmConfigReader& conf)
 
   DBG("Configured session with EnableSessionTimer = %s, "
       "SessionExpires = %u, MinimumTimer = %u\n",
-      session_timer_conf.getEnableSessionTimer() ? "yes":"no", 
+      session_timer_conf.getEnableSessionTimer() ? "yes":"no",
       session_timer_conf.getSessionExpires(),
       session_timer_conf.getMinimumTimer()
       );
@@ -247,9 +247,9 @@ int SessionTimer::configure(AmConfigReader& conf)
   return 0;
 }
 
-/** 
- * check if UAC requests too low Session-Expires 
- *   (<locally configured Min-SE)                  
+/**
+ * check if UAC requests too low Session-Expires
+ *   (<locally configured Min-SE)
  * Throws SessionIntervalTooSmallException if too low
  */
 bool SessionTimerFactory::checkSessionExpires(const AmSipRequest& req, AmConfigReader& cfg)
@@ -282,17 +282,17 @@ bool SessionTimerFactory::checkSessionExpires(const AmSipRequest& req, AmConfigR
 void SessionTimer::updateTimer(AmSession* s, const AmSipRequest& req) {
 
   if((req.method == SIP_METH_INVITE)||(req.method == SIP_METH_UPDATE)){
-    
-    remote_timer_aware = 
+
+    remote_timer_aware =
       key_in_list(getHeader(req.hdrs, SIP_HDR_SUPPORTED, SIP_HDR_SUPPORTED_COMPACT),
 		  TIMER_OPTION_TAG);
-    
+
     // determine session interval
     string sess_expires_hdr = getHeader(req.hdrs, SIP_HDR_SESSION_EXPIRES,
 					SIP_HDR_SESSION_EXPIRES_COMPACT, true);
-    
+
     bool rem_has_sess_expires = false;
-    unsigned int rem_sess_expires=0; 
+    unsigned int rem_sess_expires=0;
     if (!sess_expires_hdr.empty()) {
       if (str2i(strip_header_params(sess_expires_hdr),
 		rem_sess_expires)) {
@@ -328,12 +328,12 @@ void SessionTimer::updateTimer(AmSession* s, const AmSipRequest& req) {
         session_interval = min_se;
       }
     }
-     
+
     DBG("using actual session interval %u\n", session_interval);
 
     // determine session refresher -- cf rfc4028 Table 2
-    // only if the remote party supports timer and asks 
-    // to be refresher we will let the remote party do it. 
+    // only if the remote party supports timer and asks
+    // to be refresher we will let the remote party do it.
     // if remote supports timer and does not specify,
     // could also be refresher=uac
     if ((remote_timer_aware) && (!sess_expires_hdr.empty()) &&
@@ -346,7 +346,7 @@ void SessionTimer::updateTimer(AmSession* s, const AmSipRequest& req) {
       session_refresher      = refresh_local;
       session_refresher_role = UAS;
     }
-    
+
     removeTimers(s);
     setTimers(s);
 
@@ -355,7 +355,7 @@ void SessionTimer::updateTimer(AmSession* s, const AmSipRequest& req) {
   }
 }
 
-void SessionTimer::updateTimer(AmSession* s, const AmSipReply& reply) 
+void SessionTimer::updateTimer(AmSession* s, const AmSipReply& reply)
 {
   if (!session_timer_conf.getEnableSessionTimer())
     return;
@@ -364,14 +364,14 @@ void SessionTimer::updateTimer(AmSession* s, const AmSipReply& reply)
   if (((reply.code < 200) || (reply.code >= 300)) &&
       (!(accept_501_reply && reply.code == 501)))
     return;
-  
+
   // determine session interval
   string sess_expires_hdr = getHeader(reply.hdrs, SIP_HDR_SESSION_EXPIRES,
 				      SIP_HDR_SESSION_EXPIRES_COMPACT, true);
 
   session_refresher = refresh_local;
   session_refresher_role = UAC;
-  
+
   if (!sess_expires_hdr.empty()) {
     unsigned int sess_i_tmp = 0;
     if (str2i(strip_header_params(sess_expires_hdr),
@@ -389,24 +389,24 @@ void SessionTimer::updateTimer(AmSession* s, const AmSipReply& reply)
     if (get_header_param(sess_expires_hdr, "refresher") == "uas") {
       session_refresher = refresh_remote;
       session_refresher_role = UAS;
-    } 
+    }
   }
-  
+
   removeTimers(s);
   setTimers(s);
 }
 
-void SessionTimer::setTimers(AmSession* s) 
+void SessionTimer::setTimers(AmSession* s)
 {
   // set session timer
-  DBG("Setting session interval timer: %ds, tag '%s'\n", session_interval, 
+  DBG("Setting session interval timer: %ds, tag '%s'\n", session_interval,
       s->getLocalTag().c_str());
 
   s->setTimer(ID_SESSION_INTERVAL_TIMER, session_interval);
-    
+
   // set session refresh action timer, after half the expiration
   if (session_refresher == refresh_local) {
-    DBG("Setting session refresh timer: %ds, tag '%s'\n", session_interval/2, 
+    DBG("Setting session refresh timer: %ds, tag '%s'\n", session_interval/2,
 	s->getLocalTag().c_str());
     s->setTimer(ID_SESSION_REFRESH_TIMER, session_interval/2);
   }
@@ -420,13 +420,13 @@ void SessionTimer::retryRefreshTimer(AmSession* s) {
 }
 
 
-void SessionTimer::removeTimers(AmSession* s) 
+void SessionTimer::removeTimers(AmSession* s)
 {
   s->removeTimer(ID_SESSION_REFRESH_TIMER);
   s->removeTimer(ID_SESSION_INTERVAL_TIMER);
 }
 
-void SessionTimer::onTimeoutEvent(AmTimeoutEvent* timeout_ev) 
+void SessionTimer::onTimeoutEvent(AmTimeoutEvent* timeout_ev)
 {
 
   int timer_id = timeout_ev->data.get(0).asInt();
@@ -457,14 +457,14 @@ void SessionTimer::onTimeoutEvent(AmTimeoutEvent* timeout_ev)
 }
 
 AmSessionTimerConfig::AmSessionTimerConfig()
-  : EnableSessionTimer(DEFAULT_ENABLE_SESSION_TIMER), 
-    SessionExpires(SESSION_EXPIRES), 
+  : EnableSessionTimer(DEFAULT_ENABLE_SESSION_TIMER),
+    SessionExpires(SESSION_EXPIRES),
     MinimumTimer(MINIMUM_TIMER),
     MaximumTimer(MAXIMUM_TIMER)
 {
 }
 
-AmSessionTimerConfig::~AmSessionTimerConfig() 
+AmSessionTimerConfig::~AmSessionTimerConfig()
 {
 }
 
@@ -515,9 +515,9 @@ int AmSessionTimerConfig::setEnableSessionTimer(const string& enable) {
     EnableSessionTimer = 0;
   } else {
     return 0;
-  }	
+  }
   return 1;
-}		
+}
 
 int AmSessionTimerConfig::setSessionExpires(const string& se) {
   if(sscanf(se.c_str(),"%u",&SessionExpires) != 1) {
@@ -525,7 +525,7 @@ int AmSessionTimerConfig::setSessionExpires(const string& se) {
   }
   DBG("setSessionExpires(%i)\n",SessionExpires);
   return 1;
-} 
+}
 
 int AmSessionTimerConfig::setMinimumTimer(const string& minse) {
   if(sscanf(minse.c_str(),"%u",&MinimumTimer) != 1) {

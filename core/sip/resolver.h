@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _resolver_h_
@@ -54,7 +54,7 @@ enum address_type {
 };
 
 enum proto_type {
-    
+
     TCP=1,
     UDP=2
 };
@@ -186,7 +186,7 @@ struct naptr_record
     string regexp;
     string replace;
 
-    virtual string to_str() 
+    virtual string to_str()
     { return string(); }
 };
 
@@ -263,7 +263,7 @@ public:
     // disable SRV lookups
     static bool disable_srv;
 
-    int resolve_name(const char* name, 
+    int resolve_name(const char* name,
 		     dns_handle* h,
 		     sockaddr_storage* sa,
 		     const address_type types,

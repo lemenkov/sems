@@ -102,7 +102,7 @@ enum MediaActivity { Inactive, Sendonly, Recvonly, Sendrecv };
 static MediaActivity getMediaActivity(const vector<SdpAttribute> &attrs, MediaActivity default_value)
 {
   // go through attributes and try to find sendonly/recvonly/sendrecv/inactive
-  for (std::vector<SdpAttribute>::const_iterator a = attrs.begin(); 
+  for (std::vector<SdpAttribute>::const_iterator a = attrs.begin();
       a != attrs.end(); ++a)
   {
     if (a->attribute == sendonly) return Sendonly;
@@ -134,8 +134,8 @@ static bool isHoldRequest(AmSdp &sdp, HoldMethod &method)
   bool connection_active = connectionActive(sdp.conn, false /* empty connection like inactive? */);
   MediaActivity session_activity = getMediaActivity(sdp.attributes, Sendrecv);
 
-  for (std::vector<SdpMedia>::iterator m = sdp.media.begin(); 
-      m != sdp.media.end(); ++m) 
+  for (std::vector<SdpMedia>::iterator m = sdp.media.begin();
+      m != sdp.media.end(); ++m)
   {
     if (m->port == 0) continue; // this stream is disabled, handle like inactive (?)
     if (!connectionActive(m->conn, connection_active)) {
@@ -217,7 +217,7 @@ CallLeg::CallLeg(const CallLeg* caller, AmSipDialog* p_dlg, AmSipSubscription* p
 	 getLocalTag().c_str());
   }
 
-  MONITORING_LOG4(other_id.c_str(), 
+  MONITORING_LOG4(other_id.c_str(),
 		  "dir",  "out",
 		  "from", dlg->local_party.c_str(),
 		  "to",   dlg->remote_party.c_str(),
@@ -232,7 +232,7 @@ CallLeg::CallLeg(const CallLeg* caller, AmSipDialog* p_dlg, AmSipSubscription* p
   caller->getLowFiPLs(lowfi_payloads);
   setLowFiPLs(lowfi_payloads);
 
- 
+
   // A->B
   SBCCallRegistry::addCall(caller_dlg->getLocalTag(),
 			   SBCCallRegistryEntry(dlg->getCallid(), dlg->getLocalTag(), ""));
@@ -262,7 +262,7 @@ CallLeg::CallLeg(AmSipDialog* p_dlg, AmSipSubscription* p_subs)
   if (dlg) dlg->setOAEnabled(true);
   else WARN("can't enable OA!\n");
 }
-    
+
 CallLeg::~CallLeg()
 {
   // do necessary cleanup (might be needed if the call leg is destroyed other
@@ -288,7 +288,7 @@ void CallLeg::terminateOtherLeg()
     // all other legs in such case?
     terminateNotConnectedLegs(); // terminates all except the one identified by other_id
   }
-  
+
   AmB2BSession::terminateOtherLeg();
 
   // remove this one from the list of other legs
@@ -447,7 +447,7 @@ bool CallLeg::setOther(const string &id, bool forward)
         dlg->setOAState(AmOfferAnswer::OA_OfferRecved);
       }
       if (i->media_session) {
-        TRACE("connecting media session: %s to %s\n", 
+        TRACE("connecting media session: %s to %s\n",
             dlg->getLocalTag().c_str(), getOtherId().c_str());
         i->media_session->changeSession(a_leg, this);
       }
@@ -543,7 +543,7 @@ void CallLeg::b2bInitialErr(AmSipReply& reply, bool forward)
     return;
   }
 
-  DBG("clean-up after non-ok reply (reply: %d, status %s, other: %s)\n", 
+  DBG("clean-up after non-ok reply (reply: %d, status %s, other: %s)\n",
       reply.code, callStatus2str(getCallStatus()),
       getOtherId().c_str());
   clearRtpReceiverRelay();
@@ -623,7 +623,7 @@ void CallLeg::onB2BConnect(ConnectLegEvent* co_ev)
     return;
   }
 
-  MONITORING_LOG3(getLocalTag().c_str(), 
+  MONITORING_LOG3(getLocalTag().c_str(),
 		  "b2b_leg", getOtherId().c_str(),
 		  "to", dlg->getRemoteParty().c_str(),
 		  "ruri", dlg->getRemoteUri().c_str());
@@ -680,7 +680,7 @@ void CallLeg::onB2BReconnect(ReconnectLegEvent* ev)
     ERROR("BUG: invalid argument given\n");
     return;
   }
-  TRACE("handling ReconnectLegEvent, other: %s, connect to %s\n", 
+  TRACE("handling ReconnectLegEvent, other: %s, connect to %s\n",
 	getOtherId().c_str(), ev->session_tag.c_str());
 
   ev->markAsProcessed();
@@ -734,7 +734,7 @@ void CallLeg::onB2BReplace(ReplaceLegEvent *e)
     return;
   }
 
-  TRACE("handling ReplaceLegEvent, other: %s, connect to %s\n", 
+  TRACE("handling ReplaceLegEvent, other: %s, connect to %s\n",
 	getOtherId().c_str(), reconnect->session_tag.c_str());
 
   string id(getOtherId());
@@ -1051,12 +1051,12 @@ void CallLeg::onInvite2xx(const AmSipReply& reply)
   // remember UPDATE cseq as well because SDP may change by it as well (used
   // when handling B2BSipReply in AmB2BSession to check if reINVITE should be
   // sent).
-  // 
+  //
   // est_invite_cseq = reply.cseq;
 
   // we don't want to handle the 2xx using AmSession so the following may be
   // unwanted for us:
-  // 
+  //
   AmB2BSession::onInvite2xx(reply);
 }
 
@@ -1080,7 +1080,7 @@ void CallLeg::terminateLeg()
 }
 
 // was for caller only
-void CallLeg::onRemoteDisappeared(const AmSipReply& reply) 
+void CallLeg::onRemoteDisappeared(const AmSipReply& reply)
 {
   if (call_status == Connected) {
     // only in case we are really connected
@@ -1088,7 +1088,7 @@ void CallLeg::onRemoteDisappeared(const AmSipReply& reply)
 
     DBG("remote unreachable, ending B2BUA call\n");
     // FIXME: shouldn't be cleared in AmB2BSession as well?
-    clearRtpReceiverRelay(); 
+    clearRtpReceiverRelay();
     AmB2BSession::onRemoteDisappeared(reply); // terminates the other leg
     updateCallStatus(Disconnected, &reply);
   }

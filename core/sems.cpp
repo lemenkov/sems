@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -115,26 +115,26 @@ static bool parse_args(int argc, char* argv[], std::map<char,string>& args)
 {
 #ifndef DISABLE_DAEMON_MODE
     static const char* opts = ":hvEf:x:d:D:u:g:P:";
-#else    
+#else
     static const char* opts = ":hvEf:x:d:D:";
-#endif    
+#endif
 
     opterr = 0;
-    
+
     while (true) {
 	int c = getopt(argc, argv, opts);
 	switch (c) {
 	case -1:
 	    return true;
-	    
+
 	case ':':
 	    fprintf(stderr, "%s: missing argument for option '-%c'\n", progname, optopt);
 	    return false;
-	    
+
 	case '?':
 	    fprintf(stderr, "%s: unknown option '-%c'\n", progname, optopt);
 	    return false;
-	    
+
 	default:
 	    args[c] = (optarg ? optarg : "yes");
 	}
@@ -241,7 +241,7 @@ static void signal_handler(int sig)
     DBG("brodcasting User event to %u sessions...\n",
 	AmSession::getSessionNum());
     AmEventDispatcher::instance()->
-      broadcast(new AmSystemEvent(sig == SIGUSR1? 
+      broadcast(new AmSystemEvent(sig == SIGUSR1?
 				  AmSystemEvent::User1 : AmSystemEvent::User2));
     return;
   }
@@ -331,10 +331,10 @@ int set_fd_limit()
     ERROR("setrlimit: %s\n",strerror(errno));
     return -1;
   }
- 
+
   INFO("Open FDs limit has been raised to %u",
        (unsigned int)rlim.rlim_cur);
- 
+
   return 0;
 }
 
@@ -538,7 +538,7 @@ int main(int argc, char* argv[])
       DBG("I'm out. pid: %d", main_pid);
       return 0;
     }
-	
+
     if(write_pid_file()<0) {
       goto error;
     }
@@ -577,7 +577,7 @@ int main(int argc, char* argv[])
 
   if(set_sighandler(signal_handler))
     goto error;
-    
+
 #ifdef WITH_ZRTP
   if (AmZRTP::init()) {
     ERROR("Cannot initialize ZRTP\n");
@@ -590,11 +590,11 @@ int main(int argc, char* argv[])
 
   INFO("Starting session container\n");
   AmSessionContainer::instance()->start();
-  
+
 #ifdef SESSION_THREADPOOL
   INFO("Starting session processor threads\n");
   AmSessionProcessor::addThreads(AmConfig::SessionProcessorThreads);
-#endif 
+#endif
 
   INFO("Starting media processor\n");
   AmMediaProcessor::instance()->init();
@@ -616,7 +616,7 @@ int main(int argc, char* argv[])
   if(sip_ctrl.load()) {
     goto error;
   }
-  
+
   INFO("Loading plug-ins\n");
   AmPlugIn::instance()->init();
   if(AmPlugIn::instance()->load(AmConfig::PlugInPath, AmConfig::LoadPlugins))

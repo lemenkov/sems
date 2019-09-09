@@ -17,7 +17,7 @@
 
 /** \brief IVR wrapper of AmAudioFile */
 typedef struct {
-    
+
   PyObject_HEAD
   AmAudioFile* af;
 
@@ -28,7 +28,7 @@ typedef struct {
 #endif
 
   PyObject* py_file;
-    
+
 } IvrAudioFile;
 
 extern PyTypeObject IvrAudioFileType;

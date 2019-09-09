@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmAudioFile.h */
@@ -36,7 +36,7 @@ class AmAudioFileFormat: public AmAudioFormat
 {
   /** == "" if not yet initialized. */
   string          name;
-    
+
   /** == -1 if not yet initialized. */
   int             subtype;
 
@@ -124,8 +124,8 @@ public:
    * <ul>
    * <li>In read mode: sets input format.
    * <li>In write mode: <ol>
-   *                    <li>needs output format set. 
-   *                    <li>If file name already exists, 
+   *                    <li>needs output format set.
+   *                    <li>If file name already exists,
    *                        the file will be overwritten.
    *                    </ol>
    * </ul>
@@ -134,7 +134,7 @@ public:
    * @return 0 if everything's OK
    * @see OpenMode
    */
-  int open(const string& filename, OpenMode mode, 
+  int open(const string& filename, OpenMode mode,
 	   bool is_tmp=false);
 
   int fpopen(const string& filename, OpenMode mode, FILE* n_fp);
@@ -146,7 +146,7 @@ public:
   void rewind(unsigned int msec);
 
   /** skip forward some milliseconds. */
-  void forward(unsigned int msec); 
+  void forward(unsigned int msec);
 
   /** Closes the file. */
   void close();
@@ -154,7 +154,7 @@ public:
   /** Executes the handler's on_close. */
   void on_close();
 
-  /** be carefull with this one ;-) */ 
+  /** be carefull with this one ;-) */
   FILE* getfp() { return fp; }
 
   OpenMode getMode() { return (OpenMode)open_mode; }

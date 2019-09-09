@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _MOD_SYS_H
@@ -36,13 +36,13 @@
 
 DECLARE_MODULE(MOD_CLS_NAME);
 
-#define CONF_AKEY_CHANNEL        "conf.chan" 
-#define CONF_AKEY_DEF_TEECHANNEL "conf.teechan" 
-#define CONF_AKEY_MIXER          "conf.mixer" 
-#define CONF_AKEY_MIXLIST        "conf.mixlist" 
+#define CONF_AKEY_CHANNEL        "conf.chan"
+#define CONF_AKEY_DEF_TEECHANNEL "conf.teechan"
+#define CONF_AKEY_MIXER          "conf.mixer"
+#define CONF_AKEY_MIXLIST        "conf.mixlist"
 
 /** holds a conference channel  */
-class DSMConfChannel 
+class DSMConfChannel
 : public DSMDisposable,
   public AmObject {
   std::unique_ptr<AmConferenceChannel> chan;
@@ -86,7 +86,7 @@ template<class T> class DSMDisposableT
 
 DEF_ACTION_2P(ConfJoinAction);
 DEF_ACTION_1P(ConfLeaveAction);
-DEF_ACTION_2P(ConfRejoinAction); 
+DEF_ACTION_2P(ConfRejoinAction);
 DEF_ACTION_2P(ConfPostEventAction);
 DEF_ACTION_1P(ConfSetPlayoutTypeAction);
 DEF_ACTION_2P(ConfSizeAction);

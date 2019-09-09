@@ -11,12 +11,12 @@
 
 /** \brief python wrapper of IvrDialog, the base class for python IVR sessions */
 typedef struct {
-    
+
   PyObject_HEAD
   PyObject* dialog;
   PyObject* invite_req;
   IvrDialog* p_dlg;
-    
+
 } IvrDialogBase;
 
 
@@ -28,22 +28,22 @@ static PyObject* IvrDialogBase_new(PyTypeObject *type, PyObject *args, PyObject 
 
   self = (IvrDialogBase *)type->tp_alloc(type, 0);
   if (self != NULL) {
-	
+
     PyObject* o_dlg = NULL;
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "O", kwlist, &o_dlg)){
-	    
+
       Py_DECREF(self);
       return NULL;
     }
-    
+
     if ((NULL == o_dlg) || !PyCObject_Check(o_dlg)){
-	    
+
       Py_DECREF(self);
       return NULL;
     }
-	
+
     self->p_dlg = (IvrDialog*)PyCObject_AsVoidPtr(o_dlg);
-	
+
     // initialize self.dialog
     self->dialog = IvrSipDialog_FromPtr(self->p_dlg->dlg);
     if(!self->dialog){
@@ -69,7 +69,7 @@ static PyObject* IvrDialogBase_new(PyTypeObject *type, PyObject *args, PyObject 
 }
 
 static void
-IvrDialogBase_dealloc(IvrDialogBase* self) 
+IvrDialogBase_dealloc(IvrDialogBase* self)
 {
   DBG("IvrDialogBase_dealloc\n");
   Py_XDECREF(self->dialog);
@@ -135,16 +135,16 @@ static PyObject* IvrDialogBase_bye(IvrDialogBase* self, PyObject* args)
 static PyObject* IvrDialogBase_enqueue(IvrDialogBase* self, PyObject* args)
 {
   assert(self->p_dlg);
-    
+
   PyObject *o_play, *o_rec;
   AmAudio *a_play=NULL;
   AmAudioFile *a_rec=NULL;
-    
+
   if(!PyArg_ParseTuple(args,"OO",&o_play,&o_rec))
     return NULL;
-    
+
   if (o_play != Py_None){
-	
+
     if(PyObject_TypeCheck(o_play,&IvrAudioFileType)){
       ((IvrAudioFile*)o_play)->af->rewind();
       a_play = ((IvrAudioFile*)o_play)->af;
@@ -153,26 +153,26 @@ static PyObject* IvrDialogBase_enqueue(IvrDialogBase* self, PyObject* args)
 
       a_play = ((IvrAudioMixIn*)o_play)->mix;
 
-    } else { 
+    } else {
       PyErr_SetString(PyExc_TypeError,"Argument 1 is no IvrAudioFile");
       return NULL;
     }
-	
+
   }
-    
+
   if (o_rec != Py_None){
-	
+
     if(!PyObject_TypeCheck(o_rec,&IvrAudioFileType)){
-	    
+
       PyErr_SetString(PyExc_TypeError,"Argument 2 is no IvrAudioFile");
       return NULL;
     }
-	
+
     a_rec = ((IvrAudioFile*)o_rec)->af;
   }
-    
+
   self->p_dlg->playlist.addToPlaylist(new AmPlaylistItem(a_play,a_rec));
-    
+
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -182,7 +182,7 @@ static PyObject* IvrDialogBase_flush(IvrDialogBase* self, PyObject* args)
   assert(self->p_dlg);
 
   self->p_dlg->playlist.flush();
-    
+
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -199,7 +199,7 @@ static PyObject* IvrDialogBase_mute(IvrDialogBase* self, PyObject* args)
   assert(self->p_dlg);
 
   self->p_dlg->setMute(true);
-    
+
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -209,7 +209,7 @@ static PyObject* IvrDialogBase_unmute(IvrDialogBase* self, PyObject* args)
   assert(self->p_dlg);
 
   self->p_dlg->setMute(false);
-    
+
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -254,25 +254,25 @@ static PyObject* IvrDialogBase_disableDTMFReceiving(IvrDialogBase* self, PyObjec
   return Py_None;
 }
 
-static PyObject* IvrDialogBase_remove_mediaprocessor(IvrDialogBase* self, 
+static PyObject* IvrDialogBase_remove_mediaprocessor(IvrDialogBase* self,
 						     PyObject* args)
 {
   assert(self->p_dlg);
 
   AmMediaProcessor::instance()->removeSession(self->p_dlg);
-    
+
   Py_INCREF(Py_None);
   return Py_None;
 }
 
-static PyObject* IvrDialogBase_add_mediaprocessor(IvrDialogBase* self, 
+static PyObject* IvrDialogBase_add_mediaprocessor(IvrDialogBase* self,
 						  PyObject* args)
 {
   assert(self->p_dlg);
 
-  AmMediaProcessor::instance()->addSession(self->p_dlg, 
+  AmMediaProcessor::instance()->addSession(self->p_dlg,
 					   self->p_dlg->getCallgroup());
-    
+
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -284,7 +284,7 @@ static PyObject* IvrDialogBase_enableDTMFDetection(IvrDialogBase* self, PyObject
   assert(self->p_dlg);
 
   self->p_dlg->setDtmfDetectionEnabled(true);
-    
+
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -294,7 +294,7 @@ static PyObject* IvrDialogBase_disableDTMFDetection(IvrDialogBase* self, PyObjec
   assert(self->p_dlg);
 
   self->p_dlg->setDtmfDetectionEnabled(false);
-    
+
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -303,7 +303,7 @@ static PyObject* IvrDialogBase_disableDTMFDetection(IvrDialogBase* self, PyObjec
 static PyObject* IvrDialogBase_b2b_connectCallee(IvrDialogBase* self, PyObject* args)
 {
   assert(self->p_dlg);
-    
+
   string remote_party, remote_uri, local_party, local_uri;
 
   PyObject* py_o;
@@ -324,11 +324,11 @@ static PyObject* IvrDialogBase_b2b_connectCallee(IvrDialogBase* self, PyObject* 
 	local_party = string(lp);
 	local_uri = string(lu);
       }
-    } 
+    }
   }
-    
+
   self->p_dlg->connectCallee(remote_party, remote_uri, local_party, local_uri);
-    
+
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -337,7 +337,7 @@ static PyObject* IvrDialogBase_b2b_set_relayonly(IvrDialogBase* self, PyObject* 
 {
   assert(self->p_dlg);
   self->p_dlg->set_sip_relay_only(true);
-    
+
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -346,7 +346,7 @@ static PyObject* IvrDialogBase_b2b_set_norelayonly(IvrDialogBase* self, PyObject
 {
   assert(self->p_dlg);
   self->p_dlg->set_sip_relay_only(false);
-    
+
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -355,7 +355,7 @@ static PyObject* IvrDialogBase_b2b_terminate_leg(IvrDialogBase* self, PyObject* 
 {
   assert(self->p_dlg);
   self->p_dlg->terminateLeg();
-    
+
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -364,7 +364,7 @@ static PyObject* IvrDialogBase_b2b_terminate_other_leg(IvrDialogBase* self, PyOb
 {
   assert(self->p_dlg);
   self->p_dlg->terminateOtherLeg();
-    
+
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -374,19 +374,19 @@ static PyObject* IvrDialogBase_b2b_terminate_other_leg(IvrDialogBase* self, PyOb
 static PyObject* IvrDialogBase_setTimer(IvrDialogBase* self, PyObject* args)
 {
   assert(self->p_dlg);
-    
+
   int id = 0;
   double interval = 0.0;
   if(!PyArg_ParseTuple(args, "id", &id, &interval))
     return NULL;
-    
+
   if (id <= 0) {
     ERROR("IVR script tried to set timer with non-positive ID.\n");
     return NULL;
   }
 
   self->p_dlg->setTimer(id, interval);
-    
+
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -394,18 +394,18 @@ static PyObject* IvrDialogBase_setTimer(IvrDialogBase* self, PyObject* args)
 static PyObject* IvrDialogBase_removeTimer(IvrDialogBase* self, PyObject* args)
 {
   assert(self->p_dlg);
-    
+
   int id = 0;
   if(!PyArg_ParseTuple(args,"i",&id))
     return NULL;
-    
+
   if (id <= 0) {
     ERROR("IVR script tried to remove timer with non-positive ID.\n");
     return NULL;
   }
 
   self->p_dlg->removeTimer(id);
-    
+
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -414,7 +414,7 @@ static PyObject* IvrDialogBase_removeTimer(IvrDialogBase* self, PyObject* args)
 static PyObject* IvrDialogBase_removeTimers(IvrDialogBase* self, PyObject* args)
 {
   assert(self->p_dlg);
-    
+
   self->p_dlg->removeTimers();
 
   Py_INCREF(Py_None);
@@ -439,41 +439,41 @@ static PyObject*
 IvrDialogBase_redirect(IvrDialogBase *self, PyObject* args)
 {
   assert(self->p_dlg);
-    
+
   char* refer_to=0;
   if(!PyArg_ParseTuple(args,"s",&refer_to))
     return NULL;
-    
+
   if(self->p_dlg->dlg->transfer(refer_to)){
     ERROR("redirect failed\n");
     return NULL;
   }
-    
+
   Py_INCREF(Py_None);
   return Py_None;
-    
+
 }
 
 static PyObject*
 IvrDialogBase_refer(IvrDialogBase *self, PyObject* args)
 {
   assert(self->p_dlg);
-    
+
   char* refer_to=0;
   int expires = -1;
   char * referred_by = "";
   char * extrahdrs = "";
   if(!PyArg_ParseTuple(args, "s|iss", &refer_to, &expires, &referred_by, &extrahdrs))
     return NULL;
-    
+
   if(self->p_dlg->dlg->refer(refer_to, expires, referred_by, extrahdrs)){
     ERROR("REFER failed\n");
     return NULL;
   }
-    
+
   Py_INCREF(Py_None);
   return Py_None;
-    
+
 }
 
 // Send SIP request
@@ -507,7 +507,7 @@ static PyObject* IvrDialogBase_sendReply(IvrDialogBase* self, PyObject* args)
    return Py_None;
 }
 
-static PyObject* 
+static PyObject*
 IvrDialogBase_getAppParam(IvrDialogBase *self, PyObject* args)
 {
   const char* param_name;
@@ -572,7 +572,7 @@ IvrDialogBase_getSessionParams(IvrDialogBase *self, PyObject*)
 }
 
 static PyMethodDef IvrDialogBase_methods[] = {
-  
+
   // Event handlers
 
   {"onRtpTimeout", (PyCFunction)IvrDialogBase_onRtpTimeout, METH_NOARGS,
@@ -594,7 +594,7 @@ static PyMethodDef IvrDialogBase_methods[] = {
   //     {"onTimer", (PyCFunction)IvrDialogBase_onTimer, METH_VARARGS,
   //      "Gets called when a timer is fired"
   //     },
-    
+
   // Call control
   {"stopSession", (PyCFunction)IvrDialogBase_stopSession, METH_NOARGS,
    "Stop the session"
@@ -604,10 +604,10 @@ static PyMethodDef IvrDialogBase_methods[] = {
   },
   {"redirect", (PyCFunction)IvrDialogBase_redirect, METH_VARARGS,
    "Transfers the remote party to some third party."
-  },   
+  },
   {"refer", (PyCFunction)IvrDialogBase_refer, METH_VARARGS,
    "Refers the remote party to some third party."
-  },   
+  },
   // Send SIP request
   {"sendRequest", (PyCFunction)IvrDialogBase_sendRequest, METH_VARARGS,
     "send sip request"
@@ -659,7 +659,7 @@ static PyMethodDef IvrDialogBase_methods[] = {
   },
   {"disableDTMFDetection", (PyCFunction)IvrDialogBase_disableDTMFDetection, METH_NOARGS,
    "disable the dtmf detection"
-  },    
+  },
   // B2B
   {"connectCallee", (PyCFunction)IvrDialogBase_b2b_connectCallee, METH_VARARGS,
    "call given party as (new) callee,"
@@ -684,10 +684,10 @@ static PyMethodDef IvrDialogBase_methods[] = {
   },
   {"removeTimer", (PyCFunction)IvrDialogBase_removeTimer, METH_VARARGS,
    "remove a timer by id"
-  },    
+  },
   {"removeTimers", (PyCFunction)IvrDialogBase_removeTimers, METH_NOARGS,
    "remove all timers"
-  },    
+  },
   // App params
   {"getAppParam", (PyCFunction)IvrDialogBase_getAppParam, METH_VARARGS,
    "retrieves an application parameter"
@@ -702,11 +702,11 @@ static PyMethodDef IvrDialogBase_methods[] = {
 };
 
 static PyGetSetDef IvrDialogBase_getset[] = {
-  {(char*)"dialog", 
+  {(char*)"dialog",
    (getter)IvrDialogBase_getdialog, NULL,
    (char*)"the dialog property",
    NULL},
-  {(char*)"invite_req", 
+  {(char*)"invite_req",
    (getter)IvrDialogBase_getinvite_req, NULL,
    (char*)"the initial invite request",
    NULL},
@@ -714,7 +714,7 @@ static PyGetSetDef IvrDialogBase_getset[] = {
 };
 
 PyTypeObject IvrDialogBaseType = {
-    
+
   PyObject_HEAD_INIT(NULL)
   0,                         /*ob_size*/
   "ivr.IvrDialogBase",       /*tp_name*/

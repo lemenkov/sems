@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -96,10 +96,10 @@ int parse_header_type(sip_header* h)
 
     case COMPACT_len:{
       switch (LOWER_B(h->name.s[0])) {
-      case 'i': { // Call-ID 	
+      case 'i': { // Call-ID
 	h->type = sip_header::H_CALL_ID;
       } break;
-      case 'm': { // Contact      
+      case 'm': { // Contact
 	h->type = sip_header::H_CONTACT;
       } break;
 	//       case 'e': // Content-Encoding
@@ -107,7 +107,7 @@ int parse_header_type(sip_header* h)
       case 'l': { // Content-Length
 	h->type = sip_header::H_CONTENT_LENGTH;
       } break;
-      case 'c': { // Content-Type	
+      case 'c': { // Content-Type
 	h->type = sip_header::H_CONTENT_TYPE;
       } break;
       case 'f': { // From
@@ -120,7 +120,7 @@ int parse_header_type(sip_header* h)
       case 't': { // To
 	h->type = sip_header::H_TO;
       } break;
-      case 'v': {// Via	
+      case 'v': {// Via
 	h->type = sip_header::H_VIA;
       } break;
       default:
@@ -168,7 +168,7 @@ int parse_header_type(sip_header* h)
                     break;
 	    case 'a':
 	    case 'A':
-                    if(!lower_cmp(h->name.s+2, SIP_HDR_RACK+2, 
+                    if(!lower_cmp(h->name.s+2, SIP_HDR_RACK+2,
                             SIP_HDR_LEN(SIP_HDR_RACK)-2)) {
                         h->type = sip_header::H_RACK;
                     }
@@ -325,7 +325,7 @@ int parse_headers(list<sip_header*>& hdrs, char** c, char* end)
 		st = H_VALUE;
 		begin = *c;
 		break;
-		
+
 	    };
 	    break;
 
@@ -413,24 +413,24 @@ int parse_headers(list<sip_header*>& hdrs, char** c, char* end)
 
     case H_VALUE:
 	if(*c - begin > 0){
-	
+
 	    hdr->value.set(begin,*c - begin);
-	    
+
 	    //DBG("hdr: \"%.*s: %.*s\"\n",
 	    //	hdr->name.len,hdr->name.s,
 	    //	hdr->value.len,hdr->value.s);
-	    
+
 	    add_parsed_header(hdrs,hdr.release());
-	    
+
 	    return 0;
 	}
-	
+
 	break;
 
     case ST_LF:
     case ST_CRLF:
 	switch(saved_st){
-	    
+
 	case H_NAME:
 	    if((*c-(st==ST_CRLF?2:1))-begin == 0){
 		//DBG("Detected end of headers\n");
@@ -441,22 +441,22 @@ int parse_headers(list<sip_header*>& hdrs, char** c, char* end)
 
 	case H_VALUE:
 	    if(*c - begin > 2){
-		
+
 		hdr->value.set(begin,*c - begin - (st==ST_CRLF? 2 : 1));
-		
+
 		//DBG("hdr: \"%.*s: %.*s\"\n",
 		//	hdr->name.len,hdr->name.s,
 		//	hdr->value.len,hdr->value.s);
-		
+
 		add_parsed_header(hdrs,hdr.release());
-		
+
 		return 0;
 	    }
 	    break;
 	}
 	break;
     }
-    
+
     DBG("Incomplete header (st=%i;saved_st=%i)\n",st,saved_st);
     return UNEXPECTED_EOT;
 }

@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _MOD_PY_H
@@ -40,7 +40,7 @@ class SCPyModule
 
   SCPyModule();
   ~SCPyModule();
-  
+
   int preload();
 
   DSMAction* getAction(const string& from_str);
@@ -53,8 +53,8 @@ class SCPyModule
 
 /** smart AmObject that "owns" a python dictionary reference */
 struct SCPyDictArg
-  : public AmObject, 
-  public DSMDisposable   
+  : public AmObject,
+  public DSMDisposable
 {
   SCPyDictArg();
   SCPyDictArg(PyObject* pPyObject);
@@ -62,22 +62,22 @@ struct SCPyDictArg
   PyObject* pPyObject;
 };
 
-class SCPyPyAction			
-  : public DSMAction {			
+class SCPyPyAction
+  : public DSMAction {
     PyObject* py_func;
- public:				
+ public:
     SCPyPyAction(const string& arg);
     bool execute(AmSession* sess, DSMSession* sc_sess,
-		 DSMCondition::EventType event,	
+		 DSMCondition::EventType event,
 		 map<string,string>* event_params);
 };
 
 class PyPyCondition
 : public DSMCondition {
-  
+
   PyObject* py_func;
  public:
-  
+
   PyPyCondition(const string& arg);
   bool match(AmSession* sess, DSMSession* sc_sess, DSMCondition::EventType event,
 	     map<string,string>* event_params);

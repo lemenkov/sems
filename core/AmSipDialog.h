@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmSipDialog.h */
@@ -83,7 +83,7 @@ protected:
   /** @return a pending UAS INVITE transaction or NULL */
   AmSipRequest* getUASPendingInv();
 
-  /** 
+  /**
    * Calls onSdpCompleted on the session event handler
    * and executes onSessionStart/onEarlySessionStart when required.
    */
@@ -107,7 +107,7 @@ protected:
 		   const AmMimeBody* body = NULL,
 		   const string& hdrs = "",
 		   int flags = 0);
-    
+
   /** @return 0 on success */
   int bye(const string& hdrs = "", int flags = 0);
 
@@ -121,7 +121,7 @@ protected:
             const string &hdrs);
 
   /** @return 0 on success */
-  int update(const AmMimeBody* body, 
+  int update(const AmMimeBody* body,
             const string &hdrs);
 
   /** @return 0 on success */
@@ -130,7 +130,7 @@ protected:
 	       int flags = 0);
 
   /** @return 0 on success */
-  int invite(const string& hdrs,  
+  int invite(const string& hdrs,
 	     const AmMimeBody* body);
 
   /** @return 0 on success */
@@ -140,7 +140,7 @@ protected:
 	    const string& extrahdrs = "");
 
   /** @return 0 on success */
-  int info(const string& hdrs,  
+  int info(const string& hdrs,
 	   const AmMimeBody* body);
 
   /** @return 0 on success */
@@ -149,9 +149,9 @@ protected:
 };
 
 /**
- * \brief base class for SIP request/reply event handler 
+ * \brief base class for SIP request/reply event handler
  */
-class AmSipDialogEventHandler 
+class AmSipDialogEventHandler
   : public AmBasicSipEventHandler
 {
 public:
@@ -179,15 +179,15 @@ public:
   /** Hook called when an SDP OA transaction has been completed */
   virtual int onSdpCompleted(const AmSdp& local, const AmSdp& remote)=0;
 
-  /** Hook called when an early session starts 
+  /** Hook called when an early session starts
    *  (SDP OA completed + dialog in early state) */
   virtual void onEarlySessionStart()=0;
 
-  /** Hook called when the session creation is completed 
+  /** Hook called when the session creation is completed
    *  (INV trans replied with 200) */
   virtual void onSessionStart()=0;
 
-  virtual ~AmSipDialogEventHandler() {};    
+  virtual ~AmSipDialogEventHandler() {};
 };
 
 #endif

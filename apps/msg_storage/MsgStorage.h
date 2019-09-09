@@ -6,7 +6,7 @@
 #include <map>
 using std::map;
 
-class MsgStorage : public AmDynInvokeFactory, 
+class MsgStorage : public AmDynInvokeFactory,
 		   public AmDynInvoke
 {
 
@@ -17,7 +17,7 @@ class MsgStorage : public AmDynInvokeFactory,
   typedef map<AmDynInvoke*,string> Listeners;
   Listeners  listeners;
   AmMutex    listeners_mut;
-  
+
   int msg_new(string domain, string user, string msg_name, FILE* data);
   void msg_get(string domain, string user, string msg_name, AmArg& ret);
   int msg_markread(string domain, string user, string msg_name);
@@ -30,8 +30,8 @@ class MsgStorage : public AmDynInvokeFactory,
   void events_subscribe(AmDynInvoke* event_sink, string method);
   void events_unsubscribe(AmDynInvoke* event_sink);
 
-  void event_notify(const string& domain, 
-		    const string& user, 
+  void event_notify(const string& domain,
+		    const string& user,
 		    const string& event);
 
   inline void filecopy(FILE* ifp, FILE* ofp);

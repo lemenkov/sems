@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "DSMChartReader.h"
@@ -57,7 +57,7 @@ string DSMChartReader::getToken(string str, size_t& pos) {
   size_t pos1 = pos;
 
   if (is_snt(str[pos])) {
-    string res = " "; 
+    string res = " ";
     res[0] = str[pos];
     pos++;
     return res;
@@ -85,7 +85,7 @@ string DSMChartReader::getToken(string str, size_t& pos) {
 	  lvl++;
 	else if (str[pos1] == ')')
 	  lvl--;
-	    
+
 	else if (str[pos1] == '"') {
 	  pos1++;
 	  while (pos1<str.length() && !((str[pos1] == '"') && (last_chr != '\\'))) {
@@ -111,7 +111,7 @@ string DSMChartReader::getToken(string str, size_t& pos) {
   string res;
   if ((str[pos] == '"') || (str[pos] == '\''))
     res = str.substr(pos+1, pos1-pos-2);
-  else 
+  else
     res = str.substr(pos, pos1-pos);
 
   pos = pos1;
@@ -211,7 +211,7 @@ DSMCondition* DSMChartReader::conditionFromToken(const string& str, bool invert)
   }
 
   DSMCondition* c = core_mod.getCondition(str);
-  if (c) 
+  if (c)
     c->invert = invert;
 
   if (c)  return c;
@@ -222,7 +222,7 @@ DSMCondition* DSMChartReader::conditionFromToken(const string& str, bool invert)
 bool DSMChartReader::importModule(const string& mod_cmd, const string& mod_path) {
   string cmd;
   string params;
-  
+
   splitCmd(mod_cmd, cmd, params);
   if (!params.length()) {
     ERROR("import needs module name\n");
@@ -245,20 +245,20 @@ bool DSMChartReader::importModule(const string& mod_cmd, const string& mod_path)
     ERROR("invalid SC module '%s' (SC_EXPORT missing?)\n", fname.c_str());
     return false;
   }
-   
+
   DSMModule* mod = (DSMModule*)fc();
   if (!mod) {
-    ERROR("module '%s' did not return functions.\n", 
+    ERROR("module '%s' did not return functions.\n",
 	  fname.c_str());
     return false;
   }
   mods.push_back(mod);
-  DBG("loaded module '%s' from '%s'\n", 
+  DBG("loaded module '%s' from '%s'\n",
       params.c_str(), fname.c_str());
   return true;
 }
 
-bool DSMChartReader::decode(DSMStateDiagram* e, const string& chart, 
+bool DSMChartReader::decode(DSMStateDiagram* e, const string& chart,
 			    const string& mod_path, DSMElemContainer* owner,
 			    vector<DSMModule*>& out_mods) {
   vector<DSMElement*> stack;
@@ -267,16 +267,16 @@ bool DSMChartReader::decode(DSMStateDiagram* e, const string& chart,
     string token = getToken(chart, pos);
     if (!token.length())
       continue;
-    
+
     if (token.length()>6 && token.substr(0, 6) == "import") {
       if (!importModule(token, mod_path)) {
-	ERROR("error loading module in '%s'\n", 
+	ERROR("error loading module in '%s'\n",
 	      token.c_str());
 	return false;
       }
       continue;
     }
-    
+
     if (token == "function") {
       stack.push_back(new DSMFunction());
       continue;
@@ -305,9 +305,9 @@ bool DSMChartReader::decode(DSMStateDiagram* e, const string& chart,
     }
 
     DSMElement* stack_top = &(*stack.back());
-    
+
     DSMFunction* f = dynamic_cast<DSMFunction*>(stack_top);
-    
+
     if (f) {
       if (f->name.length()==0) {
         size_t b_pos = token.find('(');
@@ -320,7 +320,7 @@ bool DSMChartReader::decode(DSMStateDiagram* e, const string& chart,
           return false;
         }
       }
-          
+
       if (token == "{") {
       	stack.push_back(new ActionList(ActionList::AL_func));
       	continue;
@@ -331,11 +331,11 @@ bool DSMChartReader::decode(DSMStateDiagram* e, const string& chart,
       	DBG("Adding DSMFunction '%s' to funcs\n", f->name.c_str());
        	continue;
       }
-      
+
       DBG("Unknown token: %s\n", token.c_str());
       return false;
    }
-    
+
     DSMConditionTree* ct = dynamic_cast<DSMConditionTree*>(stack_top);
     if (ct) {
       if (token == "[") {
@@ -366,7 +366,7 @@ bool DSMChartReader::decode(DSMStateDiagram* e, const string& chart,
       ERROR("syntax error: got '%s' without context\n", token.c_str());
       return false;
     }
-    
+
     State* state = dynamic_cast<State*>(stack_top);
     if (state) {
       if (!state->name.length()) {
@@ -408,7 +408,7 @@ bool DSMChartReader::decode(DSMStateDiagram* e, const string& chart,
       if (token == "{") {
 	continue;
       }
-  	
+
       if ((token == "}") || (token == "->")) {
       	stack.pop_back();
         if (stack.empty()) {
@@ -502,9 +502,9 @@ bool DSMChartReader::decode(DSMStateDiagram* e, const string& chart,
 	    return false;
 	  }
 	  af->actions = al->actions;
-	  
+
 	  stack.pop_back();
-	  
+
 	  ActionList* b_al = dynamic_cast<ActionList*>(&(*stack.back()));
 	  if (!b_al) {
 	    ERROR("internal error: no ActionList for 'for'\n");
@@ -578,8 +578,8 @@ bool DSMChartReader::decode(DSMStateDiagram* e, const string& chart,
       owner->transferElem(a);
       al->actions.push_back(a);
     } // actionlist
-    
-     
+
+
     DSMConditionList* cl = dynamic_cast<DSMConditionList*>(stack_top);
     if (cl) {
       if (token == ";" || token == "[")
@@ -603,7 +603,7 @@ bool DSMChartReader::decode(DSMStateDiagram* e, const string& chart,
       if ((token == "{") || (token == "}")) {
       	// readability
       	continue;
-      } 
+      }
 
       if ((token == "/") || (token == "->") || (token == "]"))  {
       	// end of condition list
@@ -613,9 +613,9 @@ bool DSMChartReader::decode(DSMStateDiagram* e, const string& chart,
       	  delete cl;
       	  return false;
       	}
-      	
+
       	DSMElement* el = &(*stack.back());
-      	
+
       	DSMTransition* tr = dynamic_cast<DSMTransition*>(el);
       	DSMConditionTree* ct = dynamic_cast<DSMConditionTree*>(el);
       	if (tr) {
@@ -629,16 +629,16 @@ bool DSMChartReader::decode(DSMStateDiagram* e, const string& chart,
       	  delete cl;
       	  return false;
       	}
-      
+
       	delete cl;
-      
+
       	// start AL_trans action list
       	if (token == "/") {
       	  stack.push_back(new ActionList(ActionList::AL_trans));
       	}
       	continue;
       }
-      
+
       if (token == "not") {
       	cl->invert_next = !cl->invert_next;
       	continue;
@@ -648,13 +648,13 @@ bool DSMChartReader::decode(DSMStateDiagram* e, const string& chart,
       	cl->is_exception = true;
       	continue;
       }
-      
+
       DBG("new condition: '%s'\n", token.c_str());
       DSMCondition* c = conditionFromToken(token, cl->invert_next);
       cl->invert_next = false;
-      if (!c) 
+      if (!c)
       	return false;
-      
+
       owner->transferElem(c);
       cl->conditions.push_back(c);
       continue;
@@ -697,7 +697,7 @@ bool DSMChartReader::decode(DSMStateDiagram* e, const string& chart,
 	  return false;
 	}
 	delete tr;
-	  
+
 	stack.pop_back();
 	continue;
       }
@@ -746,5 +746,5 @@ bool DSMChartReader::decode(DSMStateDiagram* e, const string& chart,
 void DSMChartReader::cleanup() {
   for (vector<DSMModule*>::iterator it=mods.begin(); it != mods.end(); it++)
     delete *it;
-  mods.clear();  
+  mods.clear();
 }

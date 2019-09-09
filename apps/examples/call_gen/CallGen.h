@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _PINAUTHCONFERENCE_H_
@@ -52,7 +52,7 @@ struct CallInfo {
   time_t disconnect_ts;
 };
 
-class CallGenFactory 
+class CallGenFactory
   : public AmSessionFactory,
     public AmDynInvokeFactory,
     public AmDynInvoke,
@@ -60,7 +60,7 @@ class CallGenFactory
 {
   AmPromptCollection prompts;
 
-  // for DI 
+  // for DI
   static CallGenFactory* _instance;
 
   int load();
@@ -79,7 +79,7 @@ class CallGenFactory
   bool target_enabled;
   AmArg* target_args;
   // number of already scheduled calls for the target
-  int scheduled; 
+  int scheduled;
 
 public:
   static string DigitsDir;
@@ -115,13 +115,13 @@ public:
   void on_stop();
 
   // report
-  void reportCall(string callid, 
-		  CallGenEvent ev, 
+  void reportCall(string callid,
+		  CallGenEvent ev,
 		  time_t connect_ts,
 		  time_t disconnect_ts);
 };
 
-class CallGenDialog 
+class CallGenDialog
   : public AmSession
 {
 public:
@@ -135,7 +135,7 @@ private:
   time_t disconnect_ts;
 
   int play_rand_digits;
-  int call_time_base; 
+  int call_time_base;
   int call_time_rand;
 
   bool timer_started;
@@ -144,7 +144,7 @@ private:
   void setCallTimer();
 
 public:
-  CallGenDialog(AmPromptCollection& prompts, 
+  CallGenDialog(AmPromptCollection& prompts,
 		int play_rand_digits, int call_time_base, int call_time_rand);
   ~CallGenDialog();
 

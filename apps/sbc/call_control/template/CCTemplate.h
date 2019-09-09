@@ -89,4 +89,4 @@ class CCTemplate : public AmDynInvoke
   /* void onB2BReply(const AmSipReply& reply, void *user_data); */
 };
 
-#endif 
+#endif

@@ -10,12 +10,12 @@ DynRateLimit::DynRateLimit(unsigned int time_base_ms)
   time_base = time_base_ms / 20;
 }
 
-bool DynRateLimit::limit(unsigned int rate, unsigned int peak, 
+bool DynRateLimit::limit(unsigned int rate, unsigned int peak,
 			 unsigned int size)
 {
   lock();
 
-  if(AmAppTimer::instance()->wall_clock - last_update 
+  if(AmAppTimer::instance()->wall_clock - last_update
      > time_base) {
 
     update_limit(rate,peak);

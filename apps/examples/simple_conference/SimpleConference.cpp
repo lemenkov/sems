@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -77,20 +77,20 @@ void SimpleConferenceDialog::onSessionStart()
   // open the beep file
   BeepSound.reset(new AmAudioFile());
   if(BeepSound->open(BEEP_FILE_NAME, AmAudioFile::Read)) {
-    BeepSound.reset(0);	  
+    BeepSound.reset(0);
   }
 
-  // get a channel from the status 
+  // get a channel from the status
   channel.reset(AmConferenceStatus::getChannel(conf_id,getLocalTag(),RTPStream()->getSampleRate()));
-  
+
   // add the channel to our playlist
   play_list.addToPlaylist(new AmPlaylistItem(channel.get(),
 					     channel.get()));
-  
+
   // set the playlist as input and output
   setInOut(&play_list,&play_list);
 
-  // we need to be in the same callgroup as the other 
+  // we need to be in the same callgroup as the other
   // people in the conference (important if we have multiple
   // MediaProcessor threads
   setCallgroup(conf_id);
@@ -108,7 +108,7 @@ void SimpleConferenceDialog::onBye(const AmSipRequest& req)
 
 void SimpleConferenceDialog::process(AmEvent* ev)
 {
-  // check conference events 
+  // check conference events
   ConferenceEvent* ce = dynamic_cast<ConferenceEvent*>(ev);
   if(ce && (conf_id == ce->conf_id)){
     switch(ce->event_id){
@@ -117,17 +117,17 @@ void SimpleConferenceDialog::process(AmEvent* ev)
       if(BeepSound.get()){
 	// rewind in case we already played it
 	BeepSound->rewind();
-	// add to front of playlist - after the file is played 
+	// add to front of playlist - after the file is played
 	// we will be connected again to conference channel
 	play_list.addToPlayListFront(new AmPlaylistItem(BeepSound.get(), NULL));
-      }  
+      }
     } break;
-    
+
     case ConfParticipantLeft: {
       if(BeepSound.get()){
 	BeepSound->rewind();
 	play_list.addToPlayListFront(new AmPlaylistItem( BeepSound.get(), NULL));
-      }  
+      }
     } break;
 
     default:
@@ -141,7 +141,7 @@ void SimpleConferenceDialog::process(AmEvent* ev)
 
 void SimpleConferenceDialog::onDtmf(int event, int duration)
 {
-  DBG("SimpleConferenceDialog::onDtmf: event %d duration %d\n", 
+  DBG("SimpleConferenceDialog::onDtmf: event %d duration %d\n",
       event, duration);
 }
 

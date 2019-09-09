@@ -86,7 +86,7 @@ B2BMediaStatistics *B2BMediaStatistics::instance()
 {
   return &b2b_stats;
 }
-    
+
 void B2BMediaStatistics::reportCodecWriteUsage(string &dst)
 {
   if (codec_write_usage.empty()) {
@@ -98,7 +98,7 @@ void B2BMediaStatistics::reportCodecWriteUsage(string &dst)
   dst.clear();
   AmLock lock(mutex);
   for (map<string, int>::iterator i = codec_write_usage.begin();
-      i != codec_write_usage.end(); ++i) 
+      i != codec_write_usage.end(); ++i)
   {
     if (first) first = false;
     else dst += ",";
@@ -119,7 +119,7 @@ void B2BMediaStatistics::reportCodecReadUsage(string &dst)
   dst.clear();
   AmLock lock(mutex);
   for (map<string, int>::iterator i = codec_read_usage.begin();
-      i != codec_read_usage.end(); ++i) 
+      i != codec_read_usage.end(); ++i)
   {
     if (first) first = false;
     else dst += ",";
@@ -128,7 +128,7 @@ void B2BMediaStatistics::reportCodecReadUsage(string &dst)
     dst += int2str(i->second);
   }
 }
-    
+
 void B2BMediaStatistics::getReport(const AmArg &args, AmArg &ret)
 {
   AmArg write_usage;
@@ -138,7 +138,7 @@ void B2BMediaStatistics::getReport(const AmArg &args, AmArg &ret)
     AmLock lock(mutex);
 
     for (map<string, int>::iterator i = codec_write_usage.begin();
-        i != codec_write_usage.end(); ++i) 
+        i != codec_write_usage.end(); ++i)
     {
       AmArg avp;
       avp["codec"] = i->first;
@@ -147,7 +147,7 @@ void B2BMediaStatistics::getReport(const AmArg &args, AmArg &ret)
     }
 
     for (map<string, int>::iterator i = codec_read_usage.begin();
-        i != codec_read_usage.end(); ++i) 
+        i != codec_read_usage.end(); ++i)
     {
       AmArg avp;
       avp["codec"] = i->first;
@@ -289,7 +289,7 @@ void AudioStreamData::setRelayPaused(bool paused) {
   if (NULL != stream) {
     if (relay_paused)
       stream->disableRtpRelay();
-    else 
+    else
       stream->enableRtpRelay();
   }
 }
@@ -392,17 +392,17 @@ void AudioStreamData::updateSendStats()
   }
 
   int payload = stream->getPayloadType();
-  if (payload != outgoing_payload) { 
+  if (payload != outgoing_payload) {
     // payload used to send has changed
 
     // decrement usage of previous payload if set
-    if (outgoing_payload != UNDEFINED_PAYLOAD) 
+    if (outgoing_payload != UNDEFINED_PAYLOAD)
       b2b_stats.decCodecWriteUsage(outgoing_payload_name);
-    
+
     if (payload != UNDEFINED_PAYLOAD) {
       // remember payload name (in lowercase to simulate case insensitivity)
       outgoing_payload_name = stream->getPayloadName(payload);
-      transform(outgoing_payload_name.begin(), outgoing_payload_name.end(), 
+      transform(outgoing_payload_name.begin(), outgoing_payload_name.end(),
           outgoing_payload_name.begin(), ::tolower);
       b2b_stats.incCodecWriteUsage(outgoing_payload_name);
     }
@@ -419,17 +419,17 @@ void AudioStreamData::updateRecvStats(AmRtpStream *s)
   }
 
   int payload = s->getLastPayload();
-  if (payload != incoming_payload) { 
+  if (payload != incoming_payload) {
     // payload used to send has changed
 
     // decrement usage of previous payload if set
-    if (incoming_payload != UNDEFINED_PAYLOAD) 
+    if (incoming_payload != UNDEFINED_PAYLOAD)
       b2b_stats.decCodecReadUsage(incoming_payload_name);
-    
+
     if (payload != UNDEFINED_PAYLOAD) {
       // remember payload name (in lowercase to simulate case insensitivity)
       incoming_payload_name = stream->getPayloadName(payload);
-      transform(incoming_payload_name.begin(), incoming_payload_name.end(), 
+      transform(incoming_payload_name.begin(), incoming_payload_name.end(),
           incoming_payload_name.begin(), ::tolower);
       b2b_stats.incCodecReadUsage(incoming_payload_name);
     }
@@ -456,7 +456,7 @@ int AudioStreamData::writeStream(unsigned long long ts, unsigned char *buffer, A
         got = src_stream->get(ts, buffer, sample_rate, f_size);
         if (got > 0) {
           updateRecvStats(src_stream);
-          if (dtmf_queue && enable_dtmf_transcoding) { 
+          if (dtmf_queue && enable_dtmf_transcoding) {
 	    dtmf_queue->putDtmfAudio(buffer, got, ts);
 	  }
         }
@@ -475,7 +475,7 @@ int AudioStreamData::writeStream(unsigned long long ts, unsigned char *buffer, A
 void AudioStreamData::mute(bool set_mute)
 {
   DBG("mute(%s) - RTP stream [%p]\n", set_mute?"true":"false", stream);
- 
+
   if (stream) {
     stream->setOnHold(set_mute);
     if (muted != set_mute) stream->clearRTPTimeout();
@@ -501,7 +501,7 @@ AmB2BMedia::RelayStreamPair::RelayStreamPair(AmB2BSession *_a, AmB2BSession *_b)
   b.enableRawRelay();
 }
 
-AmB2BMedia::AmB2BMedia(AmB2BSession *_a, AmB2BSession *_b): 
+AmB2BMedia::AmB2BMedia(AmB2BSession *_a, AmB2BSession *_b):
   a(_a),
   b(_b),
   callgroup(AmSession::getNewId()),
@@ -513,7 +513,7 @@ AmB2BMedia::AmB2BMedia(AmB2BSession *_a, AmB2BSession *_b):
   a_leg_muted(false), b_leg_muted(false),
   relay_paused(false),
   logger(NULL)
-{ 
+{
 }
 
 AmB2BMedia::~AmB2BMedia()
@@ -545,7 +545,7 @@ bool AmB2BMedia::releaseReference() {
     DBG("last reference to AmB2BMedia [%p] cleared, destroying\n", this);
     delete this;
   }
-  return (r == 0); 
+  return (r == 0);
 }
 
 void AmB2BMedia::changeSession(bool a_leg, AmB2BSession *new_session)
@@ -738,7 +738,7 @@ void AmB2BMedia::createStreams(const AmSdp &sdp)
   }
 }
 
-void AmB2BMedia::replaceConnectionAddress(AmSdp &parser_sdp, bool a_leg, 
+void AmB2BMedia::replaceConnectionAddress(AmSdp &parser_sdp, bool a_leg,
 					  const string& relay_address,
 					  const string& relay_public_address)
 {
@@ -762,7 +762,7 @@ void AmB2BMedia::replaceConnectionAddress(AmSdp &parser_sdp, bool a_leg,
 
   std::vector<SdpMedia>::iterator it = parser_sdp.media.begin();
   for (; it != parser_sdp.media.end() ; ++it) {
-  
+
     // FIXME: only UDP streams are handled for now
     if (it->type == MT_AUDIO) {
 
@@ -853,8 +853,8 @@ void AmB2BMedia::replaceConnectionAddress(AmSdp &parser_sdp, bool a_leg,
   DBG("replaced connection address in SDP with %s:%s.\n",
       relay_public_address.c_str(), replaced_ports.c_str());
 }
-      
-static const char* 
+
+static const char*
 _rtp_relay_mode_str(const AmB2BSession::RTPRelayMode& relay_mode)
 {
   switch(relay_mode){
@@ -1200,7 +1200,7 @@ void AmB2BMedia::setRelayDTMFReceiving(bool enabled) {
     DBG("force_receive_dtmf %sabled for [%p]\n", enabled?"en":"dis", j->b.getStream());
     if (NULL != j->a.getStream())
       j->a.getStream()->force_receive_dtmf = enabled;
-    
+
     if (NULL != j->b.getStream())
       j->b.getStream()->force_receive_dtmf = enabled;
   }
@@ -1286,7 +1286,7 @@ void AmB2BMedia::debug()
     i->b.debug();
   }
 
-  for (RelayStreamIterator j = relay_streams.begin(); 
+  for (RelayStreamIterator j = relay_streams.begin();
        j != relay_streams.end(); ++j) {
 
     DBG(" - relay stream (A):\n");

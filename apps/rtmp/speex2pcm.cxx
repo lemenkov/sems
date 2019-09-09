@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -44,7 +44,7 @@ int main(int argc, char** argv)
     fprintf(stderr,"%s input_file output_file\n",argv[0]);
     return -1;
   }
-  
+
   int in,out;
   in = open(argv[1],O_RDONLY);
   if(in<0){
@@ -52,7 +52,7 @@ int main(int argc, char** argv)
 	    argv[1],strerror(errno));
     return -1;
   }
-  
+
   out = open(argv[2],O_WRONLY|O_CREAT|O_TRUNC,
 	     S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
   if(out<0){
@@ -107,7 +107,7 @@ int main(int argc, char** argv)
     in_len += pkg_len;
     speex_bits_read_from(&bits, buffer, pkg_len);
     int err = speex_decode_int(dec_state, &bits, output);
-    
+
     switch(err){
     case 0:
       // no error
@@ -124,7 +124,7 @@ int main(int argc, char** argv)
       goto loop_exit;
     }
   }
-  
+
  loop_exit:
   printf("in:\t%8u bytes\n",in_len);
   printf("out:\t%8u bytes\n",out_len);

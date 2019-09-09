@@ -48,7 +48,7 @@ DiameterClient* DiameterClient::instance()
   return _instance;
 }
 
-DiameterClient::DiameterClient(const string& name) 
+DiameterClient::DiameterClient(const string& name)
   : AmDynInvokeFactory(name)
 {
 }
@@ -66,7 +66,7 @@ int DiameterClient::onLoad() {
   return 0;
 }
 
-void DiameterClient::newConnection(const AmArg& args, 
+void DiameterClient::newConnection(const AmArg& args,
 				   AmArg& ret) {
   string app_name     = args.get(0).asCStr();
   string server_ip    = args.get(1).asCStr();
@@ -90,10 +90,10 @@ void DiameterClient::newConnection(const AmArg& args,
   ServerConnection* sc = new ServerConnection();
   DBG("initializing new connection for application %s...\n",
       app_name.c_str());
-  sc->init(server_ip, server_port, 
+  sc->init(server_ip, server_port,
 	   ca_file, cert_file,
-	   origin_host, origin_realm, origin_ip, 
-	   app_id, vendor_id, product_name, 
+	   origin_host, origin_realm, origin_ip,
+	   app_id, vendor_id, product_name,
 	   req_timeout);
 
   DBG("starting new connection...\n");
@@ -109,7 +109,7 @@ void DiameterClient::newConnection(const AmArg& args,
   return;
 }
 
-void DiameterClient::sendRequest(const AmArg& args, 
+void DiameterClient::sendRequest(const AmArg& args,
 				 AmArg& ret) {
   string app_name     = args.get(0).asCStr();
   int    command_code = args.get(1).asInt();
@@ -117,7 +117,7 @@ void DiameterClient::sendRequest(const AmArg& args,
   AmArg& val          = args.get(3);
   string sess_link    = args.get(4).asCStr();
 
-  vector<ServerConnection*> scs;    
+  vector<ServerConnection*> scs;
   conn_mut.lock();
   for (multimap<string, ServerConnection*>::iterator it=
 	 connections.lower_bound(app_name);
@@ -127,7 +127,7 @@ void DiameterClient::sendRequest(const AmArg& args,
   }
   conn_mut.unlock();
 
-  DBG("found %zd active connections for application %s\n", 
+  DBG("found %zd active connections for application %s\n",
       scs.size(), app_name.c_str());
 
   if (scs.empty()) {
@@ -136,16 +136,16 @@ void DiameterClient::sendRequest(const AmArg& args,
     ret.push("no active connections");
     return;
   }
-  // select one connection randomly 
+  // select one connection randomly
   size_t pos = random() % scs.size();
-  scs[pos]->postEvent(new DiameterRequestEvent(command_code, app_id, 
+  scs[pos]->postEvent(new DiameterRequestEvent(command_code, app_id,
 					       val, sess_link));
   ret.push(0);
   ret.push("request sent");
   return;
 }
 
-void DiameterClient::invoke(const string& method, const AmArg& args, 
+void DiameterClient::invoke(const string& method, const AmArg& args,
 			    AmArg& ret)
 {
   if(method == "newConnection"){
@@ -153,7 +153,7 @@ void DiameterClient::invoke(const string& method, const AmArg& args,
       args.assertArrayFmt("ssisssiisi");
     } else  {
       // plus optional ssl/tls parameters ss
-      args.assertArrayFmt("ssisssiisiss"); 
+      args.assertArrayFmt("ssisssiisiss");
     }
     newConnection(args, ret);
   } else if(method == "sendRequest"){
@@ -167,7 +167,7 @@ void DiameterClient::invoke(const string& method, const AmArg& args,
     }
     sendRequest(args, ret);
   } else if(method == "test1"){
-    AmArg a; 
+    AmArg a;
     a.push(AmArg("vtm"));
 //     a.push(AmArg("10.1.0.196"));
 //     a.push(AmArg(8080));
@@ -186,7 +186,7 @@ void DiameterClient::invoke(const string& method, const AmArg& args,
 //     a.push(AmArg("client.pem"));
     newConnection(a, ret);
   } else if(method == "test2"){
-    AmArg a; 
+    AmArg a;
 #define AAA_APP_USPI    16777241
 #define AVP_E164_NUMBER     1024
 #define AAA_VENDOR_IPTEGO  29631
@@ -232,7 +232,7 @@ void DiameterClient::invoke(const string& method, const AmArg& args,
     DBG("x sendrequest\n");
     sendRequest(a, ret);
 
-  } else if(method == "_list"){ 
+  } else if(method == "_list"){
     ret.push(AmArg("newConnection"));
     ret.push(AmArg("sendRequest"));
     ret.push(AmArg("test1"));

@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmRtpAudio.h */
@@ -47,12 +47,12 @@ enum PlayoutType {
 
 
 
-/** 
+/**
  * \brief interface for PLC buffer
  */
 
 class AmPLCBuffer {
- public: 
+ public:
 
   virtual void add_to_history(int16_t *buffer, unsigned int size) = 0;
 
@@ -92,8 +92,8 @@ public:
 };
 
 
-/** 
- * \brief binds together a \ref AmRtpStream and an \ref AmAudio for a session 
+/**
+ * \brief binds together a \ref AmRtpStream and an \ref AmAudio for a session
  */
 class AmRtpAudio: public AmRtpStream, public AmAudio, public AmPLCBuffer
 {
@@ -102,7 +102,7 @@ class AmRtpAudio: public AmRtpStream, public AmAudio, public AmPLCBuffer
 
 #ifdef USE_SPANDSP_PLC
     plc_state_t* plc_state;
-#else 
+#else
     std::unique_ptr<LowcFE>       fec;
 #endif
 
@@ -111,7 +111,7 @@ class AmRtpAudio: public AmRtpStream, public AmAudio, public AmPLCBuffer
   unsigned long long last_check;
   bool               last_check_i;
   bool               send_int;
-  
+
   unsigned long long last_send_ts;
   bool               last_send_ts_i;
 
@@ -139,10 +139,10 @@ public:
   int receive(unsigned long long system_ts);
 
   // AmAudio interface
-  int get(unsigned long long system_ts, unsigned char* buffer, 
+  int get(unsigned long long system_ts, unsigned char* buffer,
 	  int output_sample_rate, unsigned int nb_samples);
 
-  int put(unsigned long long system_ts, unsigned char* buffer, 
+  int put(unsigned long long system_ts, unsigned char* buffer,
 	  int input_sample_rate, unsigned int size);
 
   unsigned int bytes2samples(unsigned int) const;

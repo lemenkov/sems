@@ -18,7 +18,7 @@ protected:
   const char *identify() { return "async_file_writer"; }
   void on_stop();
   void run();
-  
+
 public:
   void start();
 

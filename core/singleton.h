@@ -9,9 +9,9 @@ class singleton
 {
   singleton() : T() {}
   ~singleton() {}
-  
+
 public:
-  static singleton<T>* instance() 
+  static singleton<T>* instance()
   {
     _inst_m.lock();
     if(NULL == _instance) {
@@ -30,8 +30,8 @@ public:
     _inst_m.unlock();
     return res;
   }
-  
-  static void dispose() 
+
+  static void dispose()
   {
     _inst_m.lock();
     if(_instance != NULL){

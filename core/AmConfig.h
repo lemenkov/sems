@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmConfig.h */
@@ -59,7 +59,7 @@ struct AmConfig
   /** semicolon separated list of plugins to exclude from loading */
   static string ExcludePlugins;
   /** semicolon separated list of payloads to exclude from loading */
-  static string ExcludePayloads;  
+  static string ExcludePayloads;
   //static unsigned int MaxRecordTime;
   /** log level */
   static int LogLevel;
@@ -76,7 +76,7 @@ struct AmConfig
   /** set GID when in daemon mode */
   static string DaemonGid;
 #endif
-  
+
   static unsigned int MaxShutdownTime;
 
   static unsigned int RtpMuxPort;
@@ -91,7 +91,7 @@ struct AmConfig
 
     /** Used for binding socket */
     string       LocalIP;
-        
+
     /** Used in Contact-HF */
     string PublicIP;
 
@@ -110,9 +110,9 @@ struct AmConfig
 
     /** Used for binding SIP socket */
     unsigned int LocalPort;
-        
-    /** options for the signaling socket 
-     * (@see trsp_socket::socket_options) 
+
+    /** options for the signaling socket
+     * (@see trsp_socket::socket_options)
      */
     unsigned int SigSockOpts;
 
@@ -150,7 +150,7 @@ struct AmConfig
   struct IPAddr {
     string addr;
     short  family;
-    
+
     IPAddr(const string& addr, const short family)
       : addr(addr), family(family) {}
 
@@ -218,14 +218,14 @@ struct AmConfig
     App_MAPPING,
     App_SPECIFIED
   };
-  
-  /** "application" config value */ 
+
+  /** "application" config value */
   static string Application;
   /** type of application selection (parsed from Application) */
   static ApplicationSelector AppSelect;
 
   /* this is regex->application mapping is used if  App_MAPPING */
-  static RegexMappingVector AppMapping; 
+  static RegexMappingVector AppMapping;
 
 #ifdef WITH_ZRTP
   static bool enable_zrtp;
@@ -291,10 +291,10 @@ struct AmConfig
    * command line arguments */
   static int readConfiguration();
 
-  /* following setters are used to fill config from config file */  
-	
+  /* following setters are used to fill config from config file */
+
   /** Setter for SIP Port, returns 0 on invalid value */
-  static int setSIPPort(const string& port);  
+  static int setSIPPort(const string& port);
   /** Setter for SmtpServer Port, returns 0 on invalid value */
   static int setSmtpPort(const string& port);
   /** Setter for RtpLowPort, returns 0 on invalid value */

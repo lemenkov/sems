@@ -56,4 +56,4 @@ class CCRegistrar : public AmDynInvoke
   int onLoad();
 };
 
-#endif 
+#endif

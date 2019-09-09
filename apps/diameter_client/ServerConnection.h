@@ -56,7 +56,7 @@ enum {
   AAA_ERROR_COMM       = -6
 };
 
-struct DiameterRequestEvent 
+struct DiameterRequestEvent
   : public AmEvent
 {
   int command_code;
@@ -64,7 +64,7 @@ struct DiameterRequestEvent
   AmArg val;
   string sess_link;
 
-  enum { ID_NewRequest = 0 }; 
+  enum { ID_NewRequest = 0 };
   DiameterRequestEvent(int command_code,
 		       int app_id,
 		       AmArg val,
@@ -92,7 +92,7 @@ struct DiameterServerConnection {
   ~DiameterServerConnection() {}
 };
 
-class ServerConnection 
+class ServerConnection
 : public AmThread,
   public AmEventQueue,
   public AmEventHandler
@@ -100,7 +100,7 @@ class ServerConnection
   struct timeval connect_ts;
   bool open;
   int timeout_check_cntr;
-  
+
   string server_name;
   int server_port;
 
@@ -120,7 +120,7 @@ class ServerConnection
   //  the client
   string product_name;
   uint32_t vendorID;
-  
+
   DiameterServerConnection conn;
 
   typedef map<unsigned int, pair<string, struct timeval> > DReqMap;
@@ -143,7 +143,7 @@ class ServerConnection
   static int addResultCodeAVP(AAAMessage* msg, AAAResultCode code);
   static int addGroupedAVP(AAA_AVP *avp, AAA_AVPCode avp_code, char* val, unsigned int len);
 
-  // send request and get response  
+  // send request and get response
   int sendRequest(AAAMessage* req, unsigned int& exe);
   void process(AmEvent*);
   void receive();
@@ -154,11 +154,11 @@ class ServerConnection
  public:
   ServerConnection();
   ~ServerConnection();
-  int init(const string& _server_name, 
+  int init(const string& _server_name,
 	   int _server_port,
 	   const string& _ca_file,
 	   const string& _cert_file,
-	   const string& _origin_host, 
+	   const string& _origin_host,
 	   const string& _origin_realm,
 	   const string& _origin_ip,
 	   AAAApplicationId _app_id,

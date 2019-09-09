@@ -31,7 +31,7 @@ public:
 	 * rate - rate at which to resample (e.g. 0.5 - half the original samplerate)
 	 * num_samples - number of samples to put into dst (for stereo 1 sample means 2 samples values, left and right)
 	 * rstate - resampling state
-	 * 
+	 *
 	 * returns number of samples actually put into dst
 	 *
 	 */

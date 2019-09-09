@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "log.h"
@@ -37,14 +37,14 @@
 
 SC_EXPORT(MonitoringModule);
 
-void splitCmd(const string& from_str, 
+void splitCmd(const string& from_str,
 	      string& cmd, string& params) {
   size_t b_pos = from_str.find('(');
   if (b_pos != string::npos) {
     cmd = from_str.substr(0, b_pos);
     params = from_str.substr(b_pos + 1, from_str.rfind(')') - b_pos -1);
-  } else 
-    cmd = from_str;  
+  } else
+    cmd = from_str;
 }
 
 DSMAction* MonitoringModule::getAction(const string& from_str) {
@@ -87,7 +87,7 @@ bool MonLogAction::execute(AmSession* sess, DSMSession* sc_sess,
 
   string prop = resolveVars(par1, sess, sc_sess, event_params);
   string val  = resolveVars(par2, sess, sc_sess, event_params);
-  
+
   MONITORING_LOG(sess->getLocalTag().c_str(), prop.c_str(), val.c_str());
 
   return false;
@@ -100,7 +100,7 @@ bool MonLogAddAction::execute(AmSession* sess,  DSMSession* sc_sess,
 
   string prop = resolveVars(par1, sess, sc_sess, event_params);
   string val  = resolveVars(par2, sess, sc_sess, event_params);
-  
+
   MONITORING_LOG_ADD(sess->getLocalTag().c_str(), prop.c_str(), val.c_str());
 
   return false;

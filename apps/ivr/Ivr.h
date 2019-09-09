@@ -45,7 +45,7 @@ class PythonScriptThread : public AmThread {
   void run();
   void on_stop();
  public:
- PythonScriptThread(PyObject* py_thread_object_) 
+ PythonScriptThread(PyObject* py_thread_object_)
    : py_thread_object(py_thread_object_) { }
 };
 
@@ -56,16 +56,16 @@ struct IvrScriptDesc
   PyObject* dlg_class;
 
 IvrScriptDesc()
-: mod(0), 
+: mod(0),
     dlg_class(0)
   {}
 
 IvrScriptDesc(const IvrScriptDesc& d)
-: mod(d.mod), 
+: mod(d.mod),
     dlg_class(d.dlg_class)
   {}
 
-IvrScriptDesc(PyObject* mod, 
+IvrScriptDesc(PyObject* mod,
 	      PyObject* dlg_class)
 : mod(mod),
     dlg_class(dlg_class)
@@ -89,8 +89,8 @@ class IvrFactory: public AmSessionFactory
   void set_sys_path(const string& script_path);
   void import_ivr_builtins();
 
-  void import_object(PyObject* m, 
-		     const char* name, 
+  void import_object(PyObject* m,
+		     const char* name,
 		     PyTypeObject* type);
 
   /** @return true if everything ok */
@@ -103,7 +103,7 @@ class IvrFactory: public AmSessionFactory
 
   std::queue<PyObject*> deferred_threads;
   void start_deferred_threads();
-   
+
  public:
   IvrFactory(const string& _app_name);
 
@@ -127,7 +127,7 @@ class IvrDialog : public AmB2BCallerSession
   PyObject  *py_dlg;
 
   bool callPyEventHandler(const char* name, const char* fmt, ...);
-    
+
   void process(AmEvent* event);
 
   string b2b_callee_from_party;
@@ -145,7 +145,7 @@ class IvrDialog : public AmB2BCallerSession
   void setPyPtrs(PyObject *mod, PyObject *dlg, AmArg *sp = NULL);
 
   int drop();
-    
+
   void onInvite(const AmSipRequest& req);
   int  onSdpCompleted(const AmSdp& offer, const AmSdp& answer);
   void onSessionStart();
@@ -157,12 +157,12 @@ class IvrDialog : public AmB2BCallerSession
   bool onOtherReply(const AmSipReply& r);
 
   void onSipReply(const AmSipRequest& req,
-		  const AmSipReply& reply, 
+		  const AmSipReply& reply,
 		  AmBasicSipDialog::Status old_dlg_status);
   void onSipRequest(const AmSipRequest& r);
 
   void onRtpTimeout();
-    
+
   void connectCallee(const string& remote_party, const string& remote_uri,
 		     const string& from_party, const string& from_uri);
 

@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -52,12 +52,12 @@ AmMutex::~AmMutex()
   pthread_mutex_destroy(&m);
 }
 
-void AmMutex::lock() 
+void AmMutex::lock()
 {
   pthread_mutex_lock(&m);
 }
 
-void AmMutex::unlock() 
+void AmMutex::unlock()
 {
   pthread_mutex_unlock(&m);
 }
@@ -76,7 +76,7 @@ void * AmThread::_start(void * _t)
 
   DBG("Thread %lu is ending.\n", (unsigned long) _this->_pid);
   _this->_stopped.set(true);
-    
+
   return NULL;
 }
 
@@ -105,7 +105,7 @@ void AmThread::start()
   if (res != 0) {
     ERROR("pthread create failed with code %i\n", res);
     throw string("thread could not be started");
-  }	
+  }
   //DBG("Thread %lu is just created.\n", (unsigned long int) _pid);
 }
 
@@ -119,7 +119,7 @@ void AmThread::stop()
   }
 
   // gives the thread a chance to clean up
-  DBG("Thread %lu (%lu) calling on_stop, give it a chance to clean up.\n", 
+  DBG("Thread %lu (%lu) calling on_stop, give it a chance to clean up.\n",
       (unsigned long int) _pid, (unsigned long int) _td);
 
   try { on_stop(); } catch(...) {}
@@ -175,15 +175,15 @@ int AmThread::setRealtime() {
   //     }
 
   //     policy = sched_getscheduler(0);
-    
+
   //     std::string str_policy = "unknown";
   //     switch(policy) {
   // 	case SCHED_OTHER: str_policy = "SCHED_OTHER"; break;
   // 	case SCHED_RR: str_policy = "SCHED_RR"; break;
   // 	case SCHED_FIFO: str_policy = "SCHED_FIFO"; break;
   //     }
- 
-  //     DBG("Thread has now policy '%s' - priority 80 (from %d to %d).\n", str_policy.c_str(), 
+
+  //     DBG("Thread has now policy '%s' - priority 80 (from %d to %d).\n", str_policy.c_str(),
   // 	sched_get_priority_min(policy), sched_get_priority_max(policy));
   //     return 0;
   return 0;
@@ -229,7 +229,7 @@ void AmThreadWatcher::run()
   for(;;){
 
     _run_cond.wait_for();
-    // Let some time for to threads 
+    // Let some time for to threads
     // to stop by themselves
     sleep(10);
 

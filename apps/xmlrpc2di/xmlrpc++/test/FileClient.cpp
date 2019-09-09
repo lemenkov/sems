@@ -1,6 +1,6 @@
 // FileClient.cpp : A simple xmlrpc client. Usage: FileClient serverHost serverPort xmlfile
 // Reads an xmlrpc request from the specified xmlfile and calls the method on the server.
-// 
+//
 // Link against xmlrpc lib and whatever socket libs your system needs (ws2_32.lib on windows)
 
 #include "XmlRpc.h"
@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
 }
 
 
-// 
+//
 std::string
 parseRequest(std::string const& xml, XmlRpcValue& params)
 {
@@ -82,7 +82,7 @@ parseRequest(std::string const& xml, XmlRpcValue& params)
   int offset = 0;   // Number of chars parsed from the request
 
   std::string methodName = XmlRpcUtil::parseTag(METHODNAME_TAG, xml, &offset);
-  XmlRpcUtil::log(3, "XmlRpcServerConnection::parseRequest: parsed methodName %s.", methodName.c_str()); 
+  XmlRpcUtil::log(3, "XmlRpcServerConnection::parseRequest: parsed methodName %s.", methodName.c_str());
 
   if (! methodName.empty() && XmlRpcUtil::findTag(PARAMS_TAG, xml, &offset))
   {
@@ -99,7 +99,7 @@ parseRequest(std::string const& xml, XmlRpcValue& params)
       (void) XmlRpcUtil::nextTagIs(PARAM_ETAG, xml, &offset);
     }
 
-    XmlRpcUtil::log(3, "XmlRpcServerConnection::parseRequest: parsed %d params.", nArgs); 
+    XmlRpcUtil::log(3, "XmlRpcServerConnection::parseRequest: parsed %d params.", nArgs);
 
     (void) XmlRpcUtil::nextTagIs(PARAMS_ETAG, xml, &offset);
   }

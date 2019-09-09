@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -51,7 +51,7 @@ public:
 class RtmpAudio;
 class RtmpConnection;
 
-class RtmpSession 
+class RtmpSession
   : public AmSession
 {
   RtmpAudio*      rtmp_audio;
@@ -72,7 +72,7 @@ public:
   void onBye(const AmSipRequest& req);
   void onBeforeDestroy();
   void onSipReply(const AmSipRequest& req,
-		  const AmSipReply& reply, 
+		  const AmSipReply& reply,
 		  AmBasicSipDialog::Status old_dlg_status);
 
   void onInvite(const AmSipRequest& req);

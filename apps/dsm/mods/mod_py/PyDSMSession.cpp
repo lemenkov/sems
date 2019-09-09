@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2009 IPTEGO GmbH
- * 
+ *
  * This file is part of SEMS, a free SIP media server.
  *
  * SEMS is free software; you can redistribute it and/or modify
@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -45,19 +45,19 @@ extern "C" {
     if (NULL == sess) {							\
       ERROR("retrieving the session pointer from TL dict\n");		\
       return NULL;							\
-    }									
+    }
 
   static PyObject* mod_py_setvar(PyObject*, PyObject* args)
   {
     char *varname;
-    char *val;    
+    char *val;
     if(!PyArg_ParseTuple(args,"ss",&varname,&val))
       return NULL;
 
     GET_SESS_PTR;
-    
+
     DBG("set '%s' = '%s'\n", varname, val);
-    sess->var[varname] = val; 
+    sess->var[varname] = val;
 
     Py_INCREF(Py_None);
     return Py_None;
@@ -70,7 +70,7 @@ extern "C" {
       return NULL;
 
     GET_SESS_PTR;
-    
+
     DBG("returning '%s'\n", sess->var[varname].c_str());
 
     return PyString_FromString(sess->var[varname].c_str());
@@ -91,9 +91,9 @@ extern "C" {
       ERROR("Not possible to cast to session object.\n");
       return NULL;
     }
-  
+
     if (!strcmp("local_tag", varname))
-      res = sc_sess->getLocalTag();	
+      res = sc_sess->getLocalTag();
     else if (!strcmp("user", varname))
       res = sc_sess->dlg->getUser();
     else if (!strcmp("domain", varname))
@@ -114,12 +114,12 @@ extern "C" {
 
   static PyObject* mod_py_seterror(PyObject*, PyObject* args)
   {
-    int errno;    
+    int errno;
     if(!PyArg_ParseTuple(args,"i",&errno))
       return NULL;
 
     GET_SESS_PTR;
-    
+
     DBG("setting errno '%i'\n", errno);
     sess->SET_ERRNO(errno);
 
@@ -136,7 +136,7 @@ extern "C" {
       return NULL;
 
     GET_SESS_PTR;
-    
+
     DBG("playPrompt('%s', loop=%s)\n", name, loop?"true":"false");
     try {
       sess->playPrompt(name, loop);
@@ -159,8 +159,8 @@ extern "C" {
       return NULL;
 
     GET_SESS_PTR;
-    
-    DBG("playFile('%s', loop=%s, front=%s)\n", name, 
+
+    DBG("playFile('%s', loop=%s, front=%s)\n", name,
 	loop?"true":"false", front?"true":"false");
     try {
       sess->playFile(name, loop, front);
@@ -180,7 +180,7 @@ extern "C" {
       return NULL;
 
     GET_SESS_PTR;
-    
+
     DBG("recordFile('%s')\n", name);
     try {
       sess->recordFile(name);
@@ -195,7 +195,7 @@ extern "C" {
 
   static PyObject* getRecordLength(PyObject*, PyObject* args)
   {
-    GET_SESS_PTR;    
+    GET_SESS_PTR;
     unsigned int res =  sess->getRecordLength();
     DBG("record length %d\n",res);
     return PyInt_FromLong(res);
@@ -203,7 +203,7 @@ extern "C" {
 
   static PyObject* getRecordDataSize(PyObject*, PyObject* args)
   {
-    GET_SESS_PTR;    
+    GET_SESS_PTR;
     unsigned int res =  sess->getRecordDataSize();
     DBG("record data size %d\n",res);
     return PyInt_FromLong(res);
@@ -211,7 +211,7 @@ extern "C" {
 
   static PyObject* stopRecord(PyObject*, PyObject* args)
   {
-    GET_SESS_PTR;    
+    GET_SESS_PTR;
     DBG("stopping record.");
     sess->stopRecord();
     Py_INCREF(Py_None);
@@ -221,7 +221,7 @@ extern "C" {
   static PyObject* flushPlaylist(PyObject*, PyObject* args)
   {
     GET_SESS_PTR;
-    
+
     DBG("flushPlaylist()\n");
     sess->flushPlaylist();
     Py_INCREF(Py_None);
@@ -235,7 +235,7 @@ extern "C" {
       return NULL;
 
     GET_SESS_PTR;
-    
+
     DBG("setPromptSet('%s')\n", name);
     try {
       sess->setPromptSet(name);
@@ -257,7 +257,7 @@ extern "C" {
       return NULL;
 
     GET_SESS_PTR;
-    
+
     DBG("addSeparator('%s', front=%s)\n", name, front?"true":"false");
     sess->addSeparator(name, front);
     Py_INCREF(Py_None);
@@ -266,7 +266,7 @@ extern "C" {
 
   static PyObject* connectMedia(PyObject*, PyObject* args)
   {
-    GET_SESS_PTR;    
+    GET_SESS_PTR;
     DBG("connectMedia.");
     sess->connectMedia();
     Py_INCREF(Py_None);
@@ -275,7 +275,7 @@ extern "C" {
 
   static PyObject* disconnectMedia(PyObject*, PyObject* args)
   {
-    GET_SESS_PTR;    
+    GET_SESS_PTR;
     DBG("disconnectMedia.");
     sess->disconnectMedia();
     Py_INCREF(Py_None);
@@ -284,7 +284,7 @@ extern "C" {
 
   static PyObject* mute(PyObject*, PyObject* args)
   {
-    GET_SESS_PTR;    
+    GET_SESS_PTR;
     DBG("mute.");
     sess->mute();
     Py_INCREF(Py_None);
@@ -293,7 +293,7 @@ extern "C" {
 
   static PyObject* unmute(PyObject*, PyObject* args)
   {
-    GET_SESS_PTR;    
+    GET_SESS_PTR;
     DBG("unmute.");
     sess->unmute();
     Py_INCREF(Py_None);
@@ -306,13 +306,13 @@ extern "C" {
     char *remote_uri;
     int relayed_invite = 0;
 
-    if(!PyArg_ParseTuple(args,"ss|i", &remote_party, 
+    if(!PyArg_ParseTuple(args,"ss|i", &remote_party,
 			 &remote_uri, &relayed_invite))
       return NULL;
 
     GET_SESS_PTR;
-    
-    DBG("B2BconnectCallee('%s', '%s', relayed_invite=%s)\n", remote_party, 
+
+    DBG("B2BconnectCallee('%s', '%s', relayed_invite=%s)\n", remote_party,
 	remote_uri, relayed_invite?"true":"false");
     sess->B2BconnectCallee(remote_party, remote_uri, relayed_invite);
     Py_INCREF(Py_None);
@@ -322,7 +322,7 @@ extern "C" {
 
   static PyObject* B2BterminateOtherLeg(PyObject*, PyObject* args)
   {
-    GET_SESS_PTR;    
+    GET_SESS_PTR;
     DBG("B2BterminateOtherLeg.");
     sess->B2BterminateOtherLeg();
     Py_INCREF(Py_None);

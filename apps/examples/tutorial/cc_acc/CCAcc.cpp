@@ -48,17 +48,17 @@ void CCAcc::invoke(const string& method, const AmArg& args, AmArg& ret)
       assertArgCStr(args.get(0));
       assertArgInt(args.get(1));
       ret.push(subtractCredit(args.get(0).asCStr(),
-			      args.get(1).asInt()));	
+			      args.get(1).asInt()));
     } else if(method == "addCredit"){
       assertArgCStr(args.get(0));
       assertArgInt(args.get(1));
       ret.push(addCredit(args.get(0).asCStr(),
-			 args.get(1).asInt()));	
+			 args.get(1).asInt()));
     } else if(method == "setCredit"){
       assertArgCStr(args.get(0));
       assertArgInt(args.get(1));
       ret.push(setCredit(args.get(0).asCStr(),
-			 args.get(1).asInt()));	
+			 args.get(1).asInt()));
     } else if(method == "connectCall"){
       // call is connected
     } else if(method == "_list"){

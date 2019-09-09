@@ -22,11 +22,11 @@ class RegisterDialog
   unsigned short local_if;
   string         from_ua;
 
-  // Max 'Expire' value returned to 
+  // Max 'Expire' value returned to
   // registering UAC.
   unsigned int max_ua_expire;
 
-  // Min 'Expire' value sent 
+  // Min 'Expire' value sent
   // to the registrar
   unsigned int min_reg_expire;
 
@@ -43,7 +43,7 @@ class RegisterDialog
   // inits AoR
   int initAor(const AmSipRequest& req);
 
-  // uses AoR to build alias-map 
+  // uses AoR to build alias-map
   // for * contact
   void fillAliasMap();
 
@@ -67,7 +67,7 @@ public:
 
   // AmBasicSipEventHandler interface
   void onSipReply(const AmSipRequest& req,
-		  const AmSipReply& reply, 
+		  const AmSipReply& reply,
 		  AmBasicSipDialog::Status old_dlg_status);
 
   // Utility static methods

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2002-2003 Fhg Fokus
  * Copyright (C) 2006 iptego GmbH
  *
@@ -37,7 +37,7 @@ void PySemsB2BDialog::onSessionStart()
   AmB2BCallerSession::onSessionStart();
 }
 
-void PySemsB2BDialog::process(AmEvent* event) 
+void PySemsB2BDialog::process(AmEvent* event)
 {
   DBG("PySemsB2BDialog::process\n");
 
@@ -47,7 +47,7 @@ void PySemsB2BDialog::process(AmEvent* event)
     callPyEventHandler("onEmptyQueue", NULL);
     event->processed = true;
   }
-    
+
   AmPluginEvent* plugin_event = dynamic_cast<AmPluginEvent*>(event);
   if(plugin_event && plugin_event->name == "timer_timeout") {
 

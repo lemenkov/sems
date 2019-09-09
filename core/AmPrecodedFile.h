@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -66,13 +66,13 @@ class AmPrecodedFileFormat : public AmAudioFileFormat {
   int getFrameEncodedSize() { return frame_encoded_size; }
 };
 
-class AmPrecodedRtpFormat : public AmAudioRtpFormat 
+class AmPrecodedRtpFormat : public AmAudioRtpFormat
 {
   precoded_payload_t& precoded_payload;
 
   /* encoded frame size in bytes */
   int frame_encoded_size;
-  
+
  public:
   AmPrecodedRtpFormat(precoded_payload_t& precoded_payload);
   ~AmPrecodedRtpFormat();
@@ -82,7 +82,7 @@ class AmPrecodedRtpFormat : public AmAudioRtpFormat
 
 class AmPrecodedFileInstance
 : public AmAudioFile {
- 
+
   precoded_payload_t& precoded_payload;
   amci_inoutfmt_t m_iofmt;
 
@@ -93,17 +93,17 @@ class AmPrecodedFileInstance
  AmPrecodedRtpFormat* getRtpFormat();
 
   int open();
-  
+
  protected:
   AmAudioFileFormat* fileName2Fmt(const string& name, const string& subtype);
 };
 
-class AmPrecodedFile 
+class AmPrecodedFile
 : public AmPayloadProvider {
 
   std::map<int,precoded_payload_t>  payloads;
 
- public: 
+ public:
   AmPrecodedFile();
   ~AmPrecodedFile();
 

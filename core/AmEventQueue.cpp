@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -50,7 +50,7 @@ AmEventQueue::~AmEventQueue()
 
 void AmEventQueue::postEvent(AmEvent* event)
 {
-  if (AmConfig::LogEvents) 
+  if (AmConfig::LogEvents)
     DBG("AmEventQueue: trying to post event\n");
 
   m_queue.lock();
@@ -66,7 +66,7 @@ void AmEventQueue::postEvent(AmEvent* event)
 
   m_queue.unlock();
 
-  if (AmConfig::LogEvents) 
+  if (AmConfig::LogEvents)
     DBG("AmEventQueue: event posted\n");
 }
 
@@ -75,22 +75,22 @@ void AmEventQueue::processEvents()
   m_queue.lock();
 
   while(!ev_queue.empty()) {
-	
+
     AmEvent* event = ev_queue.front();
     ev_queue.pop();
     m_queue.unlock();
 
-    if (AmConfig::LogEvents) 
+    if (AmConfig::LogEvents)
       DBG("before processing event (%s)\n",
 	  typeid(*event).name());
     handler->process(event);
-    if (AmConfig::LogEvents) 
+    if (AmConfig::LogEvents)
       DBG("event processed (%s)\n",
 	  typeid(*event).name());
     delete event;
     m_queue.lock();
   }
-    
+
   ev_pending.set(false);
   m_queue.unlock();
 }
@@ -110,10 +110,10 @@ void AmEventQueue::processSingleEvent()
     ev_queue.pop();
     m_queue.unlock();
 
-    if (AmConfig::LogEvents) 
+    if (AmConfig::LogEvents)
       DBG("before processing event\n");
     handler->process(event);
-    if (AmConfig::LogEvents) 
+    if (AmConfig::LogEvents)
       DBG("event processed\n");
     delete event;
 
@@ -132,10 +132,10 @@ bool AmEventQueue::eventPending() {
   return res;
 }
 
-void AmEventQueue::setEventNotificationSink(AmEventNotificationSink* 
+void AmEventQueue::setEventNotificationSink(AmEventNotificationSink*
 					    _wakeup_handler) {
-  // locking actually not necessary - if replacing pointer is atomic 
-  m_queue.lock(); 
+  // locking actually not necessary - if replacing pointer is atomic
+  m_queue.lock();
   wakeup_handler = _wakeup_handler;
   if(wakeup_handler && ev_pending.get())
     wakeup_handler->notify(this);

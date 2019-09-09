@@ -2,7 +2,7 @@
  * Copyright (C) 2012 FRAFOS GmbH
  *
  * Development sponsored by Sipwise GmbH.
- * 
+ *
  * This file is part of SEMS, a free SIP media server.
  *
  * SEMS is free software; you can redistribute it and/or modify
@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _AmSipSubscriptionContainer_h_
@@ -36,7 +36,7 @@ typedef map<string,AmSipSubscriptionDialog*> AmSipSubscriptionMap;
 typedef AmSipSubscriptionMap::iterator AmSipSubscriptionMapIter;
 
 
-class _AmSipSubscriptionContainer 
+class _AmSipSubscriptionContainer
 : public AmEventProcessingThread
 {
   AmSipSubscriptionMap subscriptions;
@@ -48,11 +48,11 @@ class _AmSipSubscriptionContainer
   _AmSipSubscriptionContainer();
   ~_AmSipSubscriptionContainer();
 
-  string createSubscription(const AmSipSubscriptionInfo& info, 
+  string createSubscription(const AmSipSubscriptionInfo& info,
 			    const string& sess_link,
 			    unsigned int wanted_expires=0);
 
-  bool refreshSubscription(const string& sub_handle, 
+  bool refreshSubscription(const string& sub_handle,
 			   unsigned int wanted_expires=0);
 
   void removeSubscription(const string& sub_handle);

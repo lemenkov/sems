@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -36,7 +36,7 @@ DSMModule::DSMModule() {
 DSMModule::~DSMModule() {
 }
 
-SCStrArgAction::SCStrArgAction(const string& m_arg) { 
+SCStrArgAction::SCStrArgAction(const string& m_arg) {
   arg = trim(m_arg, " \t");
   if (arg.length() && arg[0] == '"')
     arg = trim(arg, "\"");
@@ -64,7 +64,7 @@ string resolveVars(const string ts, AmSession* sess,
     if(eval_ops) {
       // remove all spaces
       string::size_type p;
-      for (p = s.find (" ", 0 ); 
+      for (p = s.find (" ", 0 );
   	p != string::npos; p = s.find(" ", p)) {
         s.erase (p, 1);
       }
@@ -98,7 +98,7 @@ string resolveVars(const string ts, AmSession* sess,
 	return it->second;
       return "";
     }
-    case '#': 
+    case '#':
       if (s.substr(1, 1)=="#")
 	return "#";
       if (event_params) {
@@ -106,7 +106,7 @@ string resolveVars(const string ts, AmSession* sess,
 	if (it != event_params->end())
 	  return it->second;
 	return  "";
-      }else 
+      }else
 	return string();
     case '@': {
       if (s.substr(1, 1)=="@")
@@ -114,9 +114,9 @@ string resolveVars(const string ts, AmSession* sess,
       if (s.length() < 2)
 	return "@";
 
-      string s1 = s.substr(1); 
+      string s1 = s.substr(1);
       if (s1 == "local_tag")
-	return sess->getLocalTag();	
+	return sess->getLocalTag();
       else if (s1 == "user")
 	return sess->dlg->getUser();
       else if (s1 == "domain")
@@ -135,19 +135,19 @@ string resolveVars(const string ts, AmSession* sess,
 	return sess->dlg->getRemoteParty();
       else
 	return string();
-    } 
+    }
     default: return trim(s, "\"");
     }
   }
   return s;
 }
 
-void splitCmd(const string& from_str, 
+void splitCmd(const string& from_str,
 			    string& cmd, string& params) {
   size_t b_pos = from_str.find('(');
   if (b_pos != string::npos) {
     cmd = from_str.substr(0, b_pos);
     params = from_str.substr(b_pos + 1, from_str.rfind(')') - b_pos -1);
-  } else 
-    cmd = from_str;  
+  } else
+    cmd = from_str;
 }

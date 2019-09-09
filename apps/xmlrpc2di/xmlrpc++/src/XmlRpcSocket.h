@@ -39,7 +39,7 @@ namespace XmlRpc {
 
     // The next four methods are appropriate for servers.
 
-    //! Allow the port the specified socket is bound to to be re-bound immediately so 
+    //! Allow the port the specified socket is bound to to be re-bound immediately so
     //! server re-starts are not delayed. Returns false on failure.
     static bool setReuseAddr(int socket);
 

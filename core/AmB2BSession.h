@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmB2BSession.h */
@@ -109,7 +109,7 @@ struct B2BConnectEvent: public B2BEvent
 
   AmMimeBody body;
   string hdrs;
-  
+
   bool relayed_invite;
   unsigned int r_cseq;
 
@@ -125,7 +125,7 @@ struct B2BConnectEvent: public B2BEvent
 
 /**
  * \brief Base class for Sessions in B2BUA mode.
- * 
+ *
  * It has two legs as independent sessions:
  * Callee- and caller-leg.
  */
@@ -135,18 +135,18 @@ class AmB2BSession: public AmSession, protected RelayController
 
   enum RTPRelayMode {
     /* audio will go directly between caller and callee
-     * SDP bodies of relayed requests are filtered */  
+     * SDP bodies of relayed requests are filtered */
     RTP_Direct,
 
     /* audio will be realyed through us
-     * SDP bodies of relayed requests are filtered 
+     * SDP bodies of relayed requests are filtered
      * and connection addresses are replaced by us
      */
     RTP_Relay,
 
     /*
-     * similar to RTP_Relay, but additionally transcoding 
-     * might be used depending on payload IDs 
+     * similar to RTP_Relay, but additionally transcoding
+     * might be used depending on payload IDs
      */
     RTP_Transcoding
   };
@@ -167,8 +167,8 @@ private:
 
   bool a_leg;
 
-  /** 
-   * Requests which have been relayed 
+  /**
+   * Requests which have been relayed
    * from the other leg and sent as SIP
    */
   TransMap relayed_req;
@@ -219,7 +219,7 @@ private:
   virtual void updateUACTransCSeq(unsigned int old_cseq, unsigned int new_cseq);
 
   void onSipRequest(const AmSipRequest& req);
-  void onSipReply(const AmSipRequest& req, const AmSipReply& reply, 
+  void onSipReply(const AmSipRequest& req, const AmSipReply& reply,
 		  AmBasicSipDialog::Status old_dlg_status);
 
   void onRequestSent(const AmSipRequest& req);
@@ -235,7 +235,7 @@ private:
   void onSessionTimeout();
   void onNoAck(unsigned int cseq);
 
-  /** send re-INVITE with established session description 
+  /** send re-INVITE with established session description
    *  @return 0 on success
    */
   int sendEstablishedReInvite();
@@ -252,15 +252,15 @@ private:
   /** B2BEvent handler */
   virtual void onB2BEvent(B2BEvent* ev);
 
-  /** handle BYE on other leg 
+  /** handle BYE on other leg
       @return whether BYE is processed and should not be relayed via SIP
       if true, the application must have handled the BYE
       (i.e. sent 200 OK to the BYE using relayError())
    */
   virtual bool onOtherBye(const AmSipRequest& req);
 
-  /** 
-   * Reply received from other leg has been replied 
+  /**
+   * Reply received from other leg has been replied
    * @return true if reply was processed (should be absorbed)
    * @return false if reply was not processed
    */
@@ -279,7 +279,7 @@ private:
   bool rtp_relay_transparent_seqno;
   /** transparent SSRC for RTP relay */
   bool rtp_relay_transparent_ssrc;
-  /** If true, transcoded audio is injected into 
+  /** If true, transcoded audio is injected into
       the inband DTMF detector */
   bool enable_dtmf_transcoding;
   /** filter RTP DTMF (2833 / 4733) packets */
@@ -287,7 +287,7 @@ private:
   /** detect DTMF through RTP DTMF (2833 / 4733) packets */
   bool enable_dtmf_rtp_detection;
 
-  /** Low fidelity payloads for which inband DTMF 
+  /** Low fidelity payloads for which inband DTMF
       transcoding should be used */
   vector<SdpPayload> lowfi_payloads;
 
@@ -343,7 +343,7 @@ private:
   void setEnableDtmfRtpFiltering(bool enable);
   void setEnableDtmfRtpDetection(bool enable);
   void setLowFiPLs(const vector<SdpPayload>& lowfi_payloads);
-  
+
   bool getRtpRelayTransparentSeqno() { return rtp_relay_transparent_seqno; }
   bool getRtpRelayTransparentSSRC() { return rtp_relay_transparent_ssrc; }
 
@@ -376,7 +376,7 @@ class AmB2BCallerSession: public AmB2BSession
  private:
   // Callee Status
   CalleeStatus callee_status;
-  
+
   int  reinviteCaller(const AmSipReply& callee_reply);
 
  protected:
@@ -393,7 +393,7 @@ class AmB2BCallerSession: public AmB2BSession
  public:
   AmB2BCallerSession();
   virtual ~AmB2BCallerSession();
-    
+
   CalleeStatus getCalleeStatus() { return callee_status; }
   void setCalleeStatus(CalleeStatus c) { callee_status = c; }
 

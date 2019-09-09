@@ -23,7 +23,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/* 
+/*
 SBC - feature-wishlist
 - accounting (MySQL DB, cassandra DB)
 - RTP transcoding mode (bridging)
@@ -79,7 +79,7 @@ bool getCCInterfaces(CCInterfaceListT& cc_interfaces, vector<AmDynInvoke*>& cc_m
        cc_it != cc_interfaces.end(); cc_it++) {
     string& cc_module = cc_it->cc_module;
     if (cc_module.empty()) {
-      ERROR("using call control but empty cc_module for '%s'!\n", 
+      ERROR("using call control but empty cc_module for '%s'!\n",
 	    cc_it->cc_name.c_str());
       return false;
     }
@@ -122,7 +122,7 @@ SBCCallLeg* CallLegCreator::create(SBCCallLeg* caller)
   return new SBCCallLeg(caller);
 }
 
-SimpleRelayCreator::Relay 
+SimpleRelayCreator::Relay
 SimpleRelayCreator::createRegisterRelay(SBCCallProfile& call_profile,
 					vector<AmDynInvoke*> &cc_modules)
 {
@@ -147,7 +147,7 @@ SimpleRelayCreator::createGenericRelay(SBCCallProfile& call_profile,
 }
 
 SBCFactory::SBCFactory(const string& _app_name)
-  : AmSessionFactory(_app_name), 
+  : AmSessionFactory(_app_name),
     AmDynInvokeFactory(_app_name),
     core_options_handling(false),
     callLegCreator(new CallLegCreator()),
@@ -257,7 +257,7 @@ int SBCFactory::onLoad()
 
 /** get the first matching profile name from active profiles */
 SBCCallProfile* SBCFactory::getActiveProfileMatch(const AmSipRequest& req,
-						  ParamReplacerCtx& ctx) 
+						  ParamReplacerCtx& ctx)
 {
   string profile, profile_rule;
   vector<string>::const_iterator it = active_profile.begin();
@@ -360,7 +360,7 @@ void oodHandlingTerminated(const AmSipRequest &req, vector<AmDynInvoke*>& cc_mod
 
 void SBCFactory::onOoDRequest(const AmSipRequest& req)
 {
-  DBG("processing message %s %s\n", req.method.c_str(), req.r_uri.c_str());  
+  DBG("processing message %s %s\n", req.method.c_str(), req.r_uri.c_str());
 
   if (core_options_handling && req.method == SIP_METH_OPTIONS) {
     DBG("processing OPTIONS in core\n");
@@ -379,7 +379,7 @@ void SBCFactory::onOoDRequest(const AmSipRequest& req)
     profiles_mut.unlock();
     throw AmSession::Exception(500,SIP_REPLY_SERVER_INTERNAL_ERROR);
   }
-  
+
   SBCCallProfile call_profile(*p_call_profile);
   profiles_mut.unlock();
 
@@ -415,7 +415,7 @@ void SBCFactory::onOoDRequest(const AmSipRequest& req)
     AmSipDialog::reply_error(req, 483, SIP_REPLY_TOO_MANY_HOPS);
     return;
   }
-  
+
   call_profile.fix_append_hdrs(ctx, req);
 
   SimpleRelayCreator::Relay relay(NULL,NULL);
@@ -436,14 +436,14 @@ void SBCFactory::onOoDRequest(const AmSipRequest& req)
   }
 
   if(SBCSimpleRelay::start(relay,req,call_profile)) {
-    AmSipDialog::reply_error(req, 500, SIP_REPLY_SERVER_INTERNAL_ERROR, 
+    AmSipDialog::reply_error(req, 500, SIP_REPLY_SERVER_INTERNAL_ERROR,
 			     "", call_profile.log_sip ? call_profile.get_logger(req): NULL);
     delete relay.first;
     delete relay.second;
   }
 }
 
-void SBCFactory::invoke(const string& method, const AmArg& args, 
+void SBCFactory::invoke(const string& method, const AmArg& args,
 				AmArg& ret)
 {
   if (method == "listProfiles"){
@@ -472,7 +472,7 @@ void SBCFactory::invoke(const string& method, const AmArg& args,
   } else if (method == "postControlCmd"){
     args.assertArrayFmt("ss"); // at least call-ltag, cmd
     postControlCmd(args,ret);
-  } else if(method == "_list"){ 
+  } else if(method == "_list"){
     ret.push(AmArg("listProfiles"));
     ret.push(AmArg("reloadProfiles"));
     ret.push(AmArg("reloadProfile"));
@@ -484,7 +484,7 @@ void SBCFactory::invoke(const string& method, const AmArg& args,
     ret.push(AmArg("loadCallcontrolModules"));
     ret.push(AmArg("postControlCmd"));
     ret.push(AmArg("printCallStats"));
-  } else if(method == "printCallStats"){ 
+  } else if(method == "printCallStats"){
     B2BMediaStatistics::instance()->getReport(args, ret);
   }  else
     throw AmDynInvoke::NotImplemented(method);
@@ -505,7 +505,7 @@ void SBCFactory::listProfiles(const AmArg& args, AmArg& ret) {
 
 void SBCFactory::reloadProfiles(const AmArg& args, AmArg& ret) {
   std::map<string, SBCCallProfile> new_call_profiles;
-  
+
   bool failed = false;
   string res = "OK";
   AmArg profile_list;
@@ -632,7 +632,7 @@ void SBCFactory::setActiveProfile(const AmArg& args, AmArg& ret) {
   ret.push("OK");
   AmArg p;
   p["active_profile"] = args[0]["active_profile"];
-  ret.push(p);  
+  ret.push(p);
 }
 
 void SBCFactory::getRegexMapNames(const AmArg& args, AmArg& ret) {
@@ -677,7 +677,7 @@ void SBCFactory::loadCallcontrolModules(const AmArg& args, AmArg& ret) {
     if (AmPlugIn::instance()->load(AmConfig::PlugInPath, load_cc_plugins) < 0) {
       ERROR("loading call control plugins '%s' from '%s'\n",
 	    load_cc_plugins.c_str(), AmConfig::PlugInPath.c_str());
-      
+
       ret.push(500);
       ret.push("Failed - please see server logs\n");
       return;
@@ -790,12 +790,12 @@ bool SBCFactory::CCRoute(const AmSipRequest& req,
 
 	  DBG("replying with %d %s on call control action "
 	      "REFUSE from '%s' headers='%s'\n",
-	      ret[i][SBC_CC_REFUSE_CODE].asInt(), 
+	      ret[i][SBC_CC_REFUSE_CODE].asInt(),
 	      ret[i][SBC_CC_REFUSE_REASON].asCStr(),
 	      cc_if.cc_name.c_str(), headers.c_str());
 
 	  AmBasicSipDialog::reply_error(req,
-	        ret[i][SBC_CC_REFUSE_CODE].asInt(), 
+	        ret[i][SBC_CC_REFUSE_CODE].asInt(),
 		ret[i][SBC_CC_REFUSE_REASON].asCStr(),
 		headers, call_profile.log_sip ? call_profile.get_logger(req): NULL);
 
@@ -807,7 +807,7 @@ bool SBCFactory::CCRoute(const AmSipRequest& req,
           continue;
 
 	default: {
-	  ERROR("unknown call control action: '%s'\n", 
+	  ERROR("unknown call control action: '%s'\n",
 		AmArg::print(ret[i]).c_str());
 	  continue;
 	}

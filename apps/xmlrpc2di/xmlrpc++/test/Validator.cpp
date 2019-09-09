@@ -9,7 +9,7 @@ using namespace XmlRpc;
 XmlRpcServer s;
 
 
-// One argument is passed, an array of structs, each with a member named curly with 
+// One argument is passed, an array of structs, each with a member named curly with
 // an integer value. Return the sum of those values.
 
 class ArrayOfStructsTest : public XmlRpcServerMethod
@@ -22,7 +22,7 @@ public:
     std::cerr << "ArrayOfStructsTest\n";
     XmlRpcValue& arg1 = params[0];
     int n = arg1.size(), sum = 0;
-    for (int i=0; i<n; ++i) 
+    for (int i=0; i<n; ++i)
       sum += int(arg1[i]["curly"]);
 
     result = sum;
@@ -30,10 +30,10 @@ public:
 } arrayOfStructsTest(&s);
 
 
-// This handler takes a single parameter, a string, that contains any number of predefined 
+// This handler takes a single parameter, a string, that contains any number of predefined
 // entities, namely <, >, &, ' and ".
-// The handler must return a struct that contains five fields, all numbers: ctLeftAngleBrackets, 
-// ctRightAngleBrackets, ctAmpersands, ctApostrophes, ctQuotes. 
+// The handler must return a struct that contains five fields, all numbers: ctLeftAngleBrackets,
+// ctRightAngleBrackets, ctAmpersands, ctApostrophes, ctQuotes.
 // To validate, the numbers must be correct.
 
 class CountTheEntities : public XmlRpcServerMethod
@@ -72,8 +72,8 @@ public:
 
 
 
-// This handler takes a single parameter, a struct, containing at least three elements 
-// named moe, larry and curly, all <i4>s. Your handler must add the three numbers and 
+// This handler takes a single parameter, a struct, containing at least three elements
+// named moe, larry and curly, all <i4>s. Your handler must add the three numbers and
 // return the result.
 
 class EasyStructTest : public XmlRpcServerMethod
@@ -123,8 +123,8 @@ public:
 
 
 
-// This handler takes a single parameter, which is an array containing between 100 and 
-// 200 elements. Each of the items is a string, your handler must return a string 
+// This handler takes a single parameter, which is an array containing between 100 and
+// 200 elements. Each of the items is a string, your handler must return a string
 // containing the concatenated text of the first and last elements.
 
 
@@ -166,7 +166,7 @@ public:
 
 
 
-// This handler takes one parameter, and returns a struct containing three elements, 
+// This handler takes one parameter, and returns a struct containing three elements,
 // times10, times100 and times1000, the result of multiplying the number by 10, 100 and 1000.
 
 class SimpleStructReturnTest : public XmlRpcServerMethod

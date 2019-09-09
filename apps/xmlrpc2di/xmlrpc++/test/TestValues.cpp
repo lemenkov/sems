@@ -119,7 +119,7 @@ void testArray(XmlRpcValue const& d)
     "    <value>four</value>\n"
     "  </data>\n"
     "</array></value>";
-    
+
   int offset = 0;
   XmlRpcValue aXml(csaXml, &offset);
   assert(a == aXml);
@@ -157,7 +157,7 @@ void testStruct()
     "    <value> <string>two</string></value>\n"
     "  </member>\n"
     "</struct></value>";
-    
+
   int offset = 0;
   XmlRpcValue structXml(csStructXml, &offset);
   assert(struct1 == structXml);

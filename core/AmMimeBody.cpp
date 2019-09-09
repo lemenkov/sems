@@ -31,7 +31,7 @@ AmMimeBody::AmMimeBody(const AmMimeBody& body)
   if(body.payload && body.content_len) {
     setPayload(body.payload,body.content_len);
   }
-  
+
   for(Parts::const_iterator it = body.parts.begin();
       it != body.parts.end(); ++it) {
     parts.push_back(new AmMimeBody(**it));
@@ -147,7 +147,7 @@ void AmMimeBody::clearPart(Parts::iterator position)
 void AmMimeBody::clearPayload()
 {
   delete [] payload;
-  payload = NULL;  
+  payload = NULL;
 }
 
 int AmContentType::parse(const string& ct)
@@ -177,7 +177,7 @@ int AmContentType::parse(const string& ct)
 	type = string(beg,c-beg);
 	st = CT_SLASH_SWS;
 	break;
-	
+
       case SLASH:
 	type = string(beg,c-beg);
 	st = CT_SUBTYPE_SWS;
@@ -235,7 +235,7 @@ int AmContentType::parse(const string& ct)
       switch(saved_st){
       case CT_TYPE:
 	if(!IS_WSP(*c)){
-	  // should not happen: parse_headers() should already 
+	  // should not happen: parse_headers() should already
 	  //                    have triggered an error
 	  DBG("Malformed Content-Type value: <%.*s>\n",(int)(end-beg),beg);
 	  return -1;
@@ -249,7 +249,7 @@ int AmContentType::parse(const string& ct)
       case CT_SLASH_SWS:
       case CT_SUBTYPE_SWS:
 	if(!IS_WSP(*c)){
-	  // should not happen: parse_headers() should already 
+	  // should not happen: parse_headers() should already
 	  //                    have triggered an error
 	  DBG("Malformed Content-Type value: <%.*s>\n",(int)(end-beg),beg);
 	  return -1;
@@ -259,13 +259,13 @@ int AmContentType::parse(const string& ct)
       case CT_SUBTYPE:
 	subtype = string(beg,(c-(st==ST_CRLF?2:1))-beg);
 	if(!IS_WSP(*c)){
-	  // should not happen: parse_headers() should already 
+	  // should not happen: parse_headers() should already
 	  //                    have triggered an error
 	  return 0;
 	}
 	return parseParams(c,end);
       }
-      
+
       st = saved_st;
       break;
     }
@@ -278,12 +278,12 @@ int AmContentType::parse(const string& ct)
   case CT_SUBTYPE_SWS:
     DBG("Malformed Content-Type value: <%.*s>\n",(int)(end-beg),beg);
     return -1;
-    
+
   case CT_SUBTYPE:
     subtype = string(beg,c-beg);
     break;
   }
-  
+
   return 0;
 }
 
@@ -294,7 +294,7 @@ int  AmContentType::parseParams(const char* c, const char* end)
     if(!avp_params.empty()) free_gen_params(&avp_params);
     return -1;
   }
-  
+
   for(list<sip_avp*>::iterator it_ct_param = avp_params.begin();
       it_ct_param != avp_params.end();++it_ct_param) {
 
@@ -310,7 +310,7 @@ int  AmContentType::parseParams(const char* c, const char* end)
       delete p;
       return -1;
     }
-    
+
     if(p->type == Param::BOUNDARY)
       mp_boundary = p;
 
@@ -325,7 +325,7 @@ int AmContentType::Param::parseType()
 {
   const char* c = name.c_str();
   unsigned  len = name.length();
-  
+
   switch(len){
   case BOUNDARY_len:
     if(!lower_cmp(c,BOUNDARY_str,len)){
@@ -370,7 +370,7 @@ int AmMimeBody::findNextBoundary(unsigned char** beg, unsigned char** end)
 
   int st=B_START;
 
-  // Allow the buffer to start directly 
+  // Allow the buffer to start directly
   // with the boundary delimiter
   if(*c == HYPHEN)
     st=B_LF;
@@ -407,7 +407,7 @@ int AmMimeBody::findNextBoundary(unsigned char** beg, unsigned char** end)
   for(;st != B_MATCHED && (c < *end-(b_end-b)); c++){
 
     switch(st){
-    case B_START: 
+    case B_START:
       if(*c == CR) {
 	*beg = c;
 	st = B_CR;
@@ -448,9 +448,9 @@ int AmMimeBody::findNextBoundary(unsigned char** beg, unsigned char** end)
 
     case B_HYPHEN2:
       switch(*c) {
-      case HYPHEN: 
-	is_final = true; 
-	st = B_HYPHEN3; 
+      case HYPHEN:
+	is_final = true;
+	st = B_HYPHEN3;
 	break;
 
       case CR:
@@ -558,7 +558,7 @@ int AmMimeBody::parseMultipart(const unsigned char* buf, unsigned int len)
       DBG("unexpected end-of-buffer while searching for MIME body boundary\n");
       return -1;
     }
-    
+
     if(parseSinglePart(part_beg,part_end-part_beg) < 0) {
       DBG("Failed parsing part\n");
     }
@@ -567,7 +567,7 @@ int AmMimeBody::parseMultipart(const unsigned char* buf, unsigned int len)
       DBG("Added new part:\n%.*s\n",
 	  part->content_len,part->payload);
     }
-    
+
   } while(!err);
 
   DBG("End-of-multipart body found\n");
@@ -576,12 +576,12 @@ int AmMimeBody::parseMultipart(const unsigned char* buf, unsigned int len)
 }
 
 int AmMimeBody::parse(const string& content_type,
-		      const unsigned char* buf, 
+		      const unsigned char* buf,
 		      unsigned int len)
 {
   if(ct.parse(content_type) < 0)
     return -1;
-  
+
   if(ct.isType(MULTIPART)) {
 
     DBG("parsing multi-part body\n");
@@ -658,7 +658,7 @@ AmMimeBody* AmMimeBody::addPart(const string& content_type)
       DBG("could not parse content-type\n");
       return NULL;
     }
-    
+
     body = this;
   }
   else if(!ct.isType(MULTIPART)) {
@@ -674,7 +674,7 @@ AmMimeBody* AmMimeBody::addPart(const string& content_type)
     // add new part
     parts.push_back(body);
   }
-  
+
   return body;
 }
 
@@ -731,12 +731,12 @@ bool AmContentType::hasContentType(const string& content_type) const
 		      content_type.c_str(),content_type.length());
 }
 
-string AmContentType::getStr() const 
+string AmContentType::getStr() const
 {
   if(type.empty() && subtype.empty())
     return "";
 
-  return type + "/" + subtype; 
+  return type + "/" + subtype;
 }
 
 string AmContentType::getHdr() const
@@ -747,7 +747,7 @@ string AmContentType::getHdr() const
 
   for(Params::const_iterator it = params.begin();
       it != params.end(); ++it) {
-    
+
     ct += ";" + (*it)->name + "=" + (*it)->value;
   }
 
@@ -767,7 +767,7 @@ AmMimeBody* AmMimeBody::hasContentType(const string& content_type)
   else if(ct.isType(MULTIPART)) {
     for(Parts::iterator it = parts.begin();
 	it != parts.end(); ++it) {
-      
+
       if((*it)->hasContentType(content_type)) {
 	return *it;
       }
@@ -785,7 +785,7 @@ const AmMimeBody* AmMimeBody::hasContentType(const string& content_type) const
   else if(ct.isType(MULTIPART)) {
     for(Parts::const_iterator it = parts.begin();
 	it != parts.end(); ++it) {
-      
+
       if((*it)->hasContentType(content_type)) {
 	return *it;
       }
@@ -806,7 +806,7 @@ void AmMimeBody::print(string& buf) const
   else {
 
     // if (ct.mp_boundary == NULL)
-    //   ct.resetBoundary(); 
+    //   ct.resetBoundary();
 
     for(Parts::const_iterator it = parts.begin();
 	it != parts.end(); ++it) {

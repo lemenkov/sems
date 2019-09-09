@@ -14,7 +14,7 @@ class exclusive_file
 {
   string   name;
   int      fd;
-  
+
   exclusive_file(const string& name);
   ~exclusive_file();
 

@@ -37,7 +37,7 @@
 using std::string;
 using std::multimap;
 
-class DiameterClient  
+class DiameterClient
 : public AmDynInvokeFactory,
   public AmDynInvoke
 {
@@ -59,11 +59,11 @@ class DiameterClient
 
   // DI API
   static DiameterClient* instance();
-  void invoke(const string& method, 
+  void invoke(const string& method,
 	      const AmArg& args, AmArg& ret);
 
   // DI-factory
-  int onLoad();	
+  int onLoad();
 };
 
 #endif

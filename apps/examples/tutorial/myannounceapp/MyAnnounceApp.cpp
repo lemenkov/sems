@@ -49,12 +49,12 @@ MyAnnounceAppDialog::~MyAnnounceAppDialog()
 
 void MyAnnounceAppDialog::onSessionStart()
 {
-    DBG("MyAnnounceAppDialog::onSessionStart - file is '%s'\n", 
+    DBG("MyAnnounceAppDialog::onSessionStart - file is '%s'\n",
 	MyAnnounceAppFactory::AnnouncementFile.c_str());
 
     if(wav_file.open(MyAnnounceAppFactory::AnnouncementFile,AmAudioFile::Read))
 	throw string("MyAnnounceAppDialog::onSessionStart: Cannot open file\n");
-    
+
     setOutput(&wav_file);
 
     AmSession::onSessionStart();

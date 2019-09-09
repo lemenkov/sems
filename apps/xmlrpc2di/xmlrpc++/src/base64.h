@@ -1,6 +1,6 @@
 
 
-//  base64.hpp 
+//  base64.hpp
 //  Autor Konstantin Pilipchuk
 //  mailto:lostd@ukr.net
 //
@@ -45,7 +45,7 @@ public:
 
 	typedef unsigned char byte_t;
 	typedef _E            char_type;
-	typedef _Tr           traits_type; 
+	typedef _Tr           traits_type;
 
 	// base64 requires max line length <= 72 characters
 	// you can fill end of line
@@ -224,7 +224,7 @@ public:
 			_3to4.zero();
 
 			// -- 0 --
-			// Search next valid char... 
+			// Search next valid char...
 			while((_Char =  _getCharType(*_First)) < 0 && _Char == _UNKNOWN_CHAR)
 			{
 				if(++_First == _Last)
@@ -235,49 +235,49 @@ public:
 
 			if(_Char == _EQUAL_CHAR){
 				// Error! First character in octet can't be '='
-				_St |= _IOS_FAILBIT; 
-				return _First; 
+				_St |= _IOS_FAILBIT;
+				return _First;
 			}
 			else
 				_3to4.b64_0(_Char);
 
 
 			// -- 1 --
-			// Search next valid char... 
+			// Search next valid char...
 			while(++_First != _Last)
 				if((_Char = _getCharType(*_First)) != _UNKNOWN_CHAR)
 					break;
 
 			if(_First == _Last)	{
-				_St |= _IOS_FAILBIT|_IOS_EOFBIT; // unexpected EOF 
+				_St |= _IOS_FAILBIT|_IOS_EOFBIT; // unexpected EOF
 				return _First;
 			}
 
 			if(_Char == _EQUAL_CHAR){
 				// Error! Second character in octet can't be '='
-				_St |= _IOS_FAILBIT; 
-				return _First; 
+				_St |= _IOS_FAILBIT;
+				return _First;
 			}
 			else
 				_3to4.b64_1(_Char);
 
 
 			// -- 2 --
-			// Search next valid char... 
+			// Search next valid char...
 			while(++_First != _Last)
 				if((_Char = _getCharType(*_First)) != _UNKNOWN_CHAR)
 					break;
 
 			if(_First == _Last)	{
 				// Error! Unexpected EOF. Must be '=' or base64 character
-				_St |= _IOS_FAILBIT|_IOS_EOFBIT; 
-				return _First; 
+				_St |= _IOS_FAILBIT|_IOS_EOFBIT;
+				return _First;
 			}
 
 			if(_Char == _EQUAL_CHAR){
 				// OK!
-				_3to4.b64_2(0); 
-				_3to4.b64_3(0); 
+				_3to4.b64_2(0);
+				_3to4.b64_3(0);
 
 				// chek for EOF
 				if(++_First == _Last)
@@ -286,7 +286,7 @@ public:
 					//_St |= _IOS_BADBIT|_IOS_EOFBIT;
 					_St |= _IOS_EOFBIT;
 				}
-				else 
+				else
 					if(_getCharType(*_First) != _EQUAL_CHAR)
 					{
 						// Error! Must be '='. Ignore it.
@@ -304,23 +304,23 @@ public:
 
 
 			// -- 3 --
-			// Search next valid char... 
+			// Search next valid char...
 			while(++_First != _Last)
 				if((_Char = _getCharType(*_First)) != _UNKNOWN_CHAR)
 					break;
 
 			if(_First == _Last)	{
 				// Unexpected EOF. It's error. But ignore it.
-				//_St |= _IOS_FAILBIT|_IOS_EOFBIT; 
-					_St |= _IOS_EOFBIT; 
-				
-				return _First; 
+				//_St |= _IOS_FAILBIT|_IOS_EOFBIT;
+					_St |= _IOS_EOFBIT;
+
+				return _First;
 			}
 
 			if(_Char == _EQUAL_CHAR)
 			{
 				// OK!
-				_3to4.b64_3(0); 
+				_3to4.b64_3(0);
 
 				// write to output 2 bytes
 				*_To = (byte_t) _3to4.get_0();
@@ -340,7 +340,7 @@ public:
 			*_To = (byte_t) _3to4.get_2();
 
 			++_First;
-			
+
 
 		} // while(_First != _Last)
 
@@ -348,7 +348,7 @@ public:
 	}
 
 protected:
-	
+
 	int _getCharType(int _Ch) const
 	{
 		if(_base64Chars[62] == _Ch)

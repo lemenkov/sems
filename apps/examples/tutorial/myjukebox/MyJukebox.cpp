@@ -24,7 +24,7 @@ int MyJukeboxFactory::onLoad()
 	return -1;
 
     JukeboxDir = cfg.getParameter("jukebox_dir","/tmp/");
-    if( !JukeboxDir.empty() 
+    if( !JukeboxDir.empty()
 	&& JukeboxDir[JukeboxDir.length()-1] != '/' )
 	JukeboxDir += "/";
 
@@ -54,9 +54,9 @@ MyJukeboxDialog::~MyJukeboxDialog()
 
 void MyJukeboxDialog::onSessionStart()
 {
-    DBG("MyJukeboxDialog::onSessionStart - jukedir is '%s'\n", 
+    DBG("MyJukeboxDialog::onSessionStart - jukedir is '%s'\n",
 	MyJukeboxFactory::JukeboxDir.c_str());
-    
+
     setInOut(&playlist, &playlist);
     setDtmfDetectionEnabled(true);
 }

@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "ModXml.h"
@@ -194,7 +194,7 @@ EXEC_ACTION_START(MODXMLEvalXPathAction) {
     EXEC_ACTION_STOP;
 
   xmlDocPtr doc = xml_doc->doc;
-  
+
   xmlXPathContextPtr xpathCtx = xmlXPathNewContext(doc);
   if(xpathCtx == NULL) {
     DBG("unable to create new XPath context\n");
@@ -262,12 +262,12 @@ EXEC_ACTION_START(MODXMLXPathResultNodeCount) {
     EXEC_ACTION_STOP;
   }
 
-  unsigned int res = (xpath_obj->xpathObj->nodesetval) ? 
+  unsigned int res = (xpath_obj->xpathObj->nodesetval) ?
     xpath_obj->xpathObj->nodesetval->nodeNr : 0;
 
   sc_sess->var[cnt_var] = int2str(res);
   DBG("set count $%s=%u\n", cnt_var.c_str(), res);
-  
+
 } EXEC_ACTION_END;
 
 
@@ -293,13 +293,13 @@ EXEC_ACTION_START(MODXMLgetXPathResult) {
   if (NULL == xpath_obj->xpathObj->nodesetval){
     res.push_back(string());
   } else {
-    xmlNodeSetPtr nodes = xpath_obj->xpathObj->nodesetval; 
+    xmlNodeSetPtr nodes = xpath_obj->xpathObj->nodesetval;
     xmlNodePtr cur;
 
     for (int i=0;i<xpath_obj->xpathObj->nodesetval->nodeNr;i++) {
       if(nodes->nodeTab[i]->type == XML_NAMESPACE_DECL) {
 	xmlNsPtr ns;
-	    
+
 	ns = (xmlNsPtr)nodes->nodeTab[i];
 	cur = (xmlNodePtr)ns->next;
 	res.push_back(string(string((const char*) ns->prefix)+"="+string((const char*) ns->href)));
@@ -309,7 +309,7 @@ EXEC_ACTION_START(MODXMLgetXPathResult) {
 	xmlChar* c = xmlNodeGetContent(cur);
 	res.push_back(c ? string((const char*)c) : string());
       } else {
-	cur = nodes->nodeTab[i];    
+	cur = nodes->nodeTab[i];
 	res.push_back(string((const char*) cur->name)+"\": type "+int2str(cur->type));
       }
     }
@@ -327,7 +327,7 @@ EXEC_ACTION_START(MODXMLgetXPathResult) {
     }
   }
 
-  
+
 } EXEC_ACTION_END;
 
 CONST_ACTION_2P(MODXMLprintXPathResult, '=', false);
@@ -351,16 +351,16 @@ EXEC_ACTION_START(MODXMLprintXPathResult) {
   if (NULL == xpath_obj->xpathObj->nodesetval){
     res = "";
   } else {
-    xmlNodeSetPtr nodes = xpath_obj->xpathObj->nodesetval; 
+    xmlNodeSetPtr nodes = xpath_obj->xpathObj->nodesetval;
     xmlNodePtr cur;
 
     for (int i=0;i<xpath_obj->xpathObj->nodesetval->nodeNr;i++) {
       if(nodes->nodeTab[i]->type == XML_NAMESPACE_DECL) {
 	xmlNsPtr ns;
-	    
+
 	ns = (xmlNsPtr)nodes->nodeTab[i];
 	cur = (xmlNodePtr)ns->next;
-	if(cur->ns) { 
+	if(cur->ns) {
 	  res += "namespace \""+string((const char*) ns->prefix)+"\"=\""+string((const char*) ns->href)+"\" for node "+
 	    string((const char*) cur->ns->href)+":"+string((const char*) cur->name)+"\n";
 	} else {
@@ -369,23 +369,23 @@ EXEC_ACTION_START(MODXMLprintXPathResult) {
 	}
       } else if(nodes->nodeTab[i]->type == XML_ELEMENT_NODE) {
 	cur = nodes->nodeTab[i];
-	if(cur->ns) {    	    
+	if(cur->ns) {
 	  xmlChar* c = xmlNodeGetContent(cur);
 	  res += "element node \""+string((const char*) cur->ns->href)+":"+string((const char*) cur->name)+"\" content: \""+
 	    (c?string((const char*)c):string("NULL"))+ "\"\n";
 	} else {
 	  xmlChar* c = xmlNodeGetContent(cur);
-	  res += "element node \""+string((const char*) cur->name)+"\" content: \""+ (c?string((const char*)c):string("NULL"))+"\n"; 
+	  res += "element node \""+string((const char*) cur->name)+"\" content: \""+ (c?string((const char*)c):string("NULL"))+"\n";
 	}
       } else {
-	cur = nodes->nodeTab[i];    
+	cur = nodes->nodeTab[i];
 	res += "node \""+string((const char*) cur->name)+"\": type "+int2str(cur->type)+"\n";
       }
     }
   }
 
   DBG("set $%s='%s'\n", cnt_var.c_str(), res.c_str());
-  
+
 } EXEC_ACTION_END;
 
 
@@ -401,11 +401,11 @@ static void
 update_xpath_nodes(xmlNodeSetPtr nodes, const xmlChar* value, int index) {
     int size;
     int i;
-    
+
     assert(value);
     size = (nodes) ? nodes->nodeNr : 0;
-    
-    if (index < 0) { 
+
+    if (index < 0) {
       // update all
       /*
        * NOTE: the nodes are processed in reverse order, i.e. reverse document
@@ -418,7 +418,7 @@ update_xpath_nodes(xmlNodeSetPtr nodes, const xmlChar* value, int index) {
       for(i = size - 1; i >= 0; i--) {
 	if (NULL == nodes->nodeTab[i])
 	  continue;
-	
+
 	xmlNodeSetContent(nodes->nodeTab[i], value);
 	/*
 	 * All the elements returned by an XPath query are pointers to
@@ -431,7 +431,7 @@ update_xpath_nodes(xmlNodeSetPtr nodes, const xmlChar* value, int index) {
 	 * This can be exercised by running
 	 *       valgrind xpath2 test3.xml '//discarded' discarded
 	 * There is 2 ways around it:
-	 *   - make a copy of the pointers to the nodes from the result set 
+	 *   - make a copy of the pointers to the nodes from the result set
 	 *     then call xmlXPathFreeObject() and then modify the nodes
 	 * or
 	 *   - remove the reference to the modified nodes from the node set
@@ -449,7 +449,7 @@ update_xpath_nodes(xmlNodeSetPtr nodes, const xmlChar* value, int index) {
       if (NULL == nodes->nodeTab[index]) {
 	ERROR("trying to update XML node %d which is NULL\n", index);
       }
-	
+
       xmlNodeSetContent(nodes->nodeTab[index], value);
       /*
        * All the elements returned by an XPath query are pointers to
@@ -462,7 +462,7 @@ update_xpath_nodes(xmlNodeSetPtr nodes, const xmlChar* value, int index) {
        * This can be exercised by running
        *       valgrind xpath2 test3.xml '//discarded' discarded
        * There is 2 ways around it:
-       *   - make a copy of the pointers to the nodes from the result set 
+       *   - make a copy of the pointers to the nodes from the result set
        *     then call xmlXPathFreeObject() and then modify the nodes
        * or
        *   - remove the reference to the modified nodes from the node set
@@ -495,9 +495,9 @@ EXEC_ACTION_START(MODXMLupdateXPathResult) {
     DBG("no xpath result found in '%s'\n", xpath_res_var.c_str());
     EXEC_ACTION_STOP;
   }
-  // todo: call xmlEncodeSpecialChars with doc 
+  // todo: call xmlEncodeSpecialChars with doc
 
-  
+
   update_xpath_nodes(xpath_obj->xpathObj->nodesetval, (const xmlChar*) value.c_str(), index);
 
 } EXEC_ACTION_END;

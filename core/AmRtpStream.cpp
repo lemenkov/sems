@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -52,7 +52,7 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <sys/types.h>
-#include <sys/socket.h>       
+#include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -117,12 +117,12 @@ int AmRtpStream::getLocalSocket()
   if((sd = socket(l_saddr.ss_family,SOCK_DGRAM,0)) == -1) {
     ERROR("%s\n",strerror(errno));
     throw string ("while creating new socket.");
-  } 
+  }
 
   if((rtcp_sd = socket(l_saddr.ss_family,SOCK_DGRAM,0)) == -1) {
     ERROR("%s\n",strerror(errno));
     throw string ("while creating new socket.");
-  } 
+  }
 
   int true_opt = 1;
   if(ioctl(sd, FIONBIO , &true_opt) == -1){
@@ -147,7 +147,7 @@ void AmRtpStream::setLocalPort(unsigned short p)
 {
   if(l_port)
     return;
-  
+
   if(l_if < 0) {
     if (session) l_if = session->getRtpInterface();
     else {
@@ -155,7 +155,7 @@ void AmRtpStream::setLocalPort(unsigned short p)
       l_if = 0;
     }
   }
-  
+
   int retry = 10;
   unsigned short port = 0;
   for(;retry; --retry){
@@ -170,13 +170,13 @@ void AmRtpStream::setLocalPort(unsigned short p)
 
     am_set_port(&l_saddr,port+1);
     if(bind(l_rtcp_sd,(const struct sockaddr*)&l_saddr,SA_len(&l_saddr))) {
-      DBG("bind: %s\n",strerror(errno));		
+      DBG("bind: %s\n",strerror(errno));
       goto try_another_port;
     }
 
     am_set_port(&l_saddr,port);
     if(bind(l_sd,(const struct sockaddr*)&l_saddr,SA_len(&l_saddr))) {
-      DBG("bind: %s\n",strerror(errno));		
+      DBG("bind: %s\n",strerror(errno));
       goto try_another_port;
     }
 
@@ -223,7 +223,7 @@ void AmRtpStream::setLocalPort(unsigned short p)
 int AmRtpStream::ping()
 {
   // TODO:
-  //  - we'd better send an empty UDP packet 
+  //  - we'd better send an empty UDP packet
   //    for this purpose.
 
   unsigned char ping_chr[2];
@@ -235,7 +235,7 @@ int AmRtpStream::ping()
   rp.payload = payload;
   rp.marker = true;
   rp.sequence = sequence++;
-  rp.timestamp = 0;   
+  rp.timestamp = 0;
   rp.ssrc = l_ssrc;
   rp.compile((unsigned char*)ping_chr,2);
 
@@ -244,11 +244,11 @@ int AmRtpStream::ping()
     ERROR("while sending RTP packet.\n");
     return -1;
   }
- 
+
   return 2;
 }
 
-int AmRtpStream::compile_and_send(const int payload, bool marker, unsigned int ts, 
+int AmRtpStream::compile_and_send(const int payload, bool marker, unsigned int ts,
 				  unsigned char* buffer, unsigned int size) {
   AmRtpPacket rp;
   rp.payload = payload;
@@ -274,11 +274,11 @@ int AmRtpStream::compile_and_send(const int payload, bool marker, unsigned int t
     case zrtp_status_drop: {
       DBG("ZRTP says: drop packet! %u - %u\n", size, rp.getBufferSize());
       return 0;
-    } 
+    }
     case zrtp_status_ok: {
       //      DBG("ZRTP says: ok!\n");
       if (rp.getBufferSize() != size)
-//       DBG("SEND packet size before: %d, after %d\n", 
+//       DBG("SEND packet size before: %d, after %d\n",
 // 	   rp.getBufferSize(), size);
       rp.setBufferSize(size);
     } break;
@@ -290,7 +290,7 @@ int AmRtpStream::compile_and_send(const int payload, bool marker, unsigned int t
     }
 
     }
-    
+
   }
 #endif
 
@@ -298,9 +298,9 @@ int AmRtpStream::compile_and_send(const int payload, bool marker, unsigned int t
     ERROR("while sending RTP packet.\n");
     return -1;
   }
- 
+
   if (logger) rp.logSent(logger, &l_saddr);
- 
+
   return size;
 }
 
@@ -320,7 +320,7 @@ int AmRtpStream::send( unsigned int ts, unsigned char* buffer, unsigned int size
     ERROR("sending packet with unsupported remote payload type %d\n", payload);
     return -1;
   }
-  
+
   return compile_and_send(it->second.remote_pt, false, ts, buffer, size);
 }
 
@@ -343,17 +343,17 @@ int AmRtpStream::send_raw( char* packet, unsigned int length )
   return length;
 }
 
-// returns 
-// @param ts              [out] timestamp of the received packet, 
+// returns
+// @param ts              [out] timestamp of the received packet,
 //                              in audio buffer relative time
-// @param audio_buffer_ts [in]  current ts at the audio_buffer 
+// @param audio_buffer_ts [in]  current ts at the audio_buffer
 
 int AmRtpStream::receive( unsigned char* buffer, unsigned int size,
 			  unsigned int& ts, int &out_payload)
 {
   AmRtpPacket* rp = NULL;
   int err = nextPacket(rp);
-    
+
   if(err <= 0)
     return err;
 
@@ -394,12 +394,12 @@ int AmRtpStream::receive( unsigned char* buffer, unsigned int size,
   return res;
 }
 
-AmRtpStream::AmRtpStream(AmSession* _s, int _if) 
+AmRtpStream::AmRtpStream(AmSession* _s, int _if)
   : sdp_media_index(-1),
     r_port(0),
     l_if(_if),
     l_port(0),
-    l_sd(0), 
+    l_sd(0),
     r_ssrc_i(false),
     passive(false),
     passive_rtcp(false),
@@ -503,9 +503,9 @@ void AmRtpStream::setRAddr(const string& addr, unsigned short port,
   memcpy(&r_saddr,&ss,sizeof(struct sockaddr_storage));
   am_set_port(&r_saddr,r_port);
 
-  mute = ((r_saddr.ss_family == AF_INET) && 
+  mute = ((r_saddr.ss_family == AF_INET) &&
 	  (SAv4(&r_saddr)->sin_addr.s_addr == INADDR_ANY)) ||
-    ((r_saddr.ss_family == AF_INET6) && 
+    ((r_saddr.ss_family == AF_INET6) &&
      IN6_IS_ADDR_UNSPECIFIED(&SAv6(&r_saddr)->sin6_addr));
 }
 
@@ -619,7 +619,7 @@ int AmRtpStream::init(const AmSdp& local,
         sdp_it->encoding_param);
 
     amci_payload_t* a_pl = NULL;
-    if(int_pt >= 0) 
+    if(int_pt >= 0)
       a_pl = payload_provider->payload(int_pt);
 
     if(a_pl == NULL){
@@ -636,7 +636,7 @@ int AmRtpStream::init(const AmSdp& local,
         continue;
       }
     };
-    
+
     p_it->pt         = sdp_it->payload_type;
     p_it->name       = sdp_it->encoding_name;
     p_it->codec_id   = a_pl->codec_id;
@@ -646,7 +646,7 @@ int AmRtpStream::init(const AmSdp& local,
 
     pl_map[sdp_it->payload_type].index     = i;
     pl_map[sdp_it->payload_type].remote_pt = -1;
-    
+
     ++p_it;
     ++sdp_it;
     ++i;
@@ -672,7 +672,7 @@ int AmRtpStream::init(const AmSdp& local,
     else {
       for(p_it = payloads.begin(); p_it != payloads.end(); ++p_it){
 
-	if(!strcasecmp(p_it->name.c_str(),sdp_it->encoding_name.c_str()) && 
+	if(!strcasecmp(p_it->name.c_str(),sdp_it->encoding_name.c_str()) &&
 	   (p_it->advertised_clock_rate == (unsigned int)sdp_it->clock_rate)){
 	  pmt_it = pl_map.find(p_it->pt);
 	  break;
@@ -680,7 +680,7 @@ int AmRtpStream::init(const AmSdp& local,
       }
     }
 
-    // TODO: remove following code once proper 
+    // TODO: remove following code once proper
     //       payload matching is implemented
     //
     // initialize remote_pt if not already there
@@ -742,9 +742,9 @@ int AmRtpStream::init(const AmSdp& local,
 
   if(local_media.send && !hold
      && (remote_media.port != 0)
-     && (((r_saddr.ss_family == AF_INET) 
+     && (((r_saddr.ss_family == AF_INET)
 	  && (SAv4(&r_saddr)->sin_addr.s_addr != 0)) ||
-	 ((r_saddr.ss_family == AF_INET6) 
+	 ((r_saddr.ss_family == AF_INET6)
 	  && (!IN6_IS_ADDR_UNSPECIFIED(&SAv6(&r_saddr)->sin6_addr))))
      ) {
     mute = false;
@@ -815,7 +815,7 @@ void AmRtpStream::recvDtmfPacket(AmRtpPacket* p) {
 
     DBG("DTMF: event=%i; e=%i; r=%i; volume=%i; duration=%i; ts=%u session = [%p]\n",
 	dpl->event,dpl->e,dpl->r,dpl->volume,ntohs(dpl->duration),p->timestamp, session);
-    if (session) 
+    if (session)
       session->postDtmfEvent(new AmRtpDtmfEvent(dpl, getLocalTelephoneEventRate(), p->timestamp));
   }
 }
@@ -847,7 +847,7 @@ void AmRtpStream::bufferPacket(AmRtpPacket* p)
     // is also relayed.
     // Else, check whether or not we should relay this payload
 
-    bool is_dtmf_packet = (p->payload == getLocalTelephoneEventPT()); 
+    bool is_dtmf_packet = (p->payload == getLocalTelephoneEventPT());
 
       if (relay_raw || (is_dtmf_packet && !active) ||
 	  relay_payloads.get(p->payload)) {
@@ -870,7 +870,7 @@ void AmRtpStream::bufferPacket(AmRtpPacket* p)
   }
 
 #ifndef WITH_ZRTP
-  // throw away ZRTP packets 
+  // throw away ZRTP packets
   if(p->version != RTP_VERSION) {
       mem.freePacket(p);
       return;
@@ -886,10 +886,10 @@ void AmRtpStream::bufferPacket(AmRtpPacket* p)
       WARN("dropping received packet, as there's no ZRTP stream initialized\n");
       receive_mut.unlock();
       mem.freePacket(p);
-      return;      
+      return;
     }
- 
-    unsigned int size = p->getBufferSize();    
+
+    unsigned int size = p->getBufferSize();
     zrtp_status_t status = zrtp_process_srtp(session->zrtp_session_state.zrtp_audio, (char*)p->getBuffer(), &size);
     switch (status)
       {
@@ -915,10 +915,10 @@ void AmRtpStream::bufferPacket(AmRtpPacket* p)
       case zrtp_status_drop: {
 	//
 	// This is a protocol ZRTP packet or masked RTP media.
-	// In either case the packet must be dropped to protect your 
+	// In either case the packet must be dropped to protect your
 	// media codec
 	mem.freePacket(p);
-	
+
       } break;
 
       case zrtp_status_fail:
@@ -988,7 +988,7 @@ int AmRtpStream::nextPacket(AmRtpPacket*& p)
   receive_mut.lock();
   timersub(&now,&last_recv_time,&diff);
   if(monitor_rtp_timeout &&
-     AmConfig::DeadRtpTime && 
+     AmConfig::DeadRtpTime &&
      (diff.tv_sec > 0) &&
      ((unsigned int)diff.tv_sec > AmConfig::DeadRtpTime)){
     WARN("RTP Timeout detected. Last received packet is too old "
@@ -1058,14 +1058,14 @@ void AmRtpStream::recvPacket(int fd, unsigned char* pkt, size_t len)
     // receive from network
     recv_res = p->recv(l_sd);
   }
-  
+
   if(recv_res > 0){
     int parse_res = 0;
 
     if (logger) p->logReceived(logger, &l_saddr);
 
     gettimeofday(&p->recv_time,NULL);
-    
+
     if(!relay_raw
 #ifdef WITH_ZRTP
        && !(session && session->enable_zrtp)
@@ -1077,7 +1077,7 @@ void AmRtpStream::recvPacket(int fd, unsigned char* pkt, size_t len)
     if (parse_res == -1) {
       DBG("error while parsing RTP packet.\n");
       clearRTPTimeout(&p->recv_time);
-      mem.freePacket(p);	  
+      mem.freePacket(p);
     } else {
       bufferPacket(p);
     }
@@ -1097,7 +1097,7 @@ void AmRtpStream::recvRtcpPacket()
 			      &recv_addr_len);
 
   if(recved_bytes < 0) {
-    if((errno != EINTR) && 
+    if((errno != EINTR) &&
        (errno != EAGAIN)) {
       ERROR("rtcp recv(%d): %s",l_rtcp_sd,strerror(errno));
     }
@@ -1141,7 +1141,7 @@ void AmRtpStream::recvRtcpPacket()
 		 (const struct sockaddr *)&rtcp_raddr,
 		 SA_len(&rtcp_raddr));
   }
-  
+
   if(err < 0){
     ERROR("could not relay RTCP packet: %s\n",strerror(errno));
     return;
@@ -1156,7 +1156,7 @@ void AmRtpStream::relay(AmRtpPacket* p)
 {
   // not yet initialized
   // or muted/on-hold
-  if (!l_port || mute || hold) 
+  if (!l_port || mute || hold)
     return;
 
   if(session && !session->onBeforeRTPRelay(p,&r_saddr))
@@ -1168,7 +1168,7 @@ void AmRtpStream::relay(AmRtpPacket* p)
   if (!relay_raw && !relay_transparent_ssrc)
     hdr->ssrc = htonl(l_ssrc);
   p->setAddr(&r_saddr);
-  
+
   if(p->send(l_sd, AmConfig::RTP_Ifs[l_if].NetIfIdx, &l_saddr, rtp_mux_remote_ip, rtp_mux_remote_port) < 0){
     ERROR("while sending RTP packet to '%s':%i\n",
 	  get_addr_str(&r_saddr).c_str(),am_get_port(&r_saddr));
@@ -1234,7 +1234,7 @@ void AmRtpStream::disableRawRelay()
   DBG("disabled RAW relay for RTP stream instance [%p]\n", this);
   relay_raw = false;
 }
- 
+
 void AmRtpStream::setRtpRelayTransparentSeqno(bool transparent) {
   DBG("%sabled RTP relay transparent seqno for RTP stream instance [%p]\n",
       transparent ? "en":"dis", this);
@@ -1298,7 +1298,7 @@ PacketMem::PacketMem()
   memset(used, 0, sizeof(used));
 }
 
-inline AmRtpPacket* PacketMem::newPacket() 
+inline AmRtpPacket* PacketMem::newPacket()
 {
   if(n_used >= MAX_PACKETS)
     return NULL; // full
@@ -1315,7 +1315,7 @@ inline AmRtpPacket* PacketMem::newPacket()
   return p;
 }
 
-inline void PacketMem::freePacket(AmRtpPacket* p) 
+inline void PacketMem::freePacket(AmRtpPacket* p)
 {
   if (!p)  return;
 
@@ -1332,7 +1332,7 @@ inline void PacketMem::freePacket(AmRtpPacket* p)
   n_used--;
 }
 
-inline void PacketMem::clear() 
+inline void PacketMem::clear()
 {
   memset(used, 0, sizeof(used));
   n_used = cur_idx = 0;

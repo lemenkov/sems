@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -80,7 +80,7 @@ bool SubscriptionDialog::terminated()
   return !(getUsages() > 0);
 }
 
-bool SubscriptionDialog::getMappedReferID(unsigned int refer_id, 
+bool SubscriptionDialog::getMappedReferID(unsigned int refer_id,
 					  unsigned int& mapped_id) const
 {
   map<unsigned int, unsigned int>::const_iterator id_it =
@@ -120,7 +120,7 @@ void SubscriptionDialog::onSipRequest(const AmSipRequest& req)
 
 	  AmSipRequest n_req(req);
 	  removeHeader(n_req.hdrs,SIP_HDR_EVENT);
-	  n_req.hdrs += SIP_HDR_COLSP(SIP_HDR_EVENT) "refer;id=" 
+	  n_req.hdrs += SIP_HDR_COLSP(SIP_HDR_EVENT) "refer;id="
 	    + int2str(mapped_id) + CRLF;
 
 	  SimpleRelayDialog::onSipRequest(n_req);
@@ -134,7 +134,7 @@ void SubscriptionDialog::onSipRequest(const AmSipRequest& req)
 }
 
 void SubscriptionDialog::onSipReply(const AmSipRequest& req,
-				    const AmSipReply& reply, 
+				    const AmSipReply& reply,
 				    AmBasicSipDialog::Status old_dlg_status)
 {
   if(!subs->onReplyIn(req,reply))

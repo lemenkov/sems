@@ -1,4 +1,4 @@
-#ifndef DIAMETER_DEFS 
+#ifndef DIAMETER_DEFS
 #define  DIAMETER_DEFS
 
 
@@ -27,13 +27,13 @@
 #define AAA_TIMEOUT		-3
 #define AAA_CONN_SHUTDOWN	-2
 
-#define AAA_USER_IN_GROUP	 0	
+#define AAA_USER_IN_GROUP	 0
 
 #define AAA_NO_CONNECTION	-1
 
 #define WWW_AUTH_CHALLENGE_LEN 		18
 #define PROXY_AUTH_CHALLENGE_LEN 	20
-		
+
 #define WWW_AUTH_CHALLENGE		"WWW-Authenticate: "
 #define PROXY_AUTH_CHALLENGE 	"Proxy-Authenticate: "
 
@@ -43,7 +43,7 @@
 #define MESSAGE_500 "Server Internal Error"
 
 typedef enum auth_result {
-	ERROR = -2 ,		/* Error occurred, a reply has been 
+	ERROR = -2 ,		/* Error occurred, a reply has been
 						   sent out -> return 0 to the ser core */
 	NO_CREDENTIALS,     /* Credentials missing   */
 	DO_AUTHORIZATION,   /* Credentials included  */
@@ -55,7 +55,7 @@ typedef struct rd_buf
 {
 	/* used to return a parsed response */
 	int ret_code;
-	unsigned int chall_len; 
+	unsigned int chall_len;
 	unsigned char *chall;
 
 	/* used to read the message*/

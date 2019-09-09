@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -50,7 +50,7 @@
  CODEC( CODEC_ULAW, Pcm16_2_ULaw, ULaw_2_Pcm16, 0, 0, 0, 0, 0 )
  CODEC( CODEC_ALAW, Pcm16_2_ALaw, ALaw_2_Pcm16, 0, 0, 0, 0, 0 )
  END_CODECS
-    
+
  BEGIN_PAYLOADS
  PAYLOAD( 0, "ulaw", 1, 8000, 8000,1, CODEC_ULAW )
  PAYLOAD( 8, "alaw", 1, 8000, 8000,1, CODEC_ALAW )
@@ -71,11 +71,11 @@
 */
 
 /** @def WAV_PCM subtype declaration. */
-#define WAV_PCM  1 
+#define WAV_PCM  1
 /** @def WAV_ALAW subtype declaration. */
-#define WAV_ALAW 6 
+#define WAV_ALAW 6
 /** @def WAV_ULAW subtype declaration. */
-#define WAV_ULAW 7 
+#define WAV_ULAW 7
 
 static int ULaw_2_Pcm16( unsigned char* out_buf, unsigned char* in_buf, unsigned int size,
 			 unsigned int channels, unsigned int rate, long h_codec );
@@ -102,7 +102,7 @@ BEGIN_EXPORTS( "wav" , AMCI_NO_MODULEINIT, AMCI_NO_MODULEDESTROY )
 	     AMCI_NO_CODEC_PLC, AMCI_NO_CODECCREATE, AMCI_NO_CODECDESTROY,
 	     g711_bytes2samples, g711_samples2bytes )
      END_CODECS
-    
+
      BEGIN_PAYLOADS
         PAYLOAD( 0, "PCMU", 8000, 8000, 1, CODEC_ULAW, AMCI_PT_AUDIO_LINEAR )
         PAYLOAD( 8, "PCMA", 8000, 8000, 1, CODEC_ALAW, AMCI_PT_AUDIO_LINEAR )

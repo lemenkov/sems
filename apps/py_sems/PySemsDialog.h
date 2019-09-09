@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2002-2003 Fhg Fokus
  * Copyright (C) 2006 iptego GmbH
  *
@@ -29,7 +29,7 @@
 #include "PySems.h"
 
 /** \brief implementation of session logic/script execution in pySems */
-class PySemsDialog  :  public AmSession, 
+class PySemsDialog  :  public AmSession,
   public PySemsDialogBase
 {
 

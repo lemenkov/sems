@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _ip_util_h_
@@ -45,7 +45,7 @@ using std::string;
 	     sizeof(sockaddr_in) : sizeof(sockaddr_in6))
 
 /**
- * Fill the sockaddr_storage structure based 
+ * Fill the sockaddr_storage structure based
  * on the address given in 'src'.
  * @param src string representation of the IP address.
  * @param dst address stucture

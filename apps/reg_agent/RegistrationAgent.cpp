@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -88,7 +88,7 @@ int RegistrationAgentFactory::onLoad()
 
     dialer.add_reg(ri);
     DBG("Adding registration account #%d (%s %s %s %s %s %s)\n", i,
-        ri.domain.c_str(), ri.user.c_str(), ri.display_name.c_str(), 
+        ri.domain.c_str(), ri.user.c_str(), ri.display_name.c_str(),
         ri.auth_user.c_str(), ri.proxy.c_str(), ri.contact.c_str());
 
     i ++;
@@ -138,9 +138,9 @@ void RegThread::create_registration(RegInfo& ri) {
       di_args.push("reg_agent");             //sess_link
       di_args.push(ri.proxy.c_str());
       di_args.push(ri.contact.c_str());
-			
+
       registrar_client_i->invoke("createRegistration", di_args, reg_handle);
-      if (reg_handle.size()) 
+      if (reg_handle.size())
 	ri.handle = reg_handle.get(0).asCStr();
     }
   }
@@ -164,7 +164,7 @@ bool RegThread::check_registration(const RegInfo& ri) {
 	  return false; // does not exist
 	int state = res.get(1).asInt();
 	int expires = res.get(2).asInt();
-	DBG("Got state %s with expires %us for registration.\n", 
+	DBG("Got state %s with expires %us for registration.\n",
 	    getSIPRegistationStateString(state), expires);
 	if (state == 2) // expired ... FIXME: add values from API here
 	  return false;
@@ -182,7 +182,7 @@ void RegThread::run() {
   sleep(2); // wait for sems to completely start up
 
   while (true) {
-    for (vector<RegInfo>::iterator it = registrations.begin(); 
+    for (vector<RegInfo>::iterator it = registrations.begin();
 	 it != registrations.end(); it++) {
       if (!check_registration(*it)) {
 	// todo: this is very crude... should adjust retry time
@@ -193,7 +193,7 @@ void RegThread::run() {
     }
     sleep(10); // 10 seconds
   }
-		
+
 }
 
 void RegThread::on_stop() {
@@ -201,7 +201,7 @@ void RegThread::on_stop() {
 }
 
 void RegThread::postEvent(AmEvent* ev) {
-  DBG("received registration event.\n"); 
+  DBG("received registration event.\n");
   // TODO: handle events instead of re-try
   delete ev;
 }

@@ -19,8 +19,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -50,7 +50,7 @@ string EarlyAnnounceFactory::AnnouncePath;
 string EarlyAnnounceFactory::AnnounceFile;
 #endif
 
-EarlyAnnounceFactory::ContB2B EarlyAnnounceFactory::ContinueB2B = 
+EarlyAnnounceFactory::ContB2B EarlyAnnounceFactory::ContinueB2B =
   EarlyAnnounceFactory::Never;
 
 EarlyAnnounceFactory::EarlyAnnounceFactory(const string& _app_name)
@@ -69,7 +69,7 @@ int get_announce_msg(string application, string message, string user,
     string query_string;
 
     if (!user.empty()) {
-	*audio_file = string("/tmp/") +  application + "_" + 
+	*audio_file = string("/tmp/") +  application + "_" +
 	    message + "_" + domain + "_" + user + ".wav";
 	query_string = "select audio from " + string(USER_AUDIO_TABLE) +
 	    " where application='" + application + "' and message='" +
@@ -91,7 +91,7 @@ int get_announce_msg(string application, string message, string user,
     }
 
     try {
-	    
+
       DBG("Query string <%s>\n", query_string.c_str());
 
       sql::Statement *stmt;
@@ -134,7 +134,7 @@ int EarlyAnnounceFactory::onLoad()
   // get application specific global parameters
   configureModule(cfg);
 
-  if (cfg.hasParameter("continue_b2b")) { 
+  if (cfg.hasParameter("continue_b2b")) {
     if (cfg.getParameter("continue_b2b") == "yes") {
       ContinueB2B = Always;
       DBG("early_announce in b2bua mode.\n");
@@ -155,7 +155,7 @@ int EarlyAnnounceFactory::onLoad()
   string mysql_server, mysql_user, mysql_passwd, mysql_db, mysql_ca_cert;
   bool reconnect_state = true;
   sql::ConnectOptionsMap connection_properties;
-  
+
   mysql_server = cfg.getParameter("mysql_server");
   if (mysql_server.empty()) {
     mysql_server = "localhost";
@@ -237,12 +237,12 @@ int EarlyAnnounceFactory::onLoad()
     return -1;
   }
 
-#else 
+#else
 
   /* Get default audio from file system */
 
   AnnouncePath = cfg.getParameter("announce_path",ANNOUNCE_PATH);
-  if( !AnnouncePath.empty() 
+  if( !AnnouncePath.empty()
       && AnnouncePath[AnnouncePath.length()-1] != '/' )
     AnnouncePath += "/";
 
@@ -261,7 +261,7 @@ int EarlyAnnounceFactory::onLoad()
 }
 
 
-void EarlyAnnounceDialog::onInvite(const AmSipRequest& req) 
+void EarlyAnnounceDialog::onInvite(const AmSipRequest& req)
 {
   AmMimeBody sdp_body;
   sdp_body.addPart(SIP_APPLICATION_SDP);
@@ -299,7 +299,7 @@ AmSession* EarlyAnnounceFactory::onInvite(const AmSipRequest& req, const string&
 #else
 
   string announce_path = AnnouncePath;
-  string announce_file = announce_path + req.domain 
+  string announce_file = announce_path + req.domain
     + "/" + req.user + ".wav";
 
   DBG("trying '%s'\n",announce_file.c_str());
@@ -339,7 +339,7 @@ void EarlyAnnounceDialog::onEarlySessionStart()
 
   if(wav_file.open(filename,AmAudioFile::Read))
     throw string("EarlyAnnounceDialog::onEarlySessionStart: Cannot open file");
-    
+
   setOutput(&wav_file);
 
   AmB2BCallerSession::onEarlySessionStart();
@@ -362,15 +362,15 @@ void EarlyAnnounceDialog::process(AmEvent* event)
 {
 
   AmAudioEvent* audio_event = dynamic_cast<AmAudioEvent*>(event);
-  if(audio_event && 
+  if(audio_event &&
      (audio_event->event_id == AmAudioEvent::cleared)) {
       DBG("AmAudioEvent::cleared\n");
 
       bool continue_b2b = false;
-      if (EarlyAnnounceFactory::ContinueB2B == 
+      if (EarlyAnnounceFactory::ContinueB2B ==
 	  EarlyAnnounceFactory::Always) {
 	continue_b2b = true;
-      } else if (EarlyAnnounceFactory::ContinueB2B == 
+      } else if (EarlyAnnounceFactory::ContinueB2B ==
 		 EarlyAnnounceFactory::AppParam) {
 	string iptel_app_param = getHeader(invite_req.hdrs, PARAM_HDR, true);
 	if (iptel_app_param.length()) {
@@ -384,7 +384,7 @@ void EarlyAnnounceDialog::process(AmEvent* event)
       if (!continue_b2b) {
 	unsigned int code_i = 404;
 	string reason = "Not Found";
-	
+
 	string iptel_app_param = getHeader(invite_req.hdrs, PARAM_HDR, true);
 	if (iptel_app_param.length()) {
 	  string code = get_header_keyvalue(iptel_app_param,"Final-Reply-Code");
@@ -410,15 +410,15 @@ void EarlyAnnounceDialog::process(AmEvent* event)
 
 	DBG("Replying with code %d %s\n", code_i, reason.c_str());
 	dlg->reply(invite_req, code_i, reason);
-	
+
 	setStopped();
       } else {
 	set_sip_relay_only(true);
 	recvd_req.insert(std::make_pair(invite_req.cseq,invite_req));
-	
+
 	relayEvent(new B2BSipRequestEvent(invite_req,true));
       }
-	
+
       return;
     }
 

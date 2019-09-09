@@ -3,7 +3,7 @@
 #define ROOM_INFO_H
 
 #include <string>
-using std::string;       
+using std::string;
 
 #include <list>
 using std::list;
@@ -11,7 +11,7 @@ using std::list;
 #include <vector>
 using std::vector;
 
-#include <sys/time.h> 
+#include <sys/time.h>
 
 
 #include "AmArg.h"
@@ -30,14 +30,14 @@ struct ConferenceRoomParticipant {
   string localtag;
   string number;
   ParticipantStatus status;
-  string last_reason; 
+  string last_reason;
   string participant_id;
 
   int muted;
-  
+
   struct timeval last_access_time;
 
-  ConferenceRoomParticipant() 
+  ConferenceRoomParticipant()
     : status(Disconnected), muted(0) { }
 
   ~ConferenceRoomParticipant() { }
@@ -45,12 +45,12 @@ struct ConferenceRoomParticipant {
   inline void updateAccess(const struct timeval& now);
   inline bool expired(const struct timeval& now);
 
-  inline void updateStatus(ParticipantStatus new_status, 
+  inline void updateStatus(ParticipantStatus new_status,
 			   const string& reason,
 			   struct timeval& now);
 
   inline void setMuted(int mute);
-  
+
   AmArg asArgArray();
 };
 
@@ -74,8 +74,8 @@ struct ConferenceRoom {
   void newParticipant(const string& localtag, const string& number,
 		      const string& participant_id);
 
-  bool updateStatus(const string& part_tag, 
-		    ConferenceRoomParticipant::ParticipantStatus newstatus, 
+  bool updateStatus(const string& part_tag,
+		    ConferenceRoomParticipant::ParticipantStatus newstatus,
 		    const string& reason);
 
   bool hasParticipant(const string& localtag);

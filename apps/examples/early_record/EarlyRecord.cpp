@@ -33,9 +33,9 @@ AmSession* EarlyRecordFactory::onInvite(const AmSipRequest& req, const string& a
 					AmArg& session_params)
 {
   UACAuthCred* cred = AmUACAuth::unpackCredentials(session_params);
-  
-  AmSession* s = new EarlyRecordDialog(cred); 
-  
+
+  AmSession* s = new EarlyRecordDialog(cred);
+
   if (NULL == cred) {
     WARN("discarding unknown session parameters.\n");
   } else {
@@ -59,11 +59,11 @@ EarlyRecordDialog::~EarlyRecordDialog()
 void EarlyRecordDialog::onEarlySessionStart() {
   DBG("Early Session Start\n");
   msg_filename = "/tmp/" + getLocalTag() + ".wav";
-  
+
   if(a_msg.open(msg_filename,AmAudioFile::Write,false))
-    throw string("EarlyRecordDialog: couldn't open ") + 
+    throw string("EarlyRecordDialog: couldn't open ") +
       msg_filename + string(" for writing");
-  
+
   setInput(&a_msg);
   setMute(true);
 
@@ -78,9 +78,9 @@ void EarlyRecordDialog::onSessionStart()
 
   // replay the recorded early media
   msg_filename = "/tmp/" + getLocalTag() + ".wav";
-  
+
   if(a_msg.open(msg_filename,AmAudioFile::Read,false))
-    throw string("EarlyRecordDialog: couldn't open ") + 
+    throw string("EarlyRecordDialog: couldn't open ") +
       msg_filename + string(" for writing");
 
   setOutput(&a_msg);

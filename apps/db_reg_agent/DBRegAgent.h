@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -204,7 +204,7 @@ class DBRegAgent
   void setRegistrationTimer(long subscriber_id, unsigned int timeout,
 			    RegistrationActionEvent::RegAction reg_action);
 
-  /** create a registration refresh timer for that registration 
+  /** create a registration refresh timer for that registration
       @param subscriber_id - ID of subscription
       @param expiry        - SIP registration expiry time
       @param reg_start_ts  - start TS of the SIP registration
@@ -218,7 +218,7 @@ class DBRegAgent
 
   /** remove timer object */
   void removeRegistrationTimer(long subscriber_id);
-  
+
   //  void run_tests();
 
   // amThread
@@ -243,10 +243,10 @@ class DBRegAgent
 
   AmDynInvoke* uac_auth_i;
 
-  void DIcreateRegistration(int subscriber_id, const string& user, 
+  void DIcreateRegistration(int subscriber_id, const string& user,
 			    const string& pass, const string& realm,
 			    const string& contact, AmArg& ret);
-  void DIupdateRegistration(int subscriber_id, const string& user, 
+  void DIupdateRegistration(int subscriber_id, const string& user,
 			    const string& pass, const string& realm,
 			    const string& contact, AmArg& ret);
   void DIremoveRegistration(int subscriber_id, AmArg& ret);
@@ -263,7 +263,7 @@ class DBRegAgent
   // DI factory
   AmDynInvoke* getInstance() { return instance(); }
   // DI API
-  void invoke(const string& method, 
+  void invoke(const string& method,
 	      const AmArg& args, AmArg& ret);
   /** re-registration timer callback */
   void timer_cb(RegTimer* timer, long subscriber_id, int data2);

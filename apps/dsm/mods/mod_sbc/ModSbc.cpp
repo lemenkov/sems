@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "ModSbc.h"
@@ -236,7 +236,7 @@ EXEC_ACTION_START(MODSBCActionProfileSet) {
   }
 
   switch (profile_param.length()) {
-  case 2: 
+  case 2:
   SET_TO_CALL_PROFILE("To", to);
   break;
 
@@ -666,7 +666,7 @@ EXEC_ACTION_START(MODSBCtestSDPConnectionAddress) {
       break;
     }
   }
- 
+
   sc_sess->var["match_connection_addr"] = found ? "true":"false";
 
   DBG("set: match_connection_addr = '%s'\n", sc_sess->var["match_connection_addr"].c_str());

@@ -44,7 +44,7 @@ void process P2((f, filename), FILE * f, char * filename)
 #endif
 			return;
 		}
-		
+
 		printf("{\t");
 		for (j = 0; j < 4; j++) {
 			printf("{\t");

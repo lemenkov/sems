@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -48,7 +48,7 @@ void status_line_wr(char** c, int status_code,
 {
     memcpy(*c,"SIP/2.0 ",8);
     *c += 8;
-    
+
     status_code_wr(c,status_code);
 
     *((*c)++) = SP;
@@ -68,10 +68,10 @@ void request_line_wr(char** c,
     *c += method.len;
 
     *((*c)++) = SP;
-    
+
     memcpy(*c,ruri.s,ruri.len);
     *c += ruri.len;
-    
+
     memcpy(*c," SIP/2.0",8);
     *c += 8;
 

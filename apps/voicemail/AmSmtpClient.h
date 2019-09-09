@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmSmtpClient.h */
@@ -35,15 +35,15 @@
 using std::string;
 using std::vector;
 
-/** 
- * SMTP Line buffer for commands and responses 
- * (not for data transmission!) 
+/**
+ * SMTP Line buffer for commands and responses
+ * (not for data transmission!)
  */
 #define SMTP_LINE_BUFFER  512
 
 /**
  * \brief SMTP client implementation
- * 
+ *
  */
 class AmSmtpClient
 {
@@ -80,7 +80,7 @@ class AmSmtpClient
   /** @return true if failed */
   bool send_command(const string& cmd);
   /** @return true if failed */
-  bool send_body(const vector<string>& hdrs, const AmMail& mail); 
+  bool send_body(const vector<string>& hdrs, const AmMail& mail);
 
 public:
   AmSmtpClient();

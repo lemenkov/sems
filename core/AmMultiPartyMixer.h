@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmMultiPartyMixer.h */
@@ -61,9 +61,9 @@ struct MixerBufferState
 
 /**
  * \brief Mixer for one conference.
- * 
+ *
  * AmMultiPartyMixer mixes the audio from all channels,
- * and returns the audio of all other channels. 
+ * and returns the audio of all other channels.
  */
 class AmMultiPartyMixer
 {
@@ -77,11 +77,11 @@ class AmMultiPartyMixer
   std::deque<MixerBufferState> buffer_state;
 
   AmMutex          audio_mut;
-  int              scaling_factor; 
+  int              scaling_factor;
   int              tmp_buffer[AUDIO_BUFFER_SIZE/2];
 
   std::deque<MixerBufferState>::iterator findOrCreateBufferState(unsigned int sample_rate);
-  std::deque<MixerBufferState>::iterator findBufferStateForReading(unsigned int sample_rate, 
+  std::deque<MixerBufferState>::iterator findBufferStateForReading(unsigned int sample_rate,
 								   unsigned long long last_ts);
   void cleanupBufferStates(unsigned int last_ts);
 
@@ -92,18 +92,18 @@ class AmMultiPartyMixer
 public:
   AmMultiPartyMixer();
   ~AmMultiPartyMixer();
-    
+
   unsigned int addChannel(unsigned int external_sample_rate);
   void removeChannel(unsigned int channel_id);
 
   void PutChannelPacket(unsigned int   channel_id,
 			unsigned long long system_ts,
-			unsigned char* buffer, 
+			unsigned char* buffer,
 			unsigned int   size);
 
   void GetChannelPacket(unsigned int   channel,
 			unsigned long long system_ts,
-			unsigned char* buffer, 
+			unsigned char* buffer,
 			unsigned int&  size,
 			unsigned int&  output_sample_rate);
 

@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "DSMStateDiagramCollection.h"
@@ -59,7 +59,7 @@ bool DSMStateDiagramCollection::readFile(const string& filename, const string& n
 	  ((r.length() >= fpos+1 && r.substr(fpos, 1) == "#" && r.substr(fpos, 8) != "#include") ))
 	continue;
 
-      if (r.length() > fpos+1 && 
+      if (r.length() > fpos+1 &&
 	  r.substr(fpos, 8) == "#include") {
 	r = r.substr(fpos+8);
 	r = trim(r, "'\" ");
@@ -107,7 +107,7 @@ bool DSMStateDiagramCollection::readFile(const string& filename, const string& n
 	}
 	continue;
       }
-	
+
     }
 
     s += r + "\n";
@@ -136,7 +136,7 @@ bool DSMStateDiagramCollection::loadFile(const string& filename, const string& n
   if (check_dsm) {
     string report;
     if (!diags.back().checkConsistency(report)) {
-      WARN("consistency check failed on '%s' from file '%s':\n", 
+      WARN("consistency check failed on '%s' from file '%s':\n",
 	   name.c_str(), filename.c_str());
       WARN("------------------------------------------\n"
 	   "%s\n"
@@ -151,26 +151,26 @@ bool DSMStateDiagramCollection::loadFile(const string& filename, const string& n
 
 bool DSMStateDiagramCollection::hasDiagram(const string& name) {
   for (vector<DSMStateDiagram>::iterator it=
-	 diags.begin(); it != diags.end(); it++) 
+	 diags.begin(); it != diags.end(); it++)
     if (it->getName() == name)
       return true;
-  
+
   return false;
 }
 
 vector<string> DSMStateDiagramCollection::getDiagramNames() {
-  vector<string> res; 
+  vector<string> res;
   for (vector<DSMStateDiagram>::iterator it=
-	 diags.begin(); it != diags.end(); it++) 
+	 diags.begin(); it != diags.end(); it++)
     res.push_back(it->getName());
   return res;
 }
 
 void DSMStateDiagramCollection::addToEngine(DSMStateEngine* e) {
   DBG("adding %zd diags to engine\n", diags.size());
-  for (vector <DSMStateDiagram>::iterator it = 
-	 diags.begin(); it != diags.end(); it++) 
+  for (vector <DSMStateDiagram>::iterator it =
+	 diags.begin(); it != diags.end(); it++)
     e->addDiagram(&(*it));
-  
+
   e->addModules(mods);
 }

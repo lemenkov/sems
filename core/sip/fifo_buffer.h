@@ -47,7 +47,7 @@ public:
   void* get_read_ptr() {
     return p_tail;
   }
-  
+
   // moves the tail's pointer by the length passed
   void skip(unsigned int len) {
     p_tail += len;

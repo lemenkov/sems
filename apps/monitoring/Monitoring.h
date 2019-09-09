@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -41,7 +41,7 @@
 
 struct LogInfo {
   time_t finished; // for garbage collection
-LogInfo() 
+LogInfo()
  : finished(0) { }
   AmArg info;
 };
@@ -66,9 +66,9 @@ struct LogBucket {
 };
 class MonitorGarbageCollector;
 
-class Monitor 
+class Monitor
 : public AmDynInvokeFactory,
-  public AmDynInvoke   
+  public AmDynInvoke
 {
   static Monitor* _instance;
   std::unique_ptr<MonitorGarbageCollector> gc_thread;
@@ -117,7 +117,7 @@ class Monitor
   AmDynInvoke* getInstance() { return instance(); }
   // DI API
   static Monitor* instance();
-  void invoke(const string& method, 
+  void invoke(const string& method,
 	      const AmArg& args, AmArg& ret);
   int onLoad();
   static unsigned int gcInterval;
@@ -125,7 +125,7 @@ class Monitor
   friend class MonitorGarbageCollector;
 };
 
-class MonitorGarbageCollector 
+class MonitorGarbageCollector
 : public AmThread,
   public AmEventQueueInterface
  {

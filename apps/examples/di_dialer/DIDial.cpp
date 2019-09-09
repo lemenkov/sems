@@ -16,7 +16,7 @@ class DIDialFactory : public AmDynInvokeFactory
 public:
   DIDialFactory(const string& name)
     : AmDynInvokeFactory(name) {}
-  
+
   AmDynInvoke* getInstance(){
     return DIDial::instance();
   }
@@ -30,7 +30,7 @@ public:
 std::map<string, DIDialoutInfo> DIDialFactory::dialout_pins;
 
 int DIDialFactory::onLoad(){
-  
+
   AmConfigReader cfg;
   if(!cfg.loadFile(AmConfig::ModConfigPath + string(APP_NAME)+ ".conf")) {
 
@@ -38,7 +38,7 @@ int DIDialFactory::onLoad(){
     while (i_pin<100) { // only for safety..
       string dialout_pin = cfg.getParameter("dialout_pin"+int2str(i_pin));
 
-      if (!dialout_pin.length()) 
+      if (!dialout_pin.length())
 	break;
 
       vector<string> d_pin = explode(dialout_pin, ";");
@@ -46,14 +46,14 @@ int DIDialFactory::onLoad(){
 	break;
 
       dialout_pins[d_pin[0]] = DIDialoutInfo(d_pin[1], d_pin[2], d_pin[3], d_pin[4]);
-      DBG("DIDial: added PIN '%s' userpart '%s' domain '%s' user '%s' pwd '<not shown>'\n", 
+      DBG("DIDial: added PIN '%s' userpart '%s' domain '%s' user '%s' pwd '<not shown>'\n",
 	  d_pin[0].c_str(), d_pin[1].c_str(), d_pin[2].c_str(), d_pin[3].c_str());
-      i_pin++;		
-    } 
+      i_pin++;
+    }
   } else {
     DBG("no configuration for di_dial found. No dialout pins will be set.\n");
   }
-  
+
   DBG("DIDial loaded.\n");
   return 0;
 }
@@ -77,36 +77,36 @@ DIDial::~DIDial() { }
 void DIDial::invoke(const string& method, const AmArg& args, AmArg& ret)
 {
     if(method == "dial"){
-       ret.push(dialout(args.get(0).asCStr(), 
-			args.get(1).asCStr(), 
-			args.get(2).asCStr(), 
+       ret.push(dialout(args.get(0).asCStr(),
+			args.get(1).asCStr(),
+			args.get(2).asCStr(),
 			args.get(3).asCStr(),
 			args.size()>4? &args.get(4) : NULL).c_str());
     } else if(method == "dial_auth"){
-       ret.push(dialout_auth(args.get(0).asCStr(), 
-			     args.get(1).asCStr(), 
-			     args.get(2).asCStr(), 
+       ret.push(dialout_auth(args.get(0).asCStr(),
+			     args.get(1).asCStr(),
+			     args.get(2).asCStr(),
 			     args.get(3).asCStr(),
-			     args.get(4).asCStr(), 
-			     args.get(5).asCStr(), 
+			     args.get(4).asCStr(),
+			     args.get(5).asCStr(),
 			     args.get(6).asCStr(),
 			     args.size()>7? &args.get(7) : NULL
 			).c_str());
     } else if(method == "dial_auth_b2b"){
-       ret.push(dialout_auth_b2b(args.get(0).asCStr(), 
-      args.get(1).asCStr(), 
-      args.get(2).asCStr(), 
+       ret.push(dialout_auth_b2b(args.get(0).asCStr(),
+      args.get(1).asCStr(),
+      args.get(2).asCStr(),
       args.get(3).asCStr(),
-      args.get(4).asCStr(), 
-      args.get(5).asCStr(), 
+      args.get(4).asCStr(),
+      args.get(5).asCStr(),
       args.get(6).asCStr(),
       args.get(7).asCStr(),
       args.get(8).asCStr()
       ).c_str());
     } else if(method == "dial_pin"){
-       ret.push(dialout_pin(args.get(0).asCStr(), 
-			    args.get(1).asCStr(), 
-			    args.get(2).asCStr(), 
+       ret.push(dialout_pin(args.get(0).asCStr(),
+			    args.get(1).asCStr(),
+			    args.get(2).asCStr(),
 			    args.get(3).asCStr()
 			).c_str());
     } else if(method == "help"){
@@ -114,43 +114,43 @@ void DIDial::invoke(const string& method, const AmArg& args, AmArg& ret)
       ret.push("dial_auth <application> <user> <from> <to> <realm> <auth_user> <auth_pwd>");
       ret.push("dial_auth_b2b <application> <announcement> <from> <to> <caller_ruri> <callee_ruri> <realm> <auth_user> <auth_pwd>");
       ret.push("dial_pin <application> <dialout pin> <local_user> <to_user>");
-    } else if(method == "_list"){ 
+    } else if(method == "_list"){
       ret.push(AmArg("dial"));
       ret.push(AmArg("dial_auth"));
       ret.push(AmArg("dial_auth_b2b"));
       ret.push(AmArg("dial_pin"));
       ret.push(AmArg("help"));
-    } else 
+    } else
 	throw AmDynInvoke::NotImplemented(method);
 }
 
-string DIDial::dialout(const string& application, 
-		       const string& user, 
-		       const string& from, 
+string DIDial::dialout(const string& application,
+		       const string& user,
+		       const string& from,
 		       const string& to,
 		       AmArg* extra_params) {
-  DBG("dialout application '%s', user '%s', from '%s', to '%s'\n", 
+  DBG("dialout application '%s', user '%s', from '%s', to '%s'\n",
       application.c_str(), user.c_str(), from.c_str(), to.c_str());
 
-  string tag = AmUAC::dialout(user.c_str(), application,  to,  
-				"<" + from +  ">", from, "<" + to + ">", 
+  string tag = AmUAC::dialout(user.c_str(), application,  to,
+				"<" + from +  ">", from, "<" + to + ">",
 				string(""), string(""), extra_params);
   if (!tag.empty())
     return tag;
-  else 
-    return "<failed>";  
+  else
+    return "<failed>";
 }
 
-string DIDial::dialout_auth(const string& application, 
-			    const string& user, 
-			    const string& from, 
+string DIDial::dialout_auth(const string& application,
+			    const string& user,
+			    const string& from,
 			    const string& to,
-			    const string& a_realm, 
-			    const string& a_user, 
+			    const string& a_realm,
+			    const string& a_user,
 			    const string& a_pwd,
 			    AmArg* extra_params
 		       ) {
-  DBG("dialout application '%s', user '%s', from '%s', to '%s', authrealm '%s', authuser '%s', authpass '%s'", 
+  DBG("dialout application '%s', user '%s', from '%s', to '%s', authrealm '%s', authuser '%s', authpass '%s'",
       application.c_str(), user.c_str(), from.c_str(), to.c_str(), a_realm.c_str(), a_user.c_str(), a_pwd.c_str());
 
   AmArg* a = new AmArg();
@@ -162,8 +162,8 @@ string DIDial::dialout_auth(const string& application,
   } else {
     a->setBorrowedPointer(new UACAuthCred(a_realm, a_user, a_pwd));
   }
-  string tag = AmUAC::dialout(user.c_str(), application,  to,  
-				"<" + from +  ">", from, "<" + to + ">", 
+  string tag = AmUAC::dialout(user.c_str(), application,  to,
+				"<" + from +  ">", from, "<" + to + ">",
 				string(""), // callid
 				string(""), // xtra hdrs
 				a);
@@ -171,17 +171,17 @@ string DIDial::dialout_auth(const string& application,
 
   if (!tag.empty())
     return tag;
-  else 
+  else
     return "<failed>\n";
 }
 
-string DIDial::dialout_auth_b2b(const string& application, 
-          const string& announcement,           const string& from, 
+string DIDial::dialout_auth_b2b(const string& application,
+          const string& announcement,           const string& from,
           const string& to,
-          const string& caller_ruri, 
+          const string& caller_ruri,
           const string& callee_ruri,
-          const string& a_realm, 
-          const string& a_user, 
+          const string& a_realm,
+          const string& a_user,
           const string& a_pwd
 ) {
 
@@ -197,44 +197,44 @@ string DIDial::dialout_auth_b2b(const string& application,
 
   string tag = AmUAC::dialout(
       announcement.c_str(), application,  caller_ruri,
-      "<" + from +  ">", from, "<" + to + ">", 
+      "<" + from +  ">", from, "<" + to + ">",
       string(""), // callid
       string(""), //xtra hdrs
       &a);
   if (!tag.empty())
     return tag;
-  else 
+  else
     return "<failed>\n";
 }
 
-string DIDial::dialout_pin(const string& application, 
+string DIDial::dialout_pin(const string& application,
 			   const string& pin,
-			   const string& user, 
-			   const string& to_user			   
+			   const string& user,
+			   const string& to_user
 		       ) {
-  DBG("dialout application '%s', user '%s', to_user '%s', pin '%s'", 
+  DBG("dialout application '%s', user '%s', to_user '%s', pin '%s'",
       application.c_str(), user.c_str(), to_user.c_str(), pin.c_str());
 
     // find pin
   std::map<string, DIDialoutInfo>::iterator it = DIDialFactory::dialout_pins.find(pin);
   if (it != DIDialFactory::dialout_pins.end()) {
     AmArg* a = new AmArg();
-    a->setBorrowedPointer(new UACAuthCred(it->second.realm, 
-					  it->second.user, 
+    a->setBorrowedPointer(new UACAuthCred(it->second.realm,
+					  it->second.user,
 					  it->second.pwd));
-    
-    string tag = AmUAC::dialout(user.c_str(), application,  
-				  "sip:"+to_user+"@"+it->second.realm,  
-				  "<sip:" + it->second.user+"@"+it->second.realm + ">", 
-				  "sip:"+it->second.user+"@"+it->second.realm, 
-				  "<sip:" + to_user+"@"+it->second.realm + ">", 
+
+    string tag = AmUAC::dialout(user.c_str(), application,
+				  "sip:"+to_user+"@"+it->second.realm,
+				  "<sip:" + it->second.user+"@"+it->second.realm + ">",
+				  "sip:"+it->second.user+"@"+it->second.realm,
+				  "<sip:" + to_user+"@"+it->second.realm + ">",
 				  string(""), // callid
 				  string(""), // xtra hdrs
 				  a);
     if (!tag.empty())
       return tag;
-    else 
+    else
       return "<failed>\n";
-  } else 
+  } else
     return "incorrect dialout pin.\n";
 }

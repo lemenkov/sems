@@ -58,7 +58,7 @@ XmlRpcDispatch::removeSource(XmlRpcSource* source)
 
 
 // Modify the types of events to watch for on this source
-void 
+void
 XmlRpcDispatch::setSourceEvents(XmlRpcSource* source, unsigned eventMask)
 {
   for (SourceList::iterator it=_sources.begin(); it!=_sources.end(); ++it)
@@ -116,7 +116,7 @@ XmlRpcDispatch::work(double timeout)
 
       // Decrement timeout by elapsed time
       timeout -= (t - timeNow);
-      if (timeout < 0.0) 
+      if (timeout < 0.0)
         timeout = 0.0;    // Shouldn't happen but its fp math...
       timeNow = t;
     }
@@ -183,7 +183,7 @@ XmlRpcDispatch::waitForAndProcessEvents(double timeout)
   SourceList::iterator it;
   for (it=_sources.begin(); it!=_sources.end(); ++it, i++) {
     fds[i].fd = it->getSource()->getfd();
-    unsigned poll_mask=0; 
+    unsigned poll_mask=0;
     if (it->getMask() & ReadableEvent) poll_mask |= POLLIN;
     if (it->getMask() & WritableEvent) poll_mask |= POLLOUT;
     if (it->getMask() & Exception)     poll_mask |= POLLERR|POLLNVAL|POLLHUP;
@@ -195,7 +195,7 @@ XmlRpcDispatch::waitForAndProcessEvents(double timeout)
   int nEvents;
   if (_endTime < 0.0)
     nEvents = poll(fds,_sources.size(), -1);
-  else 
+  else
   {
     int to_ms = (int)floor(1000.0 * timeout);
     nEvents = poll(fds,_sources.size(), to_ms);
@@ -246,7 +246,7 @@ XmlRpcDispatch::waitForAndProcessEvents(double timeout)
 	      src->close();
 	  }
       }
-    
+
   }
 
   delete [] fds;

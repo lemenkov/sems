@@ -5,7 +5,7 @@
   */
 
 /*$Header: /cvsroot/sems/answer_machine/plug-in/gsm/gsm-1.0-pl10/tls/sweet.c,v 1.1 2003/02/03 15:04:56 rco Exp $*/
- 
+
 /* Generate code to unpack a bit array from name:#bits description */
 
 #include	<stdio.h>
@@ -29,7 +29,7 @@ void write_code P2((s_spex, n_spex), struct spex * s_spex, int n_spex)
 		} else printf("\t%s |= ", sp->var);
 
 		if (vars == bits) {
-	
+
 			if (bits == 8) printf( "*c++;\n" );
 			else printf( "*c++ & 0x%lX;\n",
 				~(0xfffffffe << (bits - 1)) );
@@ -41,7 +41,7 @@ void write_code P2((s_spex, n_spex), struct spex * s_spex, int n_spex)
 
 		} else if (vars < bits) {
 
-			printf( "(*c >> %d) & 0x%lX;\n", 
+			printf( "(*c >> %d) & 0x%lX;\n",
 				bits - vars,
 				~(0xfffffffe << (vars - 1)));
 

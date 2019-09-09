@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef XMLRPC2DISERVER_H
@@ -72,14 +72,14 @@ DEF_XMLRPCSERVERMETHOD(XMLRPC2DIServerSetCPSLimitMethod, "set_cpslimit");
 DEF_XMLRPCSERVERMETHOD(XMLRPC2DIServerGetCPSLimitMethod, "get_cpslimit");
 
 
-class XMLRPC2DIServerDIMethod 
-:  public XmlRpcServerMethod { 
-  
- public: 
-  XMLRPC2DIServerDIMethod(XmlRpcServer* s) : 
-    XmlRpcServerMethod("di", s) { } 
+class XMLRPC2DIServerDIMethod
+:  public XmlRpcServerMethod {
 
-  void execute(XmlRpcValue& params, XmlRpcValue& result); 
+ public:
+  XMLRPC2DIServerDIMethod(XmlRpcServer* s) :
+    XmlRpcServerMethod("di", s) { }
+
+  void execute(XmlRpcValue& params, XmlRpcValue& result);
 };
 
 struct DIMethodProxy : public XmlRpcServerMethod
@@ -89,10 +89,10 @@ struct DIMethodProxy : public XmlRpcServerMethod
 
   AmDynInvokeFactory* di_factory;
 
-  DIMethodProxy(std::string const &server_method_name, 
+  DIMethodProxy(std::string const &server_method_name,
 		std::string const &di_method_name,
 		AmDynInvokeFactory* di_factory);
-  
+
   void execute(XmlRpcValue& params, XmlRpcValue& result);
 };
 
@@ -103,7 +103,7 @@ class XMLRPC2DIServer
 {
   XmlRpcServer* s;
 
-  unsigned int port; 
+  unsigned int port;
   string bind_ip;
 
   AmCondition<bool> running;
@@ -128,10 +128,10 @@ class XMLRPC2DIServer
 
   void process(AmEvent* ev);
 
- public: 
+ public:
   XMLRPC2DIServer(unsigned int port,
 		  const string& bind_ip,
-		  bool di_export, 
+		  bool di_export,
 		  string direct_export,
 		  XmlRpcServer* s);
 
@@ -141,8 +141,8 @@ class XMLRPC2DIServer
   void on_stop();
 
   void waitUntilStarted() { running.wait_for(); }
-  
-  static void xmlrpcval2amargarray(XmlRpcValue& v, AmArg& a, 
+
+  static void xmlrpcval2amargarray(XmlRpcValue& v, AmArg& a,
 				   unsigned int start_index);
 
   static void xmlrpcval2amarg(XmlRpcValue& v, AmArg& a);
@@ -155,7 +155,7 @@ class  XMLRPCServerEntry {
   bool active;
   time_t last_try;
 
- public: 
+ public:
   XMLRPCServerEntry(string s, int p, string u);
   ~XMLRPCServerEntry();
 
@@ -167,8 +167,8 @@ class  XMLRPCServerEntry {
   string uri;
 };
 
-class XMLRPC2DI 
-: public AmDynInvokeFactory, 
+class XMLRPC2DI
+: public AmDynInvokeFactory,
   public AmDynInvoke {
 
   XMLRPC2DIServer* server;
@@ -196,12 +196,12 @@ class XMLRPC2DI
 
   // DI API
   static XMLRPC2DI* instance();
-  void invoke(const string& method, 
+  void invoke(const string& method,
 	      const AmArg& args, AmArg& ret);
 
   static unsigned int ServerRetryAfter;
   static double ServerTimeout;
-  
+
   static bool DebugServerParams;
   static bool DebugServerResult;
 };

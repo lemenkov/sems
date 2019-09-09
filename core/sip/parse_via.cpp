@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -42,9 +42,9 @@ using std::unique_ptr;
 
 sip_via_parm::sip_via_parm()
     : eop(NULL),params(),
-      trans(), host(), 
+      trans(), host(),
       port(), port_i(),
-      branch(), 
+      branch(),
       recved(),
       has_rport(false),
       rport(),
@@ -54,9 +54,9 @@ sip_via_parm::sip_via_parm()
 
 sip_via_parm::sip_via_parm(const sip_via_parm& p)
     : eop(NULL),params(),
-      trans(p.trans), host(p.host), 
+      trans(p.trans), host(p.host),
       port(p.port), port_i(p.port_i),
-      branch(p.branch), 
+      branch(p.branch),
       recved(p.recved),
       has_rport(p.has_rport),
       rport(p.rport),
@@ -100,9 +100,9 @@ static int parse_transport(sip_transport* t, const char** c, int len)
 	DBG("Wrong/unsupported SIP version\n");
 	return MALFORMED_SIP_MSG;
     }
-    
+
     *c += SIPVER_len;
-    
+
     if (*(*c)++ != '/') {
 	DBG("Missing '/' after SIP version\n");
 	return MALFORMED_SIP_MSG;
@@ -142,7 +142,7 @@ static int parse_transport(sip_transport* t, const char** c, int len)
 
 	    case 's':
 	    case 'S':
-		if ( (len >= 4) && 
+		if ( (len >= 4) &&
 		     ( (*(*c+1) == 'c') || (*(*c+1) == 'C') ) &&
 		     ( (*(*c+2) == 't') || (*(*c+2) == 'T') ) &&
 		     ( (*(*c+3) == 'p') || (*(*c+3) == 'P') ) ) {
@@ -154,7 +154,7 @@ static int parse_transport(sip_transport* t, const char** c, int len)
 		else
 		    st = TR_OTHER;
 		break;
-		
+
 	    default:
 		st = TR_OTHER;
 		break;
@@ -165,7 +165,7 @@ static int parse_transport(sip_transport* t, const char** c, int len)
 	    switch(**c){
 	    case 'l':
 	    case 'L':
-		if( (len >= 3) && 
+		if( (len >= 3) &&
 		    ( (*(*c+1) == 's') || (*(*c+1) == 'S')) ){
 		    t->type = sip_transport::TLS;
 		    st = TR_TLS;
@@ -174,7 +174,7 @@ static int parse_transport(sip_transport* t, const char** c, int len)
 		else
 		    st = TR_OTHER;
 		break;
-		    
+
 	    case 'c':
 	    case 'C':
 		if((len >= 3) &&
@@ -347,7 +347,7 @@ static int parse_by(sip_via_parm* v, const char** c, int len)
 		DBG("bad character in port number (0x%x)\n",**c);
 		return MALFORMED_SIP_MSG;
 	    }
-	    v->port_i = v->port_i*10 + (**c - '0'); 
+	    v->port_i = v->port_i*10 + (**c - '0');
 	    break;
 
 	case_ST_CR(**c);
@@ -432,7 +432,7 @@ inline int parse_via_params(sip_via_parm* parm, const char** c, int len)
 
     list<sip_avp*>::iterator it = parm->params.begin();
     for(;it != parm->params.end();++it){
-	
+
 	const char* c   = (*it)->name.s;
 	const char* end = c + (*it)->name.len;
 	int   st  = VP_BEG;
@@ -440,7 +440,7 @@ inline int parse_via_params(sip_via_parm* parm, const char** c, int len)
 	for(;c!=end;c++){
 
 	    switch(st){
-		
+
 	    case VP_BEG:
 		switch(*c){
 		case 'b':
@@ -460,7 +460,7 @@ inline int parse_via_params(sip_via_parm* parm, const char** c, int len)
 		break;
 
 	    case VP_R:
-		
+
 		switch(*c){
 		case 'e':// "re..."
 		case 'E':
@@ -536,13 +536,13 @@ inline int parse_via_params(sip_via_parm* parm, const char** c, int len)
 	    }
 	    break;
 	}
-	
+
     next_param:
 	continue; // makes compiler happy
     }
 
     DBG("has_rport: %i\n",parm->has_rport);
-    
+
     return ret;
 }
 
@@ -550,7 +550,7 @@ inline int parse_via_params(sip_via_parm* parm, const char** c, int len)
 int parse_via(sip_via* via, const char* beg, int len)
 {
     enum {
-	
+
 	V_TRANS=0,
 	V_URI,
 	V_PARM_SEP,
@@ -576,12 +576,12 @@ int parse_via(sip_via* via, const char* beg, int len)
 
 	    st = V_URI;
  	    break;
-	    
+
  	case V_URI:
 	    switch(*c){
 
 	    case_CR_LF;
-		
+
 	    case SP:
 	    case HTAB:
 		break;
@@ -596,7 +596,7 @@ int parse_via(sip_via* via, const char* beg, int len)
 		parm->eop = c;
 		via->parms.push_back(parm.release());
 		parm.reset(new sip_via_parm());
-		
+
 		st = V_PARM_SEP;
 		c--;
 		break;
@@ -611,7 +611,7 @@ int parse_via(sip_via* via, const char* beg, int len)
 	    case SP:
 	    case HTAB:
 		break;
-		
+
 	    case ',':
 		st = V_PARM_SEP_SWS;
 		break;
@@ -630,7 +630,7 @@ int parse_via(sip_via* via, const char* beg, int len)
 	    case SP:
 	    case HTAB:
 		break;
-		
+
 	    default:
 		st = V_TRANS;
 		c--;

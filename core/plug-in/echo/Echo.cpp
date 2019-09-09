@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -47,7 +47,7 @@ EchoFactory::EchoFactory(const string& _app_name)
 int EchoFactory::onLoad()
 {
   bool useSessionTimer = false;
-    
+
   if(conf.loadFile(AmConfig::ModConfigPath + string(MODULE_NAME)+ ".conf")){
     WARN("Could not open " MODULE_NAME ".conf\n");
     WARN("assuming that default values are fine\n");
@@ -55,11 +55,11 @@ int EchoFactory::onLoad()
   else {
     if(conf.hasParameter("enable_session_timer") &&
        (conf.getParameter("enable_session_timer") == string("yes")) ){
-      
+
       useSessionTimer = true;
     }
   }
-  
+
   if(useSessionTimer){
     session_timer_f = AmPlugIn::instance()->getFactory4Seh("session_timer");
     if(session_timer_f == NULL){
@@ -68,7 +68,7 @@ int EchoFactory::onLoad()
       //return -1;
     }
   }
-  
+
   return 0;
 }
 
@@ -81,13 +81,13 @@ AmSession* EchoFactory::onInvite(const AmSipRequest& req, const string& app_name
   }
 
   AmSession* s = new EchoDialog();
-  
+
   if (NULL != session_timer_f) {
 
     AmSessionEventHandler* h = session_timer_f->getHandler(s);
     if (NULL == h)
       return NULL;
-    
+
     if(h->configure(conf)){
       ERROR("Could not configure the session timer: "
 	    "disabling session timers.\n");
@@ -100,10 +100,10 @@ AmSession* EchoFactory::onInvite(const AmSipRequest& req, const string& app_name
   return s;
 }
 
-EchoDialog::EchoDialog() 
+EchoDialog::EchoDialog()
   : playout_type(ADAPTIVE_PLAYOUT)
 {
-	
+
 }
 
 EchoDialog::~EchoDialog()
@@ -129,7 +129,7 @@ void EchoDialog::onBye(const AmSipRequest& req)
 void EchoDialog::onDtmf(int event, int duration)
 {
 #ifdef STAR_SWITCHES_PLAYOUTBUFFER
-  if (event == 10) {   
+  if (event == 10) {
     const char* pt = "simple (fifo) playout buffer";
     if (playout_type == SIMPLE_PLAYOUT) {
       playout_type = ADAPTIVE_PLAYOUT;
@@ -140,7 +140,7 @@ void EchoDialog::onDtmf(int event, int duration)
     } else
       playout_type = SIMPLE_PLAYOUT;
     DBG("received *. set playout technique to %s.\n", pt);
-		
+
     RTPStream()->setPlayoutType(playout_type);
   }
 #endif

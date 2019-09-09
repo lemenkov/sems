@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _SipCtrlInterface_h_
@@ -56,14 +56,14 @@ class _SipCtrlInterface:
 {
     bool sip_msg2am_request(const sip_msg *msg, const trans_ticket& tt, AmSipRequest &request);
     bool sip_msg2am_reply(sip_msg *msg, AmSipReply &reply);
-    
+
     void prepare_routes_uac(const list<sip_header*>& routes, string& route_field);
     void prepare_routes_uas(const list<sip_header*>& routes, string& route_field);
 
     friend class udp_trsp;
 
     AmCondition<bool> stopped;
-    
+
     unsigned short    nr_udp_sockets;
     udp_trsp_socket** udp_sockets;
 
@@ -101,7 +101,7 @@ public:
     /**
      * Sends a SIP request.
      *
-     * @param req The request to send. If the request creates a transaction, 
+     * @param req The request to send. If the request creates a transaction,
      *            its ticket is written into req.tt.
      */
     static int send(AmSipRequest &req, const string& dialog_id,
@@ -109,9 +109,9 @@ public:
 		    unsigned int flags = 0, msg_logger* logger = NULL);
 
     /**
-     * Sends a SIP reply. 
+     * Sends a SIP reply.
      *
-     * @param rep The reply to be sent. 'rep.tt' should be set to transaction 
+     * @param rep The reply to be sent. 'rep.tt' should be set to transaction
      *            ticket included in the SIP request.
      */
     static int send(const AmSipReply &rep, const string& dialog_id,

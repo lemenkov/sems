@@ -70,7 +70,7 @@ class SBCFactory: public AmSessionFactory,
 {
 
   std::map<string, SBCCallProfile> call_profiles;
-  
+
   vector<string> active_profile;
   AmMutex profiles_mut;
 
@@ -90,9 +90,9 @@ class SBCFactory: public AmSessionFactory,
   void loadCallcontrolModules(const AmArg& args, AmArg& ret);
   void postControlCmd(const AmArg& args, AmArg& ret);
 
-  SBCCallProfile* getActiveProfileMatch(const AmSipRequest& req, 
+  SBCCallProfile* getActiveProfileMatch(const AmSipRequest& req,
 					ParamReplacerCtx& ctx);
-  
+
   bool CCRoute(const AmSipRequest& req,
 	       vector<AmDynInvoke*>& cc_modules,
 	       SBCCallProfile& call_profile);
@@ -108,8 +108,8 @@ class SBCFactory: public AmSessionFactory,
   void setCallLegCreator(CallLegCreator* clc) { callLegCreator.reset(clc); }
   CallLegCreator* getCallLegCreator() { return callLegCreator.get(); }
 
-  void setSimpleRelayCreator(SimpleRelayCreator* src) { 
-    simpleRelayCreator.reset(src); 
+  void setSimpleRelayCreator(SimpleRelayCreator* src) {
+    simpleRelayCreator.reset(src);
   }
   SimpleRelayCreator* getSimpleRelayCreator() { return simpleRelayCreator.get(); }
 
@@ -132,7 +132,7 @@ class SBCFactory: public AmSessionFactory,
   // DI factory
   AmDynInvoke* getInstance() { return this; }
   // DI API
-  void invoke(const string& method, 
+  void invoke(const string& method,
 	      const AmArg& args, AmArg& ret);
 
 };

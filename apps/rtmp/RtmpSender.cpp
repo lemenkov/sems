@@ -24,8 +24,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -76,7 +76,7 @@ void RtmpSender::run()
   running.set(true);
 
   while(running.get()){
-    
+
     //wait for some work
     // (at most 1s)
     //DBG("waiting for work...\n");
@@ -102,7 +102,7 @@ void RtmpSender::run()
       }
 
       RTMPPacket_Free(&p);
-      
+
       m_q_send.lock();
     }
     has_work.set(!q_send.empty());
@@ -127,7 +127,7 @@ int RtmpSender::SendChangeChunkSize()
   packet.m_nInfoField2 = 0;
   packet.m_hasAbsTimestamp = 0;
   packet.m_body = pbuf + RTMP_MAX_HEADER_SIZE;
-  
+
   packet.m_nBodySize = 4;
 
   AMF_EncodeInt32(packet.m_body, pend, p_rtmp->m_outChunkSize);

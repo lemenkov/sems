@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-/* 
+/*
  * CPU detection (http://predef.sourceforge.net/prearch.html)
  */
 #if defined(__i386__)

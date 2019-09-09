@@ -32,7 +32,7 @@ using std::unique_ptr;
 struct RegBinding
 {
   // Absolute timestamp representing
-  // the expiration timer at the 
+  // the expiration timer at the
   // registrar side
   long int reg_expire;
 
@@ -66,7 +66,7 @@ struct AliasEntry
   string remote_ua;
 
   // Absolute timestamp representing
-  // the expiration timer at the 
+  // the expiration timer at the
   // registered UA side
   long int ua_expire;
 
@@ -78,12 +78,12 @@ struct AliasEntry
   void fire();
 };
 
-struct RegCacheStorageHandler 
+struct RegCacheStorageHandler
 {
-  virtual void onDelete(const string& aor, const string& uri, 
+  virtual void onDelete(const string& aor, const string& uri,
 			const string& alias) {}
 
-  virtual void onUpdate(const string& canon_aor, const string& alias, 
+  virtual void onUpdate(const string& canon_aor, const string& alias,
 			long int expires, const AliasEntry& alias_update) {}
 
   virtual void onUpdate(const string& alias, long int ua_expires) {}
@@ -98,7 +98,7 @@ class AorBucket
 {
 public:
   AorBucket(unsigned long id)
-  : ht_map_bucket<string,AorEntry>(id) 
+  : ht_map_bucket<string,AorEntry>(id)
   {}
 
   /**
@@ -160,9 +160,9 @@ public:
   void dump_elmt(const string& key, const string* alias) const;
 };
 
-/** 
- * Registrar/Reg-Caching 
- * parsing/processing context 
+/**
+ * Registrar/Reg-Caching
+ * parsing/processing context
  */
 struct RegisterCacheCtx
   : public AmObject
@@ -266,13 +266,13 @@ public:
   /**
    * Update contact cache entry and alias map entries.
    *
-   * Note: this function locks and unlocks 
+   * Note: this function locks and unlocks
    *       the contact cache bucket and
    *       the alias map bucket.
    *
    * aor: canonical Address-of-Record
    * uri: Contact-URI
-   * alias: 
+   * alias:
    */
   void update(const string& alias, long int reg_expires,
 	      const AliasEntry& alias_update);
@@ -284,7 +284,7 @@ public:
   /**
    * Remove contact cache entry and alias map entries.
    *
-   * Note: this function locks and unlocks 
+   * Note: this function locks and unlocks
    *       the contact cache bucket and
    *       the alias map bucket.
    *
@@ -302,7 +302,7 @@ public:
    * to a particular AOR. This is needed to support REGISTER
    * with '*' contact.
    *
-   * Note: this function locks and unlocks 
+   * Note: this function locks and unlocks
    *       the contact cache bucket.
    *
    * aor: canonical Address-of-Record
@@ -341,7 +341,7 @@ public:
    * - if request is not a REGISTER.
    * - more than one contact should be (un)registered.
    *
-   * If true has been returned, the request has already 
+   * If true has been returned, the request has already
    * been replied with either an error or 200 (w/ contact).
    *
    * Note: this function also handles binding query.

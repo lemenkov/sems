@@ -35,14 +35,14 @@ int MyCCFactory::onLoad()
   AmConfigReader cfg;
   if(cfg.loadFile(AmConfig::ModConfigPath + string(MOD_NAME ".conf")))
     return -1;
-  
+
   InitialAnnouncement = cfg.getParameter("initial_announcement", "/tmp/hello.wav");
   IncorrectPIN        = cfg.getParameter("incorrect_pin", "/tmp/incorrect_pin.wav");
   OutOfCredit         = cfg.getParameter("out_of_credit", "/tmp/out_of_credit.wav");
   Dialing             = cfg.getParameter("dialing", "/tmp/dialing.wav");
   DialFailed          = cfg.getParameter("dial_failed", "/tmp/dial_failed.wav");
-  EnterNumber         = cfg.getParameter("enter_number", "/tmp/enter_number.wav"); 
-  ConnectSuffix       = cfg.getParameter("connect_suffix", "@127.0.0.1"); 
+  EnterNumber         = cfg.getParameter("enter_number", "/tmp/enter_number.wav");
+  ConnectSuffix       = cfg.getParameter("connect_suffix", "@127.0.0.1");
 
   cc_acc_fact = AmPlugIn::instance()->getFactory4Di("cc_acc");
   if(!cc_acc_fact){
@@ -86,7 +86,7 @@ void MyCCDialog::addToPlaylist(string fname) {
   AmAudioFile* wav_file = new AmAudioFile();
   if(wav_file->open(fname,AmAudioFile::Read)) {
     ERROR("MyCCDialog::addToPlaylist: Cannot open file\n");
-    delete wav_file; 
+    delete wav_file;
   } else {
     AmPlaylistItem*  item = new AmPlaylistItem(wav_file, NULL);
     playlist.addToPlaylist(item);
@@ -96,7 +96,7 @@ void MyCCDialog::addToPlaylist(string fname) {
 void MyCCDialog::onSessionStart()
 {
     DBG("MyCCDialog::onSessionStart");
-    
+
     AmB2BCallerSession::onSessionStart();
 
     setInOut(&playlist, &playlist);
@@ -112,10 +112,10 @@ void MyCCDialog::onDtmf(int event, int duration) {
 
   switch (state) {
   case CC_Collecting_PIN: {
-    // flush the playlist (stop playing) 
+    // flush the playlist (stop playing)
     // if a key is entered
-    playlist.flush(); 
-    
+    playlist.flush();
+
     if(event <10) {
       pin +=int2str(event);
       DBG("pin is now '%s'\n", pin.c_str());
@@ -125,7 +125,7 @@ void MyCCDialog::onDtmf(int event, int duration) {
 	cc_acc->invoke("getCredit", di_args, ret);
 	credit = ret.get(0).asInt();
       if (credit < 0) {
-	addToPlaylist(MyCCFactory::IncorrectPIN);	
+	addToPlaylist(MyCCFactory::IncorrectPIN);
 	pin = "";
       } else if (credit == 0) {
 	addToPlaylist(MyCCFactory::OutOfCredit);
@@ -135,27 +135,27 @@ void MyCCDialog::onDtmf(int event, int duration) {
 	state = CC_Collecting_Number;
 	addToPlaylist(MyCCFactory::EnterNumber);
       }
-    } 
+    }
   } break;
   case CC_Collecting_Number: {
-    // flush the playlist (stop playing) 
+    // flush the playlist (stop playing)
     // if a key is entered
-    playlist.flush(); 
+    playlist.flush();
     if(event <10) {
       number +=int2str(event);
       DBG("number is now '%s'\n", number.c_str());
     } else {
       if (getCalleeStatus() == None) {
 	state = CC_Dialing;
-	connectCallee(number + " <sip:" + number+ MyCCFactory::ConnectSuffix + ">", 
+	connectCallee(number + " <sip:" + number+ MyCCFactory::ConnectSuffix + ">",
 		      "sip:"+number+MyCCFactory::ConnectSuffix);
 	addToPlaylist(MyCCFactory::Dialing);
       }
-    }   
+    }
   }
     break;
-    case CC_Dialing: 
-    case CC_Connected: 
+    case CC_Dialing:
+    case CC_Connected:
   default: break;
   };
 }
@@ -178,7 +178,7 @@ void MyCCDialog::process(AmEvent* ev)
 	stopAccounting();
 	terminateOtherLeg();
 	terminateLeg();
-	
+
 	ev->processed = true;
 	return;
       }
@@ -209,7 +209,7 @@ bool MyCCDialog::onOtherReply(const AmSipReply& reply) {
       number = "";
       state = CC_Collecting_Number;
     }
-  }  
+  }
   // we dont call
   //  AmB2BCallerSession::onOtherReply(reply);
   // as it tears down the call if callee could

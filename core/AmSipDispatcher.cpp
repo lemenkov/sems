@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -67,15 +67,15 @@ void AmSipDispatcher::handleSipMsg(AmSipRequest &req)
   AmEventDispatcher* ev_disp = AmEventDispatcher::instance();
 
   if(req.method == SIP_METH_CANCEL){
-      
+
     if(ev_disp->postSipRequest(req)){
       return;
     }
-  
+
     // CANCEL of a (here) non-existing dialog
     AmSipDialog::reply_error(req,481,SIP_REPLY_NOT_EXIST);
     return;
-  } 
+  }
   else if(!local_tag.empty()) {
     // in-dlg request
     AmSipRequestEvent* ev = new AmSipRequestEvent(req);
@@ -104,12 +104,12 @@ void AmSipDispatcher::handleSipMsg(AmSipRequest &req)
 
   DBG("method: `%s' [%zd].\n", req.method.c_str(), req.method.length());
   if(req.method == SIP_METH_INVITE){
-      
+
       AmSessionContainer::instance()->startSessionUAS(req);
   }
   else if(req.method == SIP_METH_BYE ||
 	  req.method == SIP_METH_PRACK){
-    
+
     // BYE/PRACK of a (here) non-existing dialog
     AmSipDialog::reply_error(req,481,SIP_REPLY_NOT_EXIST);
     return;
@@ -128,12 +128,12 @@ void AmSipDispatcher::handleSipMsg(AmSipRequest &req)
 	return;
       }
     }
-	
+
     if (req.method == SIP_METH_OPTIONS) {
       AmSessionFactory::replyOptions(req);
       return;
     }
-      
+
     AmSipDialog::reply_error(req,404,"Not found");
   }
 

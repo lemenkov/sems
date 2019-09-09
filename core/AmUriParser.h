@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _AmUriParser_h_
@@ -35,10 +35,10 @@ using std::string;
 struct AmUriParser {
   string display_name;
   string uri;
-	
-  string uri_user; 
-  string uri_host; 
-  string uri_port; 
+
+  string uri_user;
+  string uri_host;
+  string uri_port;
   string uri_headers;
   string uri_param;		// <sip:user@host;uri_param>
                                 // <sip:user;user_param@host>
@@ -66,7 +66,7 @@ struct AmUriParser {
   string uri_str() const;
   string canon_uri_str() const;
   string nameaddr_str() const;
-  
+
   AmUriParser() { }
 
   string print() const;

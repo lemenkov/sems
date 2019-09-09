@@ -31,7 +31,7 @@ namespace XmlRpc {
       WritableEvent = 2,    //!< connected/data can be written without blocking
       Exception     = 4     //!< uh oh
     };
-    
+
     //! Monitor this source for the event types specified by the event mask
     //! and call its event handler when any of the events occur.
     //!  @param source The source to monitor
@@ -76,7 +76,7 @@ namespace XmlRpc {
     };
 
     // A list of sources to monitor
-    typedef std::list< MonitoredSource > SourceList; 
+    typedef std::list< MonitoredSource > SourceList;
 
     // Sources being monitored
     SourceList _sources;

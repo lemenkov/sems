@@ -98,7 +98,7 @@ class atomic_int64
 #endif
 {
   volatile unsigned long long ll;
-  
+
 public:
   atomic_int64(): ll(0) {}
 
@@ -114,7 +114,7 @@ public:
     ll = val;
 #endif
   }
-  
+
   unsigned long long get() {
 #if !defined(__LP64__) || !__LP64__
     unsigned long long tmp_ll;
@@ -150,7 +150,7 @@ public:
     ll = val;
 #endif
   }
-  
+
   unsigned long long get() {
 #if !defined(__LP64__) || !__LP64__
     unsigned long long tmp_ll;

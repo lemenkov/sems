@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -43,7 +43,7 @@ unsigned int precoded_samples2bytes(long h_codec, unsigned int num_samples) {
   return ((precoded_payload_t*)h_codec)->frame_bytes;
 }
 
-amci_codec_t _codec_precoded = { 
+amci_codec_t _codec_precoded = {
   PRECODED_CODEC_ID,
   NULL,
   NULL,
@@ -57,7 +57,7 @@ amci_codec_t _codec_precoded = {
 
 void AmPrecodedFile::initPlugin() {
   AmPlugIn::instance()->addCodec(&_codec_precoded);
-  for(std::map<int,precoded_payload_t>::iterator it = 
+  for(std::map<int,precoded_payload_t>::iterator it =
 	payloads.begin(); it != payloads.end(); ++it)
     AmPlugIn::instance()->addPayload(&it->second);
 }
@@ -78,7 +78,7 @@ AmPrecodedRtpFormat::~AmPrecodedRtpFormat() {
 }
 
 AmPrecodedFileFormat::AmPrecodedFileFormat(precoded_payload_t& precoded_payload)
-  : AmAudioFileFormat(""), precoded_payload(precoded_payload) 
+  : AmAudioFileFormat(""), precoded_payload(precoded_payload)
 {
   subtype.type = 0;
   subtype.name = precoded_payload.name;
@@ -96,7 +96,7 @@ AmPrecodedFileFormat::AmPrecodedFileFormat(precoded_payload_t& precoded_payload)
   h_codec = (long)&(this->precoded_payload);
 }
 
-AmPrecodedFileFormat::~AmPrecodedFileFormat() { 
+AmPrecodedFileFormat::~AmPrecodedFileFormat() {
 }
 
 int precoded_file_open(FILE* fp, struct amci_file_desc_t* fmt_desc, int options, long h_codec)
@@ -108,14 +108,14 @@ int precoded_file_open(FILE* fp, struct amci_file_desc_t* fmt_desc, int options,
   return 0;
 }
 
-int precoded_file_close(FILE* fp, struct amci_file_desc_t* fmt_desc, int options, 
+int precoded_file_close(FILE* fp, struct amci_file_desc_t* fmt_desc, int options,
 			long h_codec, struct amci_codec_t *codec)
 {
   DBG("file closed\n");
   return 0;
 }
 
-AmPrecodedFileInstance::AmPrecodedFileInstance(precoded_payload_t& precoded_payload) 
+AmPrecodedFileInstance::AmPrecodedFileInstance(precoded_payload_t& precoded_payload)
   : AmAudioFile(), precoded_payload(precoded_payload)
 {
   memset(&m_iofmt, 0, sizeof(amci_inoutfmt_t));
@@ -139,7 +139,7 @@ AmPrecodedRtpFormat* AmPrecodedFileInstance::getRtpFormat() {
   return new AmPrecodedRtpFormat(precoded_payload);
 }
 
-AmPrecodedFile::AmPrecodedFile() 
+AmPrecodedFile::AmPrecodedFile()
 {
 }
 
@@ -168,7 +168,7 @@ int AmPrecodedFile::open(const std::string& filename) {
 	    codec_line.c_str());
       continue;
     }
-    
+
     precoded_payload_t pl;
 
 #define get_uint_item(name, index, description)			\
@@ -178,7 +178,7 @@ int AmPrecodedFile::open(const std::string& filename) {
 	    codec_line.c_str());				\
       continue;							\
     }								\
-    pl.name = name;						
+    pl.name = name;
 
     get_uint_item(payload_id, 0, "payload_id");
     pl.c_name = codec_def[1];
@@ -201,7 +201,7 @@ int AmPrecodedFile::open(const std::string& filename) {
 }
 
 amci_payload_t* AmPrecodedFile::payload(int payload_id) const {
-  std::map<int,precoded_payload_t>::const_iterator it = 
+  std::map<int,precoded_payload_t>::const_iterator it =
     payloads.find(payload_id);
 
   if(it != payloads.end())
@@ -216,10 +216,10 @@ int AmPrecodedFile::getDynPayload(const string& name, int rate, int encoding_par
       pl_it != payloads.end(); ++pl_it)
     if( (name == pl_it->second.name)
 	&& (rate == pl_it->second.sample_rate) ) {
-      if ((encoding_param > 0) && (pl_it->second.channels > 0) && 
+      if ((encoding_param > 0) && (pl_it->second.channels > 0) &&
 	  (encoding_param != pl_it->second.channels))
 	continue;
-	  
+
       return pl_it->first;
     }
 
@@ -238,7 +238,7 @@ void AmPrecodedFile::getPayloads(vector<SdpPayload>& pl_vec) const
 
 AmPrecodedFileInstance* AmPrecodedFile::getFileInstance(int payload_id) {
   std::map<int,precoded_payload_t>::iterator it=payloads.find(payload_id);
-  if (it != payloads.end()) 
+  if (it != payloads.end())
     return new AmPrecodedFileInstance(it->second);
   return NULL;
 }

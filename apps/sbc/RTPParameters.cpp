@@ -65,5 +65,5 @@ const  iana_rtp_payload IANA_RTP_PAYLOADS[IANA_RTP_PAYLOADS_SIZE] = {
                                  // 35-71     Unassigned      ?
                                  // 72-76     Reserved for RTCP conflict avoidance                                  [RFC3551]
                                  // 77-95     Unassigned      ?
-                                 // 96-127    dynamic         ?                                                     [RFC3551] 
+                                 // 96-127    dynamic         ?                                                     [RFC3551]
 };

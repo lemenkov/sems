@@ -73,4 +73,4 @@ class Prepaid : public AmDynInvoke
   int onLoad();
 };
 
-#endif 
+#endif

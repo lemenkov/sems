@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "log.h"
@@ -67,8 +67,8 @@ void DSMConfChannel::reset(AmConferenceChannel* channel) {
   chan.reset(channel);
 }
 
-DSMTeeConfChannel::DSMTeeConfChannel(AmConferenceChannel* channel) 
-  : chan(channel) { 
+DSMTeeConfChannel::DSMTeeConfChannel(AmConferenceChannel* channel)
+  : chan(channel) {
   audio_queue.setOwning(false);
 }
 
@@ -100,7 +100,7 @@ CONST_ACTION_2P(ConfPostEventAction, ',', true);
 EXEC_ACTION_START(ConfPostEventAction) {
   string channel_id = resolveVars(par1, sess, sc_sess, event_params);
   string ev_id = resolveVars(par2, sess, sc_sess, event_params);
-  
+
   unsigned int ev;
   if (str2i(ev_id, ev)) {
     ERROR("decoding conference event id '%s'\n", ev_id.c_str());
@@ -113,10 +113,10 @@ EXEC_ACTION_START(ConfPostEventAction) {
   sc_sess->CLR_ERRNO;
 } EXEC_ACTION_END;
 
-static bool ConferenceJoinChannel(DSMConfChannel** dsm_chan, 
+static bool ConferenceJoinChannel(DSMConfChannel** dsm_chan,
 				  AmSession* sess,
 				  DSMSession* sc_sess,
-				  const string& channel_id, 
+				  const string& channel_id,
 				  const string& mode) {
   bool connect_play = false;
   bool connect_record = false;
@@ -127,12 +127,12 @@ static bool ConferenceJoinChannel(DSMConfChannel** dsm_chan,
     connect_record = true;
   } else if (mode == "listenonly") {
     connect_play = true;
-  } 
-  DBG("connect_play = %s, connect_rec = %s\n", 
-      connect_play?"true":"false", 
+  }
+  DBG("connect_play = %s, connect_rec = %s\n",
+      connect_play?"true":"false",
       connect_record?"true":"false");
-  
-  AmConferenceChannel* chan = AmConferenceStatus::getChannel(channel_id, 
+
+  AmConferenceChannel* chan = AmConferenceStatus::getChannel(channel_id,
 							     sess->getLocalTag(), sess->RTPStream()->getSampleRate());
   if (NULL == chan) {
     ERROR("obtaining conference channel\n");
@@ -169,7 +169,7 @@ EXEC_ACTION_START(ConfJoinAction) {
       AmArg c_arg;
       c_arg.setBorrowedPointer(dsm_chan);
       sc_sess->avar[CONF_AKEY_CHANNEL] = c_arg;
-      
+
       // add to garbage collector
       sc_sess->transferOwnership(dsm_chan);
 
@@ -180,7 +180,7 @@ EXEC_ACTION_START(ConfJoinAction) {
 } EXEC_ACTION_END;
 
 // get conference channel or other object (mixer etc)
-template<class T> 
+template<class T>
 static T* getDSMConfChannel(DSMSession* sc_sess, const char* key_name) {
   if (sc_sess->avar.find(key_name) == sc_sess->avar.end()) {
     return NULL;
@@ -244,7 +244,7 @@ EXEC_ACTION_START(ConfSizeAction) {
   size_t res = AmConferenceStatus::getConferenceSize(channel_id);
 
   sc_sess->var[varname] = int2str((int)res);
-  DBG("set $%s = %s\n", 
+  DBG("set $%s = %s\n",
       varname.c_str(), sc_sess->var[varname].c_str());
 
 } EXEC_ACTION_END;
@@ -255,7 +255,7 @@ EXEC_ACTION_START(ConfSetPlayoutTypeAction) {
     sess->RTPStream()->setPlayoutType(ADAPTIVE_PLAYOUT);
   else if (playout_type == "jb")
     sess->RTPStream()->setPlayoutType(JB_PLAYOUT);
-  else 
+  else
     sess->RTPStream()->setPlayoutType(SIMPLE_PLAYOUT);
 } EXEC_ACTION_END;
 
@@ -264,17 +264,17 @@ CONST_ACTION_2P(ConfTeeJoinAction, ',', true);
 EXEC_ACTION_START(ConfTeeJoinAction) {
   string channel_id = resolveVars(par1, sess, sc_sess, event_params);
   string conf_varname = resolveVars(par2, sess, sc_sess, event_params);
-  if (conf_varname.empty()) 
+  if (conf_varname.empty())
     conf_varname = CONF_AKEY_DEF_TEECHANNEL;
 
   DBG("Speaking also in conference '%s' (with cvar '%s')\n",
       channel_id.c_str(), conf_varname.c_str());
 
-  DSMTeeConfChannel* chan = 
+  DSMTeeConfChannel* chan =
     getDSMConfChannel<DSMTeeConfChannel>(sc_sess, conf_varname.c_str());
   if (NULL == chan) {
     DBG("not previously in tee-channel, creating new\n");
-    AmConferenceChannel* conf_channel = AmConferenceStatus::getChannel(channel_id, 
+    AmConferenceChannel* conf_channel = AmConferenceStatus::getChannel(channel_id,
 								       sess->getLocalTag(), sess->RTPStream()->getSampleRate());
     if (NULL == conf_channel) {
       ERROR("obtaining conference channel\n");
@@ -286,7 +286,7 @@ EXEC_ACTION_START(ConfTeeJoinAction) {
     AmArg c_arg;
     c_arg.setBorrowedPointer(chan);
     sc_sess->avar[conf_varname] = c_arg;
-    
+
     // add to garbage collector
     sc_sess->transferOwnership(chan);
 
@@ -295,18 +295,18 @@ EXEC_ACTION_START(ConfTeeJoinAction) {
     if (chan_audio == NULL) {
       ERROR("tee channel audio setup failed\n");
       throw DSMException("conference");
-    } 
+    }
 
-    sess->setInput(chan_audio);    
+    sess->setInput(chan_audio);
 
   } else {
     DBG("previously already in tee-channel, resetting\n");
 
-    // temporarily switch back to playlist, 
+    // temporarily switch back to playlist,
     // while we are releasing the old channel
     sc_sess->setInputPlaylist();
 
-    AmConferenceChannel* conf_channel = AmConferenceStatus::getChannel(channel_id, 
+    AmConferenceChannel* conf_channel = AmConferenceStatus::getChannel(channel_id,
 								       sess->getLocalTag(), sess->RTPStream()->getSampleRate());
     if (NULL == conf_channel) {
       ERROR("obtaining conference channel\n");
@@ -321,20 +321,20 @@ EXEC_ACTION_START(ConfTeeJoinAction) {
     if (chan_audio == NULL) {
       ERROR("tee channel audio setup failed\n");
       throw DSMException("conference");
-    } 
+    }
 
-    sess->setInput(chan_audio);    
+    sess->setInput(chan_audio);
   }
-  
+
 } EXEC_ACTION_END;
 
 
 EXEC_ACTION_START(ConfTeeLeaveAction) {
   string conf_varname = resolveVars(arg, sess, sc_sess, event_params);
-  if (conf_varname.empty()) 
+  if (conf_varname.empty())
     conf_varname = CONF_AKEY_DEF_TEECHANNEL;
 
-  DSMTeeConfChannel* chan = 
+  DSMTeeConfChannel* chan =
     getDSMConfChannel<DSMTeeConfChannel>(sc_sess, conf_varname.c_str());
   if (NULL == chan) {
     WARN("app error: trying to leave tee conference, but channel not found\n");
@@ -346,7 +346,7 @@ EXEC_ACTION_START(ConfTeeLeaveAction) {
   // for safety, set back playlist to in/out
   sc_sess->setInOutPlaylist();
 
-  // release conf channel 
+  // release conf channel
   chan->release();
 
   sc_sess->CLR_ERRNO;
@@ -364,7 +364,7 @@ EXEC_ACTION_START(ConfSetupMixInAction) {
     s = 0;
   } else {
     if (str2i(seconds, s)) {
-      throw DSMException("conference", 
+      throw DSMException("conference",
 			 "cause", "could not interpret seconds value");
     }
   }
@@ -375,8 +375,8 @@ EXEC_ACTION_START(ConfSetupMixInAction) {
   AmAudio* output = sess->getOutput();
   AmAudioMixIn* m = new AmAudioMixIn(output, NULL, s, l, flags);
   sess->setOutput(m);
-  
-  DSMDisposableT<AmAudioMixIn >* m_obj = 
+
+  DSMDisposableT<AmAudioMixIn >* m_obj =
     getDSMConfChannel<DSMDisposableT<AmAudioMixIn > >(sc_sess, CONF_AKEY_MIXER);
   if (NULL != m_obj) {
     DBG("releasing old MixIn (hope script write setInOutPlaylist before)\n");
@@ -387,7 +387,7 @@ EXEC_ACTION_START(ConfSetupMixInAction) {
     AmArg c_arg;
     c_arg.setBorrowedPointer(m_obj);
     sc_sess->avar[CONF_AKEY_MIXER] = c_arg;
-      
+
     // add to garbage collector
     sc_sess->transferOwnership(m_obj);
   }
@@ -396,20 +396,20 @@ EXEC_ACTION_START(ConfSetupMixInAction) {
 EXEC_ACTION_START(ConfPlayMixInAction) {
   string filename = resolveVars(arg, sess, sc_sess, event_params);
 
-  DSMDisposableT<AmAudioMixIn >* m_obj = 
+  DSMDisposableT<AmAudioMixIn >* m_obj =
     getDSMConfChannel<DSMDisposableT<AmAudioMixIn > >(sc_sess, CONF_AKEY_MIXER);
   if (NULL == m_obj) {
     throw DSMException("conference", "cause", "mixer not setup!\n");
-  } 
+  }
 
   AmAudioMixIn* m = m_obj->get();
 
   DSMDisposableAudioFile* af = new DSMDisposableAudioFile();
   if(af->open(filename,AmAudioFile::Read)) {
-    ERROR("audio file '%s' could not be opened for reading.\n", 
+    ERROR("audio file '%s' could not be opened for reading.\n",
 	  filename.c_str());
     delete af;
-    
+
     throw DSMException("file", "path", filename);
   }
 
@@ -427,7 +427,7 @@ EXEC_ACTION_START(ConfPlayMixInListAction) {
 
   bool has_playlist = true;
   // get playlist
-  DSMDisposableT<AmPlaylist >* l_obj = 
+  DSMDisposableT<AmPlaylist >* l_obj =
     getDSMConfChannel<DSMDisposableT<AmPlaylist> >(sc_sess, CONF_AKEY_MIXLIST);
   if (NULL == l_obj) {
     // playlist newly setup
@@ -436,7 +436,7 @@ EXEC_ACTION_START(ConfPlayMixInListAction) {
     AmArg c_arg;
     c_arg.setBorrowedPointer(l_obj);
     sc_sess->avar[CONF_AKEY_MIXLIST] = c_arg;
-      
+
     // add to garbage collector
     sc_sess->transferOwnership(l_obj);
     has_playlist = false;
@@ -446,10 +446,10 @@ EXEC_ACTION_START(ConfPlayMixInListAction) {
 
   DSMDisposableAudioFile* af = new DSMDisposableAudioFile();
   if(af->open(filename,AmAudioFile::Read)) {
-    ERROR("audio file '%s' could not be opened for reading.\n", 
+    ERROR("audio file '%s' could not be opened for reading.\n",
 	  filename.c_str());
     delete af;
-    
+
     throw DSMException("file", "path", filename);
   }
   sc_sess->transferOwnership(af);
@@ -460,7 +460,7 @@ EXEC_ACTION_START(ConfPlayMixInListAction) {
 
   if (!has_playlist) {
     // get mixin mixer
-    DSMDisposableT<AmAudioMixIn >* m_obj = 
+    DSMDisposableT<AmAudioMixIn >* m_obj =
       getDSMConfChannel<DSMDisposableT<AmAudioMixIn > >(sc_sess, CONF_AKEY_MIXER);
     if (NULL == m_obj) {
       throw DSMException("conference", "cause", "mixer not setup!\n");
@@ -473,7 +473,7 @@ EXEC_ACTION_START(ConfPlayMixInListAction) {
 
 EXEC_ACTION_START(ConfFlushMixInListAction) {
   // get playlist
-  DSMDisposableT<AmPlaylist >* l_obj = 
+  DSMDisposableT<AmPlaylist >* l_obj =
     getDSMConfChannel<DSMDisposableT<AmPlaylist> >(sc_sess, CONF_AKEY_MIXLIST);
   if (NULL == l_obj) {
     DBG("no mix list present - not flushing list\n");

@@ -53,7 +53,7 @@ int CCParallelCalls::onLoad() {
   	 (AmConfig::ModConfigPath + string(MOD_NAME ".conf")).c_str());
     return 0;
   }
-  
+
   refuse_reason = cfg.hasParameter("refuse_reason") ?
     cfg.getParameter("refuse_reason") : refuse_reason;
 
@@ -78,7 +78,7 @@ void CCParallelCalls::invoke(const string& method, const AmArg& args, AmArg& ret
     start(args[CC_API_PARAMS_CC_NAMESPACE].asCStr(),
 	  args[CC_API_PARAMS_LTAG].asCStr(), call_profile,
 	  args[CC_API_PARAMS_CFGVALUES], ret);
-    
+
   } else if(method == "connect"){
     // no action
 

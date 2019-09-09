@@ -74,4 +74,4 @@ class CCBLRedis : public AmDynInvoke
   int onLoad();
 };
 
-#endif 
+#endif

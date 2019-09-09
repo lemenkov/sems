@@ -99,7 +99,7 @@ int AmConferenceChannel::get(unsigned long long system_ts, unsigned char* buffer
   return size;
 }
 
-ChannelWritingFile::ChannelWritingFile(const char* path) 
+ChannelWritingFile::ChannelWritingFile(const char* path)
   : async_file(256*1024) // 256k buffer
 {
   fp = fopen(path, "w");

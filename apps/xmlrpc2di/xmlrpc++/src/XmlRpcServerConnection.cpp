@@ -53,7 +53,7 @@ XmlRpcServerConnection::handleEvent(unsigned /*eventType*/)
   if (_connectionState == WRITE_RESPONSE)
     if ( ! writeResponse()) return 0;
 
-  return (_connectionState == WRITE_RESPONSE) 
+  return (_connectionState == WRITE_RESPONSE)
         ? XmlRpcDispatch::WritableEvent : XmlRpcDispatch::ReadableEvent;
 }
 
@@ -97,7 +97,7 @@ XmlRpcServerConnection::readHeader()
         XmlRpcUtil::error("XmlRpcServerConnection::readHeader: EOF while reading header");
       return false;   // Either way we close the connection
     }
-    
+
     return true;  // Keep reading
   }
 
@@ -112,7 +112,7 @@ XmlRpcServerConnection::readHeader()
     XmlRpcUtil::error("XmlRpcServerConnection::readHeader: Invalid Content-length specified (%d).", _contentLength);
     return false;
   }
-  	
+
   XmlRpcUtil::log(3, "XmlRpcServerConnection::readHeader: specified content length is %d.", _contentLength);
 
   // Otherwise copy non-header data to request buffer and set state to read request.
@@ -130,7 +130,7 @@ XmlRpcServerConnection::readHeader()
   XmlRpcUtil::log(3, "KeepAlive: %d", _keepAlive);
 
 
-  _header = ""; 
+  _header = "";
   _connectionState = READ_REQUEST;
   return true;    // Continue monitoring this source
 }

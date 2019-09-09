@@ -5,9 +5,9 @@
 #include <errno.h>
 
 DRedisConfig::DRedisConfig(const string& host, unsigned int port,
-			 bool unix_socket, bool full_logging, 
+			 bool unix_socket, bool full_logging,
 			 bool use_transactions, int connect_timeout)
-  : host(host), port(port), 
+  : host(host), port(port),
     unix_socket(unix_socket),
     full_logging(full_logging),
     use_transactions(use_transactions)
@@ -69,15 +69,15 @@ int DRedisConnection::handle_redis_reply(redisReply *reply, const char* _cmd) {
       return DB_E_CONNECTION;
 
     case REDIS_ERR_EOF: // silently reconnect
-    case REDIS_ERR_OTHER: 
+    case REDIS_ERR_OTHER:
       disconnect();
       return DB_E_CONNECTION;
 
-    case REDIS_ERR_PROTOCOL: 
+    case REDIS_ERR_PROTOCOL:
       ERROR("REDIS Protocol error detected\n");
       disconnect();
       return DB_E_CONNECTION;
-    }    
+    }
   }
 
   switch (reply->type) {
@@ -89,7 +89,7 @@ int DRedisConnection::handle_redis_reply(redisReply *reply, const char* _cmd) {
   case REDIS_REPLY_STRING:
     if (reply->len>=0) {
       if (cfg.full_logging) {
-	DBG("REDIS %s: str: %.*s\n", _cmd, reply->len, reply->str); 
+	DBG("REDIS %s: str: %.*s\n", _cmd, reply->len, reply->str);
       }
     } break;
 
@@ -114,12 +114,12 @@ int DRedisConnection::handle_redis_reply(redisReply *reply, const char* _cmd) {
 	  DBG("REDIS %s: %lld\n", _cmd, reply->element[i]->integer);
 	} break;
 
-      case REDIS_REPLY_NIL: 
+      case REDIS_REPLY_NIL:
 	if (cfg.full_logging) {
 	  DBG("REDIS %s: nil\n", _cmd);
 	} break;
 
-      case REDIS_REPLY_ARRAY: 
+      case REDIS_REPLY_ARRAY:
 	if (cfg.full_logging) {
 	  DBG("REDIS : %zd elements\n", reply->elements);
 	} break;
@@ -129,7 +129,7 @@ int DRedisConnection::handle_redis_reply(redisReply *reply, const char* _cmd) {
 	if (cfg.full_logging) {
 	  if (reply->element[i]->len >= 0) {
 	    DBG("REDIS %s: %.*s\n", _cmd,
-		reply->element[i]->len, reply->element[i]->str); 
+		reply->element[i]->len, reply->element[i]->str);
 	  }
 	}
 	break;
@@ -189,6 +189,6 @@ int DRedisConnection::get_reply(redisReply*& reply) {
 
   redisGetReply(redis_context, (void**)&reply);
   int ret = handle_redis_reply(reply, "<pipelined>");
-  return ret;  
+  return ret;
 }
 

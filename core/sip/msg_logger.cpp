@@ -56,7 +56,7 @@ static string addr2str(sockaddr_storage* addr)
       ERROR("Could not convert IPv4 address to string: %s",strerror(errno));
       return "unknown";
     }
-    
+
     return string(ntop_buffer) + ":" + int2str(ntohs(sin->sin_port));
   }
 
@@ -66,7 +66,7 @@ static string addr2str(sockaddr_storage* addr)
     ERROR("Could not convert IPv6 address to string: %s",strerror(errno));
     return "unknown";
   }
-  
+
   return string(ntop_buffer) + ":" + int2str(ntohs(sin6->sin6_port));
 }
 
@@ -109,7 +109,7 @@ int cf_msg_logger::log(const char* buf, int len,
 
   write_src_dst(src);
   write_src_dst(dst);
-  
+
   string what = c2stlstr(method);
   if(reply_code > 0) {
     what = int2str(reply_code) + " / " + what;
@@ -126,7 +126,7 @@ int cf_msg_logger::log(const char* buf, int len,
   if(write(buf,len) != len) return -1;
 
   WRITE_CSTSTR("</call>\n");
- 
+
   return 0;
 }
 

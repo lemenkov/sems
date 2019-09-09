@@ -21,8 +21,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "ModUtils.h"
@@ -78,18 +78,18 @@ MOD_CONDITIONEXPORT_BEGIN(MOD_CLS_NAME) {
 
 } MOD_CONDITIONEXPORT_END;
 
-vector<string> utils_get_count_files(DSMSession* sc_sess, unsigned int cnt, 
+vector<string> utils_get_count_files(DSMSession* sc_sess, unsigned int cnt,
 				     const string& basedir, const string& suffix, bool right) {
-  
+
   vector<string> res;
 
   if (cnt <= 20) {
     res.push_back(basedir+int2str(cnt)+suffix);
     return res;
   }
-  
+
   for (int i=9;i>1;i--) {
-    div_t num = div(cnt, (int)pow(10.,i));  
+    div_t num = div(cnt, (int)pow(10.,i));
     if (num.quot) {
       res.push_back(basedir+int2str(int(num.quot * pow(10.,i)))+suffix);
     }
@@ -105,13 +105,13 @@ vector<string> utils_get_count_files(DSMSession* sc_sess, unsigned int cnt,
   }
 
   div_t num = div(cnt, 10);
-  if (right) { 
+  if (right) {
    // language has single digits before 10s
     res.push_back(basedir+int2str(num.quot * 10)+suffix);
-    res.push_back(basedir+("x"+int2str(num.rem))+suffix);    
+    res.push_back(basedir+("x"+int2str(num.rem))+suffix);
   } else {
     // language has single digits before 10s
-    res.push_back(basedir+("x"+int2str(num.rem))+suffix);    
+    res.push_back(basedir+("x"+int2str(num.rem))+suffix);
     res.push_back(basedir+int2str(num.quot * 10)+suffix);
   }
 
@@ -119,16 +119,16 @@ vector<string> utils_get_count_files(DSMSession* sc_sess, unsigned int cnt,
 }
 
 
-bool utils_play_count(DSMSession* sc_sess, unsigned int cnt, 
+bool utils_play_count(DSMSession* sc_sess, unsigned int cnt,
 		      const string& basedir, const string& suffix, bool right) {
-  
+
   if (cnt <= 20) {
     sc_sess->playFile(basedir+int2str(cnt)+suffix, false);
     return false;
   }
-  
+
   for (int i=9;i>1;i--) {
-    div_t num = div(cnt, (int)pow(10.,i));  
+    div_t num = div(cnt, (int)pow(10.,i));
     if (num.quot) {
       sc_sess->playFile(basedir+int2str(int(num.quot * pow(10.,i)))+suffix, false);
     }
@@ -144,13 +144,13 @@ bool utils_play_count(DSMSession* sc_sess, unsigned int cnt,
   }
 
   div_t num = div(cnt, 10);
-  if (right) { 
+  if (right) {
    // language has single digits before 10s
     sc_sess->playFile(basedir+int2str(num.quot * 10)+suffix, false);
-    sc_sess->playFile(basedir+("x"+int2str(num.rem))+suffix, false);    
+    sc_sess->playFile(basedir+("x"+int2str(num.rem))+suffix, false);
   } else {
     // language has single digits before 10s
-    sc_sess->playFile(basedir+("x"+int2str(num.rem))+suffix, false);    
+    sc_sess->playFile(basedir+("x"+int2str(num.rem))+suffix, false);
     sc_sess->playFile(basedir+int2str(num.quot * 10)+suffix, false);
   }
 
@@ -175,7 +175,7 @@ void utils_set_session_vars(DSMSession* sc_sess, string prefix, AmArg json) {
       json_string.erase(json_string.end() - 1);
       json_string.erase(json_string.begin());
     }
-    sc_sess->var[prefix] = json_string.c_str();      
+    sc_sess->var[prefix] = json_string.c_str();
   }
 }
 
@@ -327,9 +327,9 @@ EXEC_ACTION_START(SCURandomAction) {
   string modulo_str = resolveVars(par2, sess, sc_sess, event_params);
 
   unsigned int modulo = 0;
-  if (modulo_str.length()) 
+  if (modulo_str.length())
     str2i(modulo_str, modulo);
-  
+
   if (modulo)
     sc_sess->var[varname]=int2str(rand()%modulo);
   else
@@ -365,7 +365,7 @@ EXEC_ACTION_START(SCUSAddAction) {
   // todo: err checking
   string res = double2str(atof(n1.c_str()) + atof(n2.c_str()));
 
-  DBG("setting var[%s] = %s + %s = %s\n", 
+  DBG("setting var[%s] = %s + %s = %s\n",
       varname.c_str(), n1.c_str(), n2.c_str(), res.c_str());
   sc_sess->var[varname] = res;
 
@@ -383,7 +383,7 @@ EXEC_ACTION_START(SCUSSubAction) {
   // todo: err checking
   string res = double2str(atof(n1.c_str()) - atof(n2.c_str()));
 
-  DBG("setting var[%s] = %s - %s = %s\n", 
+  DBG("setting var[%s] = %s - %s = %s\n",
       varname.c_str(), n1.c_str(), n2.c_str(), res.c_str());
   sc_sess->var[varname] = res;
 
@@ -401,7 +401,7 @@ EXEC_ACTION_START(SCUSMulAction) {
   // todo: err checking
   string res = int2str(atoi(n1.c_str()) * atoi(n2.c_str()));
 
-  DBG("setting var[%s] = %s * %s = %s\n", 
+  DBG("setting var[%s] = %s * %s = %s\n",
       varname.c_str(), n1.c_str(), n2.c_str(), res.c_str());
   sc_sess->var[varname] = res;
 
@@ -413,10 +413,10 @@ EXEC_ACTION_START(SCUIntAction) {
 
   string varname = par1;
   if (varname.length() && varname[0] == '$')
-    varname = varname.substr(1);  
+    varname = varname.substr(1);
 
   sc_sess->var[varname] = int2str((int)atof(val.c_str()));
-  DBG("set $%s = %s\n", 
+  DBG("set $%s = %s\n",
       varname.c_str(), sc_sess->var[varname].c_str());
 
 } EXEC_ACTION_END;
@@ -496,7 +496,7 @@ EXEC_ACTION_START(SCUSplitStringAction) {
     dst_array = par1;
   if (dst_array.length() && dst_array[0]=='$')
     dst_array = dst_array.substr(1);
-  
+
   size_t p = 0, last_p = 0;
   while (true) {
     p = str.find("\n", last_p);
@@ -505,10 +505,10 @@ EXEC_ACTION_START(SCUSplitStringAction) {
 	sc_sess->var[dst_array+"["+int2str((unsigned int)cntr)+"]"] = str.substr(last_p);
       break;
     }
-    
+
     sc_sess->var[dst_array+"["+int2str((unsigned int)cntr++)+"]"] = str.substr(last_p, p-last_p);
 
-    last_p = p+1;    
+    last_p = p+1;
   }
 } EXEC_ACTION_END;
 

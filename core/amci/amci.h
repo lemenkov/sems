@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -45,19 +45,19 @@ extern "C" {
 /**
  * @file amci.h
  * @brief Definition of the codec interface.
- * 
- * This codec interface makes it possible for third-party 
+ *
+ * This codec interface makes it possible for third-party
  * developer to implement and integrate their own codecs and file formats.
- * 
+ *
  * Three entities can be declared within a plug-in:
  * <ol>
- * <li>Codecs: transform samples to/from the internal coding scheme 
+ * <li>Codecs: transform samples to/from the internal coding scheme
  *             from/to these described in the plug-in.
  *
- * <li>Payloads: special format definition used by the RTP protocol 
+ * <li>Payloads: special format definition used by the RTP protocol
  *               and including a codec.
  *
- * <li>File formats: collection of subtypes sharing the same header 
+ * <li>File formats: collection of subtypes sharing the same header
  *                   scheme whereby each subtype can use a different codec.
  * </ol>
  * @warning
@@ -81,8 +81,8 @@ extern "C" {
 
 struct amci_codec_t;
 
-/** 
- * \brief File format declaration 
+/**
+ * \brief File format declaration
  */
 struct amci_file_desc_t {
 
@@ -124,7 +124,7 @@ struct amci_file_desc_t {
  * @see amci_codec_t::intern2type
  * @see amci_codec_t::type2intern
  */
-typedef int (*amci_converter_t)( unsigned char* out, 
+typedef int (*amci_converter_t)( unsigned char* out,
 				 unsigned char* in,
 				 unsigned int   size,
 				 unsigned int   channels,
@@ -186,8 +186,8 @@ typedef int (*amci_file_close_t)( FILE* fptr,
 
 /**
  * File format handler's open function from memory area
- * @param fptr     [in]  pointer to memory where file is loaded 
- * @param size     [in]  length of file in mem  
+ * @param fptr     [in]  pointer to memory where file is loaded
+ * @param size     [in]  length of file in mem
  * @param pos      [out] position after open
  * @param fmt_desc [out] file description
  * @param options  [in]  options (see amci_inoutfmt_t)
@@ -206,7 +206,7 @@ typedef int (*amci_file_mem_open_t)(unsigned char* mptr,
 /**
  * File format handler's mem close function (usually no-op)
  * @param fptr     [in]  pointer to memory where file is loaded
- * @param pos      [in,out]  position in memory 
+ * @param pos      [in,out]  position in memory
  * @param fmt_desc [out] file description
  * @param options  [in]  options (see amci_inoutfmt_t)
  * @param h_codec  [in]  handle of the codec
@@ -238,19 +238,19 @@ typedef void (*amci_codec_module_destroy_t)(void);
 /**
  * \brief Codec's init function pointer.
  *
- * @param format_parameters      [in]  parameters as passed by fmtp tag, NULL if none 
- * @param format_parameters_out  [out] parameters passed back to fmtp, NULL if none 
- * @param format_description     [out] pointer to describing block, with amci_codec_fmt_info_t array; zero-terminated. 
+ * @param format_parameters      [in]  parameters as passed by fmtp tag, NULL if none
+ * @param format_parameters_out  [out] parameters passed back to fmtp, NULL if none
+ * @param format_description     [out] pointer to describing block, with amci_codec_fmt_info_t array; zero-terminated.
         NULL if none
  *   <table><tr><td><b>key</b></td><td><b>value</b></td></tr>
  *     <tr><td>AMCI_FMT_FRAME_LENGTH (1)</td><td>  frame length in ms (for framed codecs; must be multiple of 10)</td></tr>
  *     <tr><td>AMCI_FMT_FRAME_SIZE (2)</td><td>  frame size in samples</td></tr>
  *     <tr><td>AMCI_FMT_ENCODED_FRAME_SIZE (3)</td><td>  encoded frame size</td></tr></table>
- * @return -1 if failed, else some handle which will be 
+ * @return -1 if failed, else some handle which will be
  *         passed by each further call (0 is legal).
  *
  */
-  
+
   typedef struct {
     int id;
     int value;
@@ -288,9 +288,9 @@ struct amci_codec_t {
     /** internal codec id (the ones from codecs.h) */
     int id;
 
-    /** 
+    /**
      * Converts the input buffer (internal format: Pcm16)
-     * to the format described in this structure. 
+     * to the format described in this structure.
      */
     amci_converter_t encode;
 
@@ -314,7 +314,7 @@ struct amci_codec_t {
     /** function for dry-negotiating codec format - no codec instance is created */
     amci_codec_negotiate_fmt_t negotiate_fmt;
 };
-  
+
   /** \brief supported subtypes for a file */
 struct amci_subtype_t {
 
@@ -325,13 +325,13 @@ struct amci_subtype_t {
     const char* name;
 
     /**
-     * This must be initialized.<br> 
+     * This must be initialized.<br>
      * example: 8000 Hz.
      */
     int sample_rate;
 
     /**
-     * This must be initialized.<br> 
+     * This must be initialized.<br>
      * <br>example 1 (mono), 2 (stereo).
     */
     int channels;
@@ -348,13 +348,13 @@ struct amci_subtype_t {
 struct amci_inoutfmt_t {
 
     /** example: "Wav". */
-    char* name; 
-  
+    char* name;
+
     /** example: "wav". */
     char* ext;
 
     /** example: "audio/x-wav". */
-    char* email_content_type; 
+    char* email_content_type;
 
     /** options: AMCI_RDONLY, AMCI_WRONLY. */
     amci_file_open_t open;
@@ -369,7 +369,7 @@ struct amci_inoutfmt_t {
     amci_file_mem_close_t mem_close;
 
     /** NULL terminated subtype array. */
-    struct amci_subtype_t*  subtypes; 
+    struct amci_subtype_t*  subtypes;
 
 };
 
@@ -389,7 +389,7 @@ struct amci_payload_t {
     /** example: "PCMU" (see RFC 1890)*/
     const char* name;
 
-    /** 
+    /**
      * example: 8000 (Hz).
      * @note For frame based payloads:
      *    use instead the in/out sampling rate
@@ -432,11 +432,11 @@ struct amci_exports_t {
     amci_codec_module_destroy_t module_destroy;
 
     /** NULL terminated array of amci_codec_t */
-    struct amci_codec_t*    codecs;       
+    struct amci_codec_t*    codecs;
     /** NULL terminated array of amci_payload_t */
-    struct amci_payload_t*  payloads;     
+    struct amci_payload_t*  payloads;
     /** NULL terminated array of amci_inoutfmt_t */
-    struct amci_inoutfmt_t* file_formats; 
+    struct amci_inoutfmt_t* file_formats;
 };
 
 

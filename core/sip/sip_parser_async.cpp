@@ -94,7 +94,7 @@ static int parse_header_async(sip_header* hdr, parser_state* pst, char* end)
 		st = H_VALUE;
 		begin = *c;
 		break;
-		
+
 	    };
 	    break;
 
@@ -172,7 +172,7 @@ static int parse_header_async(sip_header* hdr, parser_state* pst, char* end)
     case ST_LF:
     case ST_CRLF:
 	switch(saved_st){
-	    
+
 	case H_NAME:
 	    if((*c-(st==ST_CRLF?2:1))-begin == 0){
 		//DBG("Detected end of headers\n");
@@ -183,7 +183,7 @@ static int parse_header_async(sip_header* hdr, parser_state* pst, char* end)
 	}
 	break;
     }
-    
+
     DBG("Incomplete header (st=%i;saved_st=%i)\n",st,saved_st);
     return UNEXPECTED_EOT;
 }

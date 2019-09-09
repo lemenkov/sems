@@ -37,13 +37,13 @@ struct SBCCallRegistryEntry
   string ltag;
   string rtag;
   string callid;
-  
+
   SBCCallRegistryEntry() { }
 SBCCallRegistryEntry(const string& callid, const string& ltag, const string& rtag)
   : ltag(ltag), rtag(rtag), callid(callid) { }
 };
 
-class SBCCallRegistry 
+class SBCCallRegistry
 {
   static AmMutex registry_mutex;
   static std::map<string, SBCCallRegistryEntry> registry;
@@ -58,4 +58,4 @@ class SBCCallRegistry
   static void removeCall(const string& ltag);
 };
 
-#endif                           
+#endif

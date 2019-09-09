@@ -27,7 +27,7 @@ class SystemDSM
 : public AmThread,
   public AmEventQueue,
   public AmEventHandler,
-  public DSMSession 
+  public DSMSession
 
 {
 

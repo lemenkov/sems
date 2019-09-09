@@ -21,7 +21,7 @@ public:
 
 class MyAnnounceAppDialog : public AmSession
 {
-    
+
     AmAudioFile wav_file;
 
  public:

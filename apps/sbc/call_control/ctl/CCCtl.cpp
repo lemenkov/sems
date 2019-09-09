@@ -82,7 +82,7 @@ int CCCtl::onLoad() {
   //   return 0;
   // }
 
-  // syslog_prefix = cfg.hasParameter("cdr_prefix") ? 
+  // syslog_prefix = cfg.hasParameter("cdr_prefix") ?
   //   cfg.getParameter("cdr_prefix") : syslog_prefix;
 
   return 0;

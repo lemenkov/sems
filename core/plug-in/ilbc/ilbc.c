@@ -20,13 +20,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 #include "amci.h"
-#include "codecs.h" 
+#include "codecs.h"
 #include "../../log.h"
 
 #include <math.h>
@@ -38,20 +38,20 @@
 #include "iLBC_decode.h"
 /**
  * @file plug-in/ilbc/ilbc.c
- * iLBC support 
- * This plug-in imports the Internet Low Bitrate Codec. 
+ * iLBC support
+ * This plug-in imports the Internet Low Bitrate Codec.
  *
- * See http://www.ilbcfreeware.org/ . 
+ * See http://www.ilbcfreeware.org/ .
  * Features: <ul>
  *           <li>iLBC30 codec/payload/subtype
  *           <li>iLBC20 codec/payload/subtype
- *           <li>ilbc file format including iLBC30/iLBC20 
+ *           <li>ilbc file format including iLBC30/iLBC20
  *           </ul>
  *
  */
 
 /** @def ILBC30 subtype declaration. */
-#define ILBC30  30 
+#define ILBC30  30
 #define ILBC20  20
 
 #ifndef MIN_SAMPLE
@@ -94,11 +94,11 @@ BEGIN_EXPORTS( "ilbc" , AMCI_NO_MODULEINIT, AMCI_NO_MODULEDESTROY )
 
   BEGIN_CODECS
     CODEC( CODEC_ILBC, Pcm16_2_iLBC, iLBC_2_Pcm16, iLBC_PLC,
-           iLBC_create, 
+           iLBC_create,
            iLBC_destroy,
            ilbc_bytes2samples, ilbc_samples2bytes )
   END_CODECS
-    
+
   BEGIN_PAYLOADS
     PAYLOAD( -1, "iLBC", 8000, 8000, 1, CODEC_ILBC, AMCI_PT_AUDIO_FRAME )
   END_PAYLOADS
@@ -146,7 +146,7 @@ long iLBC_create(const char* format_parameters, const char** format_parameters_o
   char* mbegin;
   char* msep;
   char modeb[8];
-  
+
   if ((!format_parameters)||(!*format_parameters)||(!(mbegin=strstr(format_parameters, "mode")))) {
     mode = 30; // default to 30 ms mode if no parameter given.
   } else {
@@ -155,7 +155,7 @@ long iLBC_create(const char* format_parameters, const char** format_parameters_o
     msep++; mbegin=msep;
     while (*msep!='=' && *msep!='\0') msep++;
     if ((msep-mbegin)>8) {
-      DBG("Error in fmtp line >>'%s<<.\n", format_parameters); 
+      DBG("Error in fmtp line >>'%s<<.\n", format_parameters);
       mode=30;
     } else {
       memcpy(modeb, mbegin, msep-mbegin);
@@ -176,12 +176,12 @@ long iLBC_create(const char* format_parameters, const char** format_parameters_o
   codec_inst = (iLBC_Codec_Inst_t*)malloc(sizeof(iLBC_Codec_Inst_t));
   codec_inst->mode = mode;
 
-  if (!codec_inst) 
+  if (!codec_inst)
     return -1;
 
   initEncode(&codec_inst->iLBC_Enc_Inst, mode);
   initDecode(&codec_inst->iLBC_Dec_Inst, mode, 0 /* 1=use_enhancer */);
-  
+
   return (long)codec_inst;
 }
 
@@ -192,7 +192,7 @@ void iLBC_destroy(long h_inst) {
 
 int Pcm16_2_iLBC( unsigned char* out_buf, unsigned char* in_buf, unsigned int size,
 		  unsigned int channels, unsigned int rate, long h_codec )
-{ 
+{
   short* in_b = (short*)in_buf;
 
   float block[BLOCKL_MAX];
@@ -208,10 +208,10 @@ int Pcm16_2_iLBC( unsigned char* out_buf, unsigned char* in_buf, unsigned int si
     ERROR("Unsupported input format for iLBC encoder.\n");
     return 0;
   }
-  
+
   codec_inst = (iLBC_Codec_Inst_t*)h_codec;
 
-  for (i=0;i< size / (2*codec_inst->iLBC_Enc_Inst.blockl);i++) {  
+  for (i=0;i< size / (2*codec_inst->iLBC_Enc_Inst.blockl);i++) {
     /* convert signal to float */
     for (k=0; k<codec_inst->iLBC_Enc_Inst.blockl; k++)
       block[k] = in_b[i*codec_inst->iLBC_Enc_Inst.blockl + k];
@@ -219,8 +219,8 @@ int Pcm16_2_iLBC( unsigned char* out_buf, unsigned char* in_buf, unsigned int si
     iLBC_encode((unsigned char *)(out_buf+out_buf_offset), block, &codec_inst->iLBC_Enc_Inst);
     out_buf_offset+=codec_inst->iLBC_Enc_Inst.no_of_bytes;
   }
- 
-  
+
+
   return out_buf_offset;
 }
 
@@ -252,7 +252,7 @@ static int iLBC_2_Pcm16_Ext( unsigned char* out_buf, unsigned char* in_buf, unsi
   float decblock[BLOCKL_MAX];
   float dtmp;
   iLBC_Codec_Inst_t* codec_inst;
-  
+
   short out_buf_offset=0;
 
   if (!h_codec){
@@ -265,7 +265,7 @@ static int iLBC_2_Pcm16_Ext( unsigned char* out_buf, unsigned char* in_buf, unsi
   }
 
   codec_inst = (iLBC_Codec_Inst_t*)h_codec;
-  
+
   noframes = size / codec_inst->iLBC_Dec_Inst.no_of_bytes;
   if (noframes*codec_inst->iLBC_Dec_Inst.no_of_bytes != size) {
     WARN("Dropping extra %d bytes from iLBC packet.\n",
@@ -274,7 +274,7 @@ static int iLBC_2_Pcm16_Ext( unsigned char* out_buf, unsigned char* in_buf, unsi
 
   for (i=0;i<noframes;i++) {
     /* do actual decoding of block */
-      
+
     iLBC_decode(decblock,in_buf+i*codec_inst->iLBC_Dec_Inst.no_of_bytes,
 		&codec_inst->iLBC_Dec_Inst, mode/* mode 0=PL, 1=Normal */);
 
@@ -329,7 +329,7 @@ static int ilbc_read_header(FILE* fp, struct amci_file_desc_t* fmt_desc)
   fseek(fp, 0, SEEK_END);
   fmt_desc->data_size = ftell(fp) - 9; // file size - header size
   fseek(fp, 9, SEEK_SET);   // get at start of samples
-    
+
   return 0;
 }
 

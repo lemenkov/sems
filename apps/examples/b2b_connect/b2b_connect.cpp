@@ -56,7 +56,7 @@ int b2b_connectFactory::onLoad()
 
   if (cfg.getParameter("transparent_ruri")=="true")
     TransparentDestination = true;
-  
+
   return 0;
 }
 
@@ -76,7 +76,7 @@ b2b_connectDialog::b2b_connectDialog()
   : AmB2ABCallerSession()
 
 {
-  RTPStream()->setPlayoutType(ADAPTIVE_PLAYOUT); 
+  RTPStream()->setPlayoutType(ADAPTIVE_PLAYOUT);
 }
 
 b2b_connectDialog::~b2b_connectDialog()
@@ -122,13 +122,13 @@ void b2b_connectDialog::onInvite(const AmSipRequest& req)
   }
 
   recvd_req.insert(std::make_pair(req.cseq,req));
-  
-  connectCallee(remote_party, remote_uri, from, from, 
+
+  connectCallee(remote_party, remote_uri, from, from,
 		b2b_connectFactory::TransparentHeaders ? invite_req.hdrs : "");
 
-  MONITORING_LOG(other_id.c_str(), 
+  MONITORING_LOG(other_id.c_str(),
 		 "app", MOD_NAME);
-  
+
 }
 
 void b2b_connectDialog::onSessionStart()
@@ -139,7 +139,7 @@ void b2b_connectDialog::onSessionStart()
 void b2b_connectDialog::onB2ABEvent(B2ABEvent* ev)
 {
   if (ev->event_id == B2ABConnectOtherLegException) {
-    B2ABConnectOtherLegExceptionEvent* ex_ev = 
+    B2ABConnectOtherLegExceptionEvent* ex_ev =
       dynamic_cast<B2ABConnectOtherLegExceptionEvent*>(ev);
     if (ex_ev && dlg->getStatus() < AmSipDialog::Connected) {
       DBG("callee leg creation failed with exception '%d %s'\n",
@@ -151,7 +151,7 @@ void b2b_connectDialog::onB2ABEvent(B2ABEvent* ev)
   }
 
   if (ev->event_id == B2ABConnectOtherLegFailed) {
-    B2ABConnectOtherLegFailedEvent* f_ev = 
+    B2ABConnectOtherLegFailedEvent* f_ev =
       dynamic_cast<B2ABConnectOtherLegFailedEvent*>(ev);
     if (f_ev && dlg->getStatus() < AmSipDialog::Connected) {
       DBG("callee leg creation failed with reply '%d %s'\n",
@@ -187,7 +187,7 @@ void b2b_connectDialog::process(AmEvent* ev)
 //   }
 
   AmAudioEvent* audio_event = dynamic_cast<AmAudioEvent*>(ev);
-	
+
   if(audio_event && (audio_event->event_id == AmAudioEvent::cleared)){
     DBG("ignoring end of prompt.\n");
     return;
@@ -200,7 +200,7 @@ void b2b_connectDialog::onDtmf(int event, int duration)
 {
   DBG("DTMF event %d duration %d\n", event, duration);
   return;
-  
+
 }
 
 void b2b_connectDialog::onBye(const AmSipRequest& req)
@@ -235,11 +235,11 @@ AmB2ABCalleeSession* b2b_connectDialog::createCalleeSession()
 
 b2b_connectCalleeSession::b2b_connectCalleeSession(const string& other_tag,
 						   AmSessionAudioConnector* connector,
-						   const string& user, const string& pwd) 
+						   const string& user, const string& pwd)
   : AmB2ABCalleeSession(other_tag, connector),
     credentials("", user, pwd) // domain (realm) is unused in credentials
 {
-  RTPStream()->setPlayoutType(ADAPTIVE_PLAYOUT); 
+  RTPStream()->setPlayoutType(ADAPTIVE_PLAYOUT);
   setDtmfDetectionEnabled(false);
 }
 
@@ -256,7 +256,7 @@ void b2b_connectCalleeSession::onSipReply(const AmSipRequest& req,
 					  AmSipDialog::Status old_dlg_status) {
 
   AmB2ABCalleeSession::onSipReply(req, reply, old_dlg_status);
- 
+
   if ((old_dlg_status < AmSipDialog::Connected) &&
       (dlg->getStatus() == AmSipDialog::Disconnected)) {
     DBG("status change Pending -> Disconnected. Stopping session.\n");

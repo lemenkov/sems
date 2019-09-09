@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -37,7 +37,7 @@
 #include "AmPlaylist.h"
 
 /** DSM interpreter instance for one call leg */
-class SBCDSMInstance 
+class SBCDSMInstance
 : public AmObject, public DSMSession
 {
   private:
@@ -49,7 +49,7 @@ class SBCDSMInstance
   std::set<DSMDisposable*> gc_trash;
   vector<AmAudio*> audiofiles;
 
-  unique_ptr<AmSession> dummy_session;  
+  unique_ptr<AmSession> dummy_session;
 
   unique_ptr<AmPlaylist> playlist;
 
@@ -103,7 +103,7 @@ class SBCDSMInstance
     void setInOutPlaylist();
     void setInputPlaylist();
     void setOutputPlaylist();
-    
+
     void addToPlaylist(AmPlaylistItem* item, bool front = false);
     void flushPlaylist();
     void setPromptSet(const string& name);

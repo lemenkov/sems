@@ -21,8 +21,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -64,7 +64,7 @@ void AmDtmfSender::sendPacket(unsigned int ts, unsigned int remote_pt, AmRtpStre
       current_send_dtmf_ts = ts;
       DBG("starting to send DTMF\n");
     } break;
-      
+
     case DTMF_SEND_SENDING: {
       if (ts_less()(ts, current_send_dtmf_ts + current_send_dtmf.second)) {
 	// send packet
@@ -80,9 +80,9 @@ void AmDtmfSender::sendPacket(unsigned int ts, unsigned int remote_pt, AmRtpStre
 	DBG("sending DTMF: event=%i; e=%i; r=%i; volume=%i; duration=%i; ts=%u\n",
 	    dtmf.event,dtmf.e,dtmf.r,dtmf.volume,ntohs(dtmf.duration),current_send_dtmf_ts);
 
-	stream->compile_and_send(remote_pt, dtmf.duration == 0, 
-				 current_send_dtmf_ts, 
-				 (unsigned char*)&dtmf, sizeof(dtmf_payload_t)); 
+	stream->compile_and_send(remote_pt, dtmf.duration == 0,
+				 current_send_dtmf_ts,
+				 (unsigned char*)&dtmf, sizeof(dtmf_payload_t));
 	return;
 
       } else {
@@ -91,7 +91,7 @@ void AmDtmfSender::sendPacket(unsigned int ts, unsigned int remote_pt, AmRtpStre
 	send_dtmf_end_repeat = 0;
       }
     } break;
-      
+
     case DTMF_SEND_ENDING:  {
       if (send_dtmf_end_repeat >= 3) {
 	DBG("DTMF send complete\n");
@@ -104,7 +104,7 @@ void AmDtmfSender::sendPacket(unsigned int ts, unsigned int remote_pt, AmRtpStre
 
 	dtmf_payload_t dtmf;
 	dtmf.event = current_send_dtmf.first;
-	dtmf.e = 1; 
+	dtmf.e = 1;
 	dtmf.r = 0;
 	dtmf.duration = htons(current_send_dtmf.second);
 	dtmf.volume = 20;
@@ -112,8 +112,8 @@ void AmDtmfSender::sendPacket(unsigned int ts, unsigned int remote_pt, AmRtpStre
 	DBG("sending DTMF: event=%i; e=%i; r=%i; volume=%i; duration=%i; ts=%u\n",
 	    dtmf.event,dtmf.e,dtmf.r,dtmf.volume,ntohs(dtmf.duration),current_send_dtmf_ts);
 
-	stream->compile_and_send(remote_pt, false, current_send_dtmf_ts, 
-				 (unsigned char*)&dtmf, sizeof(dtmf_payload_t)); 
+	stream->compile_and_send(remote_pt, false, current_send_dtmf_ts,
+				 (unsigned char*)&dtmf, sizeof(dtmf_payload_t));
 	return;
       }
     } break;

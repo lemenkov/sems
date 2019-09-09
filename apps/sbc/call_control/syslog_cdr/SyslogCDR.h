@@ -73,4 +73,4 @@ class SyslogCDR : public AmDynInvoke, public ExtendedCCInterface, public AmObjec
   virtual CCChainProcessing onEvent(SBCCallLeg *call, AmEvent *e);
 };
 
-#endif 
+#endif

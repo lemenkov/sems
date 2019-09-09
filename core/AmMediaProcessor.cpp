@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -80,21 +80,21 @@ AmMediaProcessor* AmMediaProcessor::instance()
   return _instance;
 }
 
-void AmMediaProcessor::addSession(AmMediaSession* s, 
+void AmMediaProcessor::addSession(AmMediaSession* s,
 				  const string& callgroup)
 {
   s->onMediaProcessingStarted();
- 
+
   // evaluate correct scheduler
   unsigned int sched_thread = 0;
   group_mut.lock();
-    
-  // callgroup already in a thread? 
+
+  // callgroup already in a thread?
   std::map<std::string, unsigned int>::iterator it =
     callgroup2thread.find(callgroup);
   if (it != callgroup2thread.end()) {
     // yes, use it
-    sched_thread = it->second; 
+    sched_thread = it->second;
   } else {
     // no, find the thread with lowest load
     unsigned int lowest_load = threads[0]->getLoad();
@@ -107,13 +107,13 @@ void AmMediaProcessor::addSession(AmMediaSession* s,
     // create callgroup->thread mapping
     callgroup2thread[callgroup] = sched_thread;
   }
-    
+
   // join the callgroup
   callgroupmembers.insert(make_pair(callgroup, s));
   session2callgroup[s]=callgroup;
-    
+
   group_mut.unlock();
-    
+
   // add the session to selected thread
   threads[sched_thread]->
     postRequest(new SchedRequest(InsertSession,s));
@@ -131,16 +131,16 @@ void AmMediaProcessor::softRemoveSession(AmMediaSession* s) {
   removeFromProcessor(s, SoftRemoveSession);
 }
 
-/* FIXME: implement Call Group ts offsets for soft changing of 
-	call groups 
+/* FIXME: implement Call Group ts offsets for soft changing of
+	call groups
 */
-void AmMediaProcessor::changeCallgroup(AmMediaSession* s, 
+void AmMediaProcessor::changeCallgroup(AmMediaSession* s,
 				       const string& new_callgroup) {
   removeFromProcessor(s, SoftRemoveSession);
   addSession(s, new_callgroup);
 }
 
-void AmMediaProcessor::removeFromProcessor(AmMediaSession* s, 
+void AmMediaProcessor::removeFromProcessor(AmMediaSession* s,
 					   unsigned int r_type) {
   DBG("AmMediaProcessor::removeSession\n");
   group_mut.lock();
@@ -149,7 +149,7 @@ void AmMediaProcessor::removeFromProcessor(AmMediaSession* s,
   unsigned int sched_thread = callgroup2thread[callgroup];
   DBG("  callgroup is '%s', thread %u\n", callgroup.c_str(), sched_thread);
   // erase callgroup membership entry
-  std::multimap<std::string, AmMediaSession*>::iterator it = 
+  std::multimap<std::string, AmMediaSession*>::iterator it =
     callgroupmembers.lower_bound(callgroup);
   while ((it != callgroupmembers.end()) &&
          (it != callgroupmembers.upper_bound(callgroup))) {
@@ -166,7 +166,7 @@ void AmMediaProcessor::removeFromProcessor(AmMediaSession* s,
   }
   // erase session entry
   session2callgroup.erase(s);
-  group_mut.unlock();    
+  group_mut.unlock();
 
   threads[sched_thread]->postRequest(new SchedRequest(r_type,s));
 }
@@ -189,7 +189,7 @@ void AmMediaProcessor::stop() {
       }
     }
   } while(!threads_stopped);
-  
+
   for (unsigned int i=0;i<num_threads;i++) {
     if(threads[i] != NULL) {
       delete threads[i];
@@ -200,7 +200,7 @@ void AmMediaProcessor::stop() {
   threads = NULL;
 }
 
-void AmMediaProcessor::dispose() 
+void AmMediaProcessor::dispose()
 {
   if(_instance != NULL) {
     if(_instance->threads != NULL) {
@@ -240,7 +240,7 @@ void AmMediaProcessorThread::run()
 
   gettimeofday(&now,NULL);
   timeradd(&tick,&now,&next_tick);
-    
+
   while(!stop_requested.get()){
 
     gettimeofday(&now,NULL);
@@ -355,7 +355,7 @@ void AmMediaProcessorThread::process(AmEvent* e)
 }
 
 unsigned int AmMediaProcessorThread::getLoad() {
-  // lock ? 
+  // lock ?
   return sessions.size();
 }
 

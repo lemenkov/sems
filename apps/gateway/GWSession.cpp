@@ -13,7 +13,7 @@
 #include "log.h"
 #include"mISDNChannel.h"
 
-GWSession::GWSession(const string& auth_realm, const string& auth_user, const string& auth_pwd) : 
+GWSession::GWSession(const string& auth_realm, const string& auth_user, const string& auth_pwd) :
 						      credentials(auth_realm, auth_user, auth_pwd) {
 	DBG("new GWSession@%p\n", this);
 }
@@ -48,28 +48,28 @@ void GWSession::onSessionStart(const AmSipRequest& req) {
 	setInOut((AmAudio *)(m_OtherLeg),(AmAudio *)(m_OtherLeg));
 	AmSession::onSessionStart(req);
 	AmMediaProcessor::instance()->addSession(this, callgroup);
-}	
+}
 void GWSession::onSessionStart(const AmSipReply& reply) {
         DBG("GWSession::onSessionStart(reply)\n");
 	DBG("calling ((mISDNChannel*)m_otherleg)->accept();\n");
         int ret=((mISDNChannel*)m_OtherLeg)->accept();
         DBG("GWSession::onSessionStart Setting Audio\n");
-	setInOut((AmAudio *)(m_OtherLeg),(AmAudio *)(m_OtherLeg)); 
+	setInOut((AmAudio *)(m_OtherLeg),(AmAudio *)(m_OtherLeg));
         AmSession::onSessionStart(reply);
 
 }
-		    
+
 void GWSession::onBye(const AmSipRequest& req) {
 	DBG("GWSession::onBye\n");
 	int ret=((mISDNChannel*)m_OtherLeg)->hangup();
         AmSession::onBye(req);
-		
+
 }
 void GWSession::onCancel(const AmSipRequest& req) {
 	DBG("GWSession::onCancel\n");
 	int ret=((mISDNChannel*)m_OtherLeg)->hangup();
         AmSession::onCancel(req);
-		
+
 }
 
 GWSession::~GWSession()
@@ -92,10 +92,10 @@ void GWSession::onSipRequest(const AmSipRequest& req)
 
 void GWSession::onSipReply(const AmSipReply& reply, AmSipDialog::Status old_dlg_status) {
     int status = dlg.getStatus();
-    DBG("GWSession::onSipReply: code = %i, reason = %s\n, status = %i\n",  
+    DBG("GWSession::onSipReply: code = %i, reason = %s\n, status = %i\n",
 	reply.code,reply.reason.c_str(),dlg.getStatus());
     if((dlg.getStatus()==AmSipDialog::Pending)&&(reply.code==183)) {	onProgress(reply);   }
-    if((dlg.getStatus()==AmSipDialog::Pending)&&(reply.code>=300)) {	
+    if((dlg.getStatus()==AmSipDialog::Pending)&&(reply.code>=300)) {
 	int ret=((mISDNChannel*)m_OtherLeg)->hangup();
     }
     DBG("GWSession::onSipReply calling parent\n");
@@ -129,7 +129,7 @@ GWSession* GWSession::CallFromOutside(std::string &fromnumber, std::string &tonu
     from_uri.insert(4,fromnumber);from_uri.append(gwconf.getParameter("callerdomain",""));
     std::string to="sip:@";
     to.insert(4,tonumber);to.append(gwconf.getParameter("calleddomain",""));
-    DBG ("GWSession::CallFromOutside user=%s r_uri=%s from=%s to=%s\n",user.c_str(),r_uri.c_str(),from.c_str(),to.c_str()); 
+    DBG ("GWSession::CallFromOutside user=%s r_uri=%s from=%s to=%s\n",user.c_str(),r_uri.c_str(),from.c_str(),to.c_str());
     AmSession* s = AmUAC::dialout(user, 	//user
 	"gateway",                              //app_name
 	r_uri,              //r_uri

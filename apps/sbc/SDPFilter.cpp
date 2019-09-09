@@ -30,7 +30,7 @@
 #include "RTPParameters.h"
 
 int filterSDP(AmSdp& sdp, const vector<FilterEntry>& filter_list) {
-  
+
   for (vector<FilterEntry>::const_iterator it=
 	 filter_list.begin(); it!=filter_list.end(); it++){
 
@@ -50,14 +50,14 @@ int filterSDP(AmSdp& sdp, const vector<FilterEntry>& filter_list) {
       std::vector<SdpPayload> new_pl;
       for (std::vector<SdpPayload>::iterator p_it =
 	     media.payloads.begin(); p_it != media.payloads.end(); p_it++) {
-      
+
 	string c = p_it->encoding_name;
 	std::transform(c.begin(), c.end(), c.begin(), ::tolower);
 
 	bool is_filtered =  (sdpfilter == Whitelist) ^
 	  (sdpfilter_list.find(c) != sdpfilter_list.end());
 
-	// DBG("%s (%s) is_filtered: %s\n", p_it->encoding_name.c_str(), c.c_str(), 
+	// DBG("%s (%s) is_filtered: %s\n", p_it->encoding_name.c_str(), c.c_str(),
 	// 	  is_filtered?"true":"false");
 
 	if (!is_filtered)
@@ -166,18 +166,18 @@ std::vector<SdpAttribute> filterSDPAttributes(std::vector<SdpAttribute> attribut
   std::vector<SdpAttribute> res;
   for (std::vector<SdpAttribute>::iterator a_it =
     attributes.begin(); a_it != attributes.end(); a_it++) {
-    
+
     // Case insensitive search:
     string c = a_it->attribute;
     std::transform(c.begin(), c.end(), c.begin(), ::tolower);
-    
+
     // Check, if this should be filtered:
     bool is_filtered =  (sdpalinesfilter == Whitelist) ^
       (sdpalinesfilter_list.find(c) != sdpalinesfilter_list.end());
 
-    DBG("%s (%s) is_filtered: %s\n", a_it->attribute.c_str(), c.c_str(), 
+    DBG("%s (%s) is_filtered: %s\n", a_it->attribute.c_str(), c.c_str(),
      	  is_filtered?"true":"false");
- 
+
     // If it is not filtered, just add it to the list:
     if (!is_filtered)
 	res.push_back(*a_it);
@@ -195,7 +195,7 @@ int filterSDPalines(AmSdp& sdp, const vector<FilterEntry>& filter_list) {
     // If not Black- or Whitelist, simply return
     if (!isActiveFilter(sdpalinesfilter))
       continue;
-  
+
     // We start with per Session-alines
     sdp.attributes =
       filterSDPAttributes(sdp.attributes, sdpalinesfilter, sdpalinesfilter_list);

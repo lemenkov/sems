@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -43,11 +43,11 @@ string ServiceLineFactory::AnnouncePath;
 string ServiceLineFactory::AnnounceFile;
 
 string ServiceLineFactory::callee_numbers[10];
-	
+
 string ServiceLineFactory::GWDomain;
 string ServiceLineFactory::GWUser;
 string ServiceLineFactory::GWDisplayname;
-	
+
 string ServiceLineFactory::GWAuthuser;
 string ServiceLineFactory::GWAuthrealm;
 string ServiceLineFactory::GWAuthpwd;
@@ -79,15 +79,15 @@ int ServiceLineFactory::onLoad()
   DBG("ServiceLine Connect DTMF Key Mapping:\n");
   for (unsigned int i=0;i<10;i++) {
     callee_numbers[i] = cfg.getParameter("callee_number"+int2str(i));
-    DBG("Key %u -> Extension __%s__\n", 
+    DBG("Key %u -> Extension __%s__\n",
 	i, callee_numbers[i].empty()?
 	"none":callee_numbers[i].c_str());
   }
-  
+
   GWDomain= cfg.getParameter("gw_domain", "");;
   GWUser= cfg.getParameter("gw_user", "");;
   GWDisplayname= cfg.getParameter("gw_displayname", "");;
-  
+
   GWAuthuser= cfg.getParameter("gw_authuser", "");
   GWAuthrealm=cfg.getParameter("gw_authrealm", ""); // actually unused
   GWAuthpwd=cfg.getParameter("gw_authpwd", "");
@@ -101,16 +101,16 @@ AmSession* ServiceLineFactory::onInvite(const AmSipRequest& req, const string& a
   string announce_path = AnnouncePath;
   string announce_file = announce_path + req.domain
     + "/" + req.user + ".wav";
-    
+
   DBG("trying '%s'\n",announce_file.c_str());
   if(file_exists(announce_file))
     new ServiceLineCallerDialog(announce_file);
-    
+
   announce_file = announce_path + req.user + ".wav";
   DBG("trying '%s'\n",announce_file.c_str());
   if(file_exists(announce_file))
     new ServiceLineCallerDialog(announce_file);
-    
+
   announce_file = AnnouncePath + AnnounceFile;
   return new ServiceLineCallerDialog(announce_file);
 }
@@ -134,7 +134,7 @@ void ServiceLineCallerDialog::onSessionStart()
 
   if(wav_file.open(filename,AmAudioFile::Read))
     throw string("AnnouncementDialog::onSessionStart: Cannot open file\n");
-  
+
   setInOut(&playlist, &playlist);
   playlist.addToPlaylist(new AmPlaylistItem(&wav_file, NULL));
 
@@ -143,9 +143,9 @@ void ServiceLineCallerDialog::onSessionStart()
 
 void ServiceLineCallerDialog::process(AmEvent* event)
 {
-    
+
   AmAudioEvent* audio_event = dynamic_cast<AmAudioEvent*>(event);
-	
+
   if(audio_event && (audio_event->event_id == AmAudioEvent::cleared)){
     DBG("ignoring end of prompt.\n");
     return;
@@ -159,21 +159,21 @@ void ServiceLineCallerDialog::onDtmf(int event, int duration)
   DBG("DTMF event %d duration %d\n", event, duration);
   if (getCalleeStatus() != None)
     return;
-  
-  if ((event < 10) && (event >= 0) && 
+
+  if ((event < 10) && (event >= 0) &&
       (!ServiceLineFactory::callee_numbers[event].empty())) {
-    connectCallee("sip:"+ServiceLineFactory::callee_numbers[event]+"@"+ServiceLineFactory::GWDomain, 
-		  "sip:"+ServiceLineFactory::callee_numbers[event]+"@"+ServiceLineFactory::GWDomain, 
-		  "sip:"+ServiceLineFactory::GWUser+"@"+ServiceLineFactory::GWDomain, 
+    connectCallee("sip:"+ServiceLineFactory::callee_numbers[event]+"@"+ServiceLineFactory::GWDomain,
+		  "sip:"+ServiceLineFactory::callee_numbers[event]+"@"+ServiceLineFactory::GWDomain,
+		  "sip:"+ServiceLineFactory::GWUser+"@"+ServiceLineFactory::GWDomain,
 		  "sip:"+ServiceLineFactory::GWUser+"@"+ServiceLineFactory::GWDomain);
   }
 
   return;
-  
+
 }
 
 AmB2ABCalleeSession* ServiceLineCallerDialog::createCalleeSession() {
-  ServiceLineCalleeDialog* sess = 
+  ServiceLineCalleeDialog* sess =
     new ServiceLineCalleeDialog(getLocalTag(), connector);
 
   AmUACAuth::enable(sess);
@@ -184,11 +184,11 @@ AmB2ABCalleeSession* ServiceLineCallerDialog::createCalleeSession() {
 ServiceLineCalleeDialog::~ServiceLineCalleeDialog() {
 }
 
-ServiceLineCalleeDialog::ServiceLineCalleeDialog(const string& other_tag, 
-						 AmSessionAudioConnector* connector) 
+ServiceLineCalleeDialog::ServiceLineCalleeDialog(const string& other_tag,
+						 AmSessionAudioConnector* connector)
   : AmB2ABCalleeSession(other_tag, connector),
-    cred(ServiceLineFactory::GWAuthrealm, 
-	 ServiceLineFactory::GWAuthuser, 
+    cred(ServiceLineFactory::GWAuthrealm,
+	 ServiceLineFactory::GWAuthuser,
 	 ServiceLineFactory::GWAuthpwd)
 {
   RTPStream()->setPlayoutType(ADAPTIVE_PLAYOUT);

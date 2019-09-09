@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2009 IPTEGO GmbH
- * 
+ *
  * This file is part of SEMS, a free SIP media server.
  *
  * SEMS is free software; you can redistribute it and/or modify
@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -68,7 +68,7 @@ int SCPyModule::preload() {
 
   PyEval_InitThreads();
 
-  interp = PyThreadState_Get()->interp; 
+  interp = PyThreadState_Get()->interp;
   tstate = PyThreadState_Get();
 
   PyImport_AddModule("dsm");
@@ -80,7 +80,7 @@ int SCPyModule::preload() {
   PyModule_AddIntConstant(dsm_module, "Timer", DSMCondition::Timer);
   PyModule_AddIntConstant(dsm_module, "NoAudio", DSMCondition::NoAudio);
   PyModule_AddIntConstant(dsm_module, "Hangup", DSMCondition::Hangup);
-  PyModule_AddIntConstant(dsm_module, "Hold", DSMCondition::Hold);  
+  PyModule_AddIntConstant(dsm_module, "Hold", DSMCondition::Hold);
   PyModule_AddIntConstant(dsm_module, "UnHold", DSMCondition::UnHold);
   PyModule_AddIntConstant(dsm_module, "XmlrpcResponse", DSMCondition::XmlrpcResponse);
   PyModule_AddIntConstant(dsm_module, "DSMEvent", DSMCondition::DSMEvent);
@@ -130,11 +130,11 @@ MOD_CONDITIONEXPORT_BEGIN(MOD_CLS_NAME) {
 
 } MOD_CONDITIONEXPORT_END;
 
-SCPyDictArg::SCPyDictArg() 
+SCPyDictArg::SCPyDictArg()
  : pPyObject(NULL) {
 }
 
-SCPyDictArg::SCPyDictArg(PyObject* pPyObject) 
+SCPyDictArg::SCPyDictArg(PyObject* pPyObject)
  : pPyObject(pPyObject) {
 }
 
@@ -144,7 +144,7 @@ SCPyDictArg::~SCPyDictArg() {
   if (NULL != pPyObject) {
     PyDict_Clear(pPyObject);
   }
-  Py_XDECREF(pPyObject); 
+  Py_XDECREF(pPyObject);
 }
 
 PyObject* getPyLocals(DSMSession* sc_sess) {
@@ -152,8 +152,8 @@ PyObject* getPyLocals(DSMSession* sc_sess) {
   SCPyDictArg* py_arg = NULL;
   AmObject* py_locals_obj;
 
-  if (((l_it=sc_sess->avar.find("py_locals")) != sc_sess->avar.end()) && 
-      (l_it->second.getType() == AmArg::AObject) && 
+  if (((l_it=sc_sess->avar.find("py_locals")) != sc_sess->avar.end()) &&
+      (l_it->second.getType() == AmArg::AObject) &&
       ((py_locals_obj = l_it->second.asObject()) != NULL) &&
       ((py_arg = dynamic_cast<SCPyDictArg*>(py_locals_obj)) != NULL) &&
       (py_arg->pPyObject != NULL)
@@ -164,15 +164,15 @@ PyObject* getPyLocals(DSMSession* sc_sess) {
   PyObject* locals = PyDict_New();
   PyDict_SetItemString(locals, "dsm", SCPyModule::dsm_module);
   PyDict_SetItemString(locals, "session", SCPyModule::session_module);
-  
+
   py_arg = new SCPyDictArg(locals);
   sc_sess->transferOwnership(py_arg);
   sc_sess->avar["py_locals"] = AmArg(py_arg);
-  
+
   return locals;
 }
 
-bool py_execute(PyCodeObject* py_func, DSMSession* sc_sess, 
+bool py_execute(PyCodeObject* py_func, DSMSession* sc_sess,
 		DSMCondition::EventType event, map<string,string>* event_params,
 		bool expect_int_result) {
   // acquire the GIL
@@ -191,7 +191,7 @@ bool py_execute(PyCodeObject* py_func, DSMSession* sc_sess,
 
   PyObject* params = PyDict_New();
   if (NULL != event_params) {
-    for (map<string,string>::iterator it=event_params->begin(); 
+    for (map<string,string>::iterator it=event_params->begin();
 	 it != event_params->end(); it++) {
       PyObject* v = PyString_FromString(it->second.c_str());
       PyDict_SetItemString(params, it->first.c_str(), v);
@@ -220,10 +220,10 @@ bool py_execute(PyCodeObject* py_func, DSMSession* sc_sess,
 
   PyDict_DelItemString(locals, "type");
   Py_DECREF(t);
-  
+
   //   ts_dict = PyThreadState_GetDict(); // should be the same as before
   PyDict_DelItemString(ts_dict, "_dsm_sess_");
-  
+
   if (NULL == res) {
     ERROR("evaluating python code\n");
   } else if (PyBool_Check(res)) {
@@ -243,7 +243,7 @@ SCPyPyAction::SCPyPyAction(const string& arg) {
   PYLOCK;
   py_func = Py_CompileString(arg.c_str(), ("<mod_py action: '"+arg+"'>").c_str(), Py_file_input);
   if (NULL == py_func) {
-    ERROR("compiling python code '%s'\n", 
+    ERROR("compiling python code '%s'\n",
 	  arg.c_str());
     if(PyErr_Occurred())
       PyErr_Print();
@@ -253,7 +253,7 @@ SCPyPyAction::SCPyPyAction(const string& arg) {
 }
 
 EXEC_ACTION_START(SCPyPyAction) {
-  py_execute((PyCodeObject*)py_func, sc_sess, 
+  py_execute((PyCodeObject*)py_func, sc_sess,
 	     event, event_params, false);
 
 } EXEC_ACTION_END;
@@ -263,7 +263,7 @@ PyPyCondition::PyPyCondition(const string& arg) {
   PYLOCK;
   py_func = Py_CompileString(arg.c_str(), ("<mod_py condition: '"+arg+"'>").c_str(), Py_eval_input);
   if (NULL == py_func) {
-    ERROR("compiling python code '%s'\n", 
+    ERROR("compiling python code '%s'\n",
 	  arg.c_str());
     if(PyErr_Occurred())
       PyErr_Print();
@@ -273,7 +273,7 @@ PyPyCondition::PyPyCondition(const string& arg) {
 }
 
 MATCH_CONDITION_START(PyPyCondition) {
-  return py_execute((PyCodeObject*)py_func, sc_sess, 
+  return py_execute((PyCodeObject*)py_func, sc_sess,
 	     event, event_params, false);
 } MATCH_CONDITION_END;
 
@@ -290,7 +290,7 @@ void printdict(PyObject* p, char* name) {
   DBG("dict %s %p -------------\n", name, p);
   PyObject *key, *value;
   Py_ssize_t pos = 0;
-  
+
   while (PyDict_Next(p, &pos, &key, &value)) {
     DBG(" obj '%s' ref %d\n", PyString_AsString(key), key->ob_refcnt);
   }
@@ -303,19 +303,19 @@ SCPyModule::~SCPyModule() {
   //PYLOCK;
   PyEval_AcquireThread(tstate);
   FILE* f = fopen("refs.txt", "w");
-  
+
   _Py_PrintReferences(f);
-  
+
   /* Disable signal handling */
   PyOS_FiniInterrupts();
 
   PyInterpreterState_Clear(interp);
-  
-  
+
+
   /* Delete current thread */
   PyThreadState_Swap(NULL);
   PyInterpreterState_Delete(interp);
-  
+
   /* Sundry finalizers */
   PyMethod_Fini();
   PyFrame_Fini();
@@ -326,9 +326,9 @@ SCPyModule::~SCPyModule() {
   PyString_Fini();
   PyInt_Fini();
   PyFloat_Fini();
-  
+
   PyGrammar_RemoveAccelerators(&_PyParser_Grammar);
-  
+
   _Py_PrintReferenceAddresses(f);
 
   fclose(f);

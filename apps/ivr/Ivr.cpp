@@ -68,7 +68,7 @@ struct PythonGIL
 };
 
 
-// This must be the first declaration of every 
+// This must be the first declaration of every
 // function using Python C-API.
 // But this is not necessary in function which
 // will get called from Python
@@ -85,7 +85,7 @@ extern "C" {
       return NULL;
 
     _LOG(level, "%s", msg);
-	
+
     Py_INCREF(Py_None);
     return Py_None;
   }
@@ -142,9 +142,9 @@ extern "C" {
 	Py_DECREF(ivrFactory);
       }
     }
-    if (pIvrFactory) 
+    if (pIvrFactory)
       pIvrFactory->addDeferredThread(py_thread_object);
-    else 
+    else
       ERROR("Could not find __c_ivrFactory in Python state.\n");
 
     Py_INCREF(Py_None);
@@ -363,7 +363,7 @@ void IvrFactory::set_sys_path(const string& script_path)
   PyObject* py_mod_name = PyString_FromString("sys");
   PyObject* py_mod = PyImport_Import(py_mod_name);
   Py_DECREF(py_mod_name);
-    
+
   if(!py_mod){
     PyErr_PrintEx(0);
     ERROR("IvrFactory: could not import 'sys' module.\n");
@@ -418,7 +418,7 @@ IvrDialog* IvrFactory::newDlg(const string& name, AmArg* session_params)
     throw AmSession::Exception(500,"Internal error in IVR plug-in.\n");
 
     return NULL;
-  }    
+  }
 
   dlg->setPyPtrs(mod_desc.mod, dlg_inst, session_params);
   Py_DECREF(dlg_inst);
@@ -430,7 +430,7 @@ IvrDialog* IvrFactory::newDlg(const string& name, AmArg* session_params)
 bool IvrFactory::loadScript(const string& path)
 {
   PYLOCK;
-    
+
   PyObject *modName=NULL,*mod=NULL,*dict=NULL,*dlg_class=NULL,*config=NULL;
 
   // load module configuration
@@ -458,17 +458,17 @@ bool IvrFactory::loadScript(const string& path)
   // set config ivr ivr_module while loading
   Py_INCREF(config);
   PyObject_SetAttrString(ivr_module, "config", config);
-  
+
   // load module
   modName = PyString_FromString(path.c_str());
-  
+
   mod     = PyImport_Import(modName);
   if (NULL != config) {
     // remove config ivr ivr_module while loading
     PyObject_DelAttrString(ivr_module, "config");
     Py_DECREF(config);
   }
-    
+
   if(!mod){
     PyErr_PrintEx(0);
     WARN("IvrFactory: Failed to load \"%s\"\n", path.c_str());
@@ -633,9 +633,9 @@ void IvrFactory::start_deferred_threads() {
 int IvrDialog::drop()
 {
   int res = dlg->drop();
-  if (res) 
+  if (res)
     setStopped();
-	
+
   return res;
 }
 
@@ -677,7 +677,7 @@ AmSession* IvrFactory::onInvite(const AmSipRequest& req, const string& app_name,
 
 
 IvrDialog::IvrDialog()
-  : py_mod(NULL), 
+  : py_mod(NULL),
     py_dlg(NULL),
     playlist(this),
     session_params(NULL)
@@ -692,7 +692,7 @@ IvrDialog::~IvrDialog()
   if(session_params) delete session_params;
 
   playlist.flush();
-  
+
   PYLOCK;
   Py_XDECREF(py_mod);
   Py_XDECREF(py_dlg);
@@ -794,7 +794,7 @@ bool IvrDialog::callPyEventHandler(const char* name, const char* fmt, ...)
 
     Py_DECREF(o);
   }
-    
+
   return ret;
 }
 
@@ -877,8 +877,8 @@ void safe_Py_DECREF(PyObject* pyo)
 }
 
 void IvrDialog::onSipReply(const AmSipRequest& req,
-			   const AmSipReply& reply, 
-			   AmBasicSipDialog::Status old_dlg_status) 
+			   const AmSipReply& reply,
+			   AmBasicSipDialog::Status old_dlg_status)
 {
   PyObject* pyrp = getPySipReply(reply);
   PyObject* pyrq = getPySipRequest(req);
@@ -902,7 +902,7 @@ void IvrDialog::onRtpTimeout()
   callPyEventHandler("onRtpTimeout",NULL);
 }
 
-void IvrDialog::process(AmEvent* event) 
+void IvrDialog::process(AmEvent* event)
 {
   DBG("IvrDialog::process\n");
 
@@ -924,13 +924,13 @@ void IvrDialog::process(AmEvent* event)
       event->processed = true;
     }
   }
-  
+
   IvrEvent* ivr_event = dynamic_cast<IvrEvent*>(event);
   if(ivr_event) {
     callPyEventHandler("onIvrMessage", "(s)", ivr_event->msg.c_str());
     event->processed = true;
   }
-  
+
   AmSystemEvent* sys_event = dynamic_cast<AmSystemEvent*>(event);
   if(sys_event) {
     if(sys_event->sys_event == AmSystemEvent::User1) {
@@ -962,13 +962,13 @@ void IvrDialog::createCalleeSession()
 {
   AmB2BCalleeSession* callee_session = new AmB2BCalleeSession(this);
   AmSipDialog* callee_dlg = callee_session->dlg;
-  
+
   setOtherId(AmSession::getNewId());
-  
+
   callee_dlg->setLocalTag(getOtherId());
   callee_dlg->setCallid(AmSession::getNewId());
-  
-  // this will be overwritten by ConnectLeg event 
+
+  // this will be overwritten by ConnectLeg event
   callee_dlg->setRemoteParty(dlg->getLocalParty());
   callee_dlg->setRemoteUri(dlg->getLocalUri());
 
@@ -981,12 +981,12 @@ void IvrDialog::createCalleeSession()
     callee_dlg->setLocalParty(b2b_callee_from_party);
     callee_dlg->setLocalUri(b2b_callee_from_uri);
   }
-  
+
   DBG("Created B2BUA callee leg, From: %s\n",
       callee_dlg->getLocalParty().c_str());
 
   callee_session->start();
-  
+
   AmSessionContainer* sess_cont = AmSessionContainer::instance();
   sess_cont->addSession(getOtherId(),callee_session);
 }

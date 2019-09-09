@@ -54,4 +54,4 @@ class RestModule : public AmDynInvoke
   int onLoad();
 };
 
-#endif 
+#endif

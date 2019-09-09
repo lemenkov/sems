@@ -2,7 +2,7 @@
 #define _DIAMETER_CLIENT_API_H
 
 #include "AmEvent.h"
- 
+
 #define 	AAA_AVP_FLAG_NONE               0x00
 #define 	AAA_AVP_FLAG_MANDATORY          0x40
 #define 	AAA_AVP_FLAG_RESERVED           0x1F
@@ -37,11 +37,11 @@
 //    0    OK
 //    != 0 error
 
-// reply events : 
+// reply events :
 //  avps:
 // [ code, flags, vendorId, type, data_blob ]
 
-struct DiameterReplyEvent 
+struct DiameterReplyEvent
   : public AmEvent
 {
   unsigned int commandCode;
@@ -49,20 +49,20 @@ struct DiameterReplyEvent
 
   AmArg avps;
 
- DiameterReplyEvent(unsigned int commandCode, 
+ DiameterReplyEvent(unsigned int commandCode,
 		    unsigned int applicationId, AmArg avps)
-   : AmEvent(0), commandCode(commandCode), 
+   : AmEvent(0), commandCode(commandCode),
     applicationId(applicationId), avps(avps)
   { }
 };
 
-struct DiameterTimeoutEvent 
+struct DiameterTimeoutEvent
   : public AmEvent
 {
   unsigned int req_id;
 
   DiameterTimeoutEvent(unsigned int req_id)
-    : AmEvent(1), req_id(req_id) 
+    : AmEvent(1), req_id(req_id)
   { }
 };
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 TelTech Systems Inc.
- * 
+ *
  * This file is part of SEMS, a free SIP media server.
  *
  * SEMS is free software; you can redistribute it and/or modify
@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -42,7 +42,7 @@ JsonRPCServerModule* JsonRPCServerModule::instance()
   return _instance;
 }
 
-JsonRPCServerModule::JsonRPCServerModule(const string& mod_name) 
+JsonRPCServerModule::JsonRPCServerModule(const string& mod_name)
   : AmDynInvokeFactory(mod_name)
 {
 }
@@ -55,9 +55,9 @@ int JsonRPCServerModule::onLoad() {
 }
 
 int JsonRPCServerModule::load() {
-  
+
   AmConfigReader cfg;
-  if(cfg.loadFile(AmConfig::ModConfigPath + 
+  if(cfg.loadFile(AmConfig::ModConfigPath +
 		  string(MOD_NAME ".conf"))) {
     INFO("no '%s' configuration file present. using default values\n",
 	 (AmConfig::ModConfigPath + string(MOD_NAME ".conf")).c_str());
@@ -72,16 +72,16 @@ int JsonRPCServerModule::load() {
   DBG("starting server loop thread\n");
   server_loop = new JsonRPCServerLoop();
   server_loop->start();
-  
+
   return 0;
 }
 
-void JsonRPCServerModule::invoke(const string& method, 
+void JsonRPCServerModule::invoke(const string& method,
 				 const AmArg& args, AmArg& ret) {
   if (method == "execRpc"){
 
     // todo: add connection id
-    args.assertArrayFmt("sssisis");   // evq_link, notificationReceiver, requestReceiver, 
+    args.assertArrayFmt("sssisis");   // evq_link, notificationReceiver, requestReceiver,
                                       // flags(i), host, port (i), method, [params]
     if (args.size() > 7)  {
       if (!isArgArray(args.get(7)) && !isArgStruct(args.get(7))) {
@@ -100,13 +100,13 @@ void JsonRPCServerModule::invoke(const string& method,
       }
     }
     sendMessage(args, ret);
-  } else if (method == "execServerFunction"){ 
+  } else if (method == "execServerFunction"){
     args.assertArrayFmt("ss");          // method, id, params
     JsonRpcServer::execRpc(args.get(0).asCStr(), args.get(1).asCStr(), args.get(2), ret);
     // JsonRpcServer::execRpc(args, ret);
   } else if (method == "getServerPort"){
     ret.push(port);
-  } else if(method == "_list"){ 
+  } else if(method == "_list"){
     ret.push(AmArg("execRpc"));
     ret.push(AmArg("sendMessage"));
     ret.push(AmArg("getServerPort"));
@@ -115,7 +115,7 @@ void JsonRPCServerModule::invoke(const string& method,
     // ret.push(AmArg("sendRequest"));
     // ret.push(AmArg("sendRequestList"));
   }  else
-    throw AmDynInvoke::NotImplemented(method);  
+    throw AmDynInvoke::NotImplemented(method);
 }
 
 void JsonRPCServerModule::execRpc(const AmArg& args, AmArg& ret) {
@@ -131,12 +131,12 @@ void JsonRPCServerModule::execRpc(const AmArg& args, AmArg& ret) {
 
   JsonRPCServerLoop::execRpc(// evq_link, notification_link, request_link
 			     args.get(0).asCStr(), args.get(1).asCStr(),
-			     args.get(2).asCStr(), 
+			     args.get(2).asCStr(),
 			     // flags
-			     args.get(3).asInt(), 
+			     args.get(3).asInt(),
 			     // host, port, method
-			     args.get(4).asCStr(), 
-			     args.get(5).asInt(), args.get(6).asCStr(), 
+			     args.get(4).asCStr(),
+			     args.get(5).asInt(), args.get(6).asCStr(),
 			     params, udata, ret);
 }
 
@@ -150,7 +150,7 @@ void JsonRPCServerModule::sendMessage(const AmArg& args, AmArg& ret) {
   if (args.size()>6)
     udata = args.get(6);
 
-  JsonRPCServerLoop::sendMessage(args.get(0).asCStr(), // conn_id, 
+  JsonRPCServerLoop::sendMessage(args.get(0).asCStr(), // conn_id,
 				 args.get(1).asInt(),  // type, (0 == reply)
 				 args.get(2).asCStr(), // method,
 				 args.get(3).asCStr(), // id

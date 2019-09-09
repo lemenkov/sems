@@ -38,7 +38,7 @@ public:
     MsgAction,      // accepting action on message
     PromptTurnover, // prompting to turn over to first message
     Bye             // term dialog
-  }; 
+  };
 
 private:
   AmPlaylist  play_list;

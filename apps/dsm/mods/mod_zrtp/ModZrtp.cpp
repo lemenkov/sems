@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "ModZrtp.h"
@@ -245,7 +245,7 @@ EXEC_ACTION_START(ZRTPSetSignalingHash) {
     sc_sess->SET_STRERROR("ZRTP not active on that stream");
     EXEC_ACTION_STOP;
   }
-  
+
   if (zrtp_status_ok != zrtp_signaling_hash_set(sess->zrtp_session_state.zrtp_audio,
 						h.c_str(), h.length())) {
     DBG("zrtp_signaling_hash_set failed\n");

@@ -1,5 +1,5 @@
 // Author: Hong Jiang <hong@hjiang.net>
-/* 
+/*
 source: http://github.com/hjiang/jsonxx/
 
 Copyright (c) 2010 Hong Jiang
@@ -85,8 +85,8 @@ bool parse_string(std::istream& input, std::string* value) {
 	  char ch1;
 	  input.get(ch1);
 	  switch (ch1) {
-	  case '"': 
-	  case '\\': 
+	  case '"':
+	  case '\\':
 	  case '/': value->push_back(ch1); break;
 	  case 'b': value->push_back('\b'); break;
 	  case 'f': value->push_back('\f'); break;
@@ -274,7 +274,7 @@ bool parse_number(std::istream& input, long* value) {
 	break;
     }
 
-    if (p_state == p_e) { 
+    if (p_state == p_e) {
       // todo: check also some other error states
       for (std::string::reverse_iterator r_it=
     	     exp_str.rbegin(); r_it != exp_str.rend(); r_it++)
@@ -284,12 +284,12 @@ bool parse_number(std::istream& input, long* value) {
     	input.putback(*r_it);
       return false;
     }
-    
+
     if (value_str.size() > 0) {
         std::istringstream(value_str) >> *value;
 	*value*=sign;
 
-	if (exp_value_str.size()) {	  
+	if (exp_value_str.size()) {
 	  std::istringstream(exp_value_str) >> e_value;
 
 	  if (e_value && e_sign==-1) {
@@ -300,8 +300,8 @@ bool parse_number(std::istream& input, long* value) {
 	    for (std::string::reverse_iterator r_it=
 		   value_str.rbegin(); r_it != value_str.rend(); r_it++)
 	      input.putback(*r_it);
-	    
-	    return false;  
+
+	    return false;
 	  }
 	  *value *= pow(10, e_value);
 	}
@@ -403,9 +403,9 @@ bool parse_float(std::istream& input, double* value) {
 	break;
     }
 
-    // DBG("correct = %s, has_dot = %s, e_sign = %d, exp_value_str.size() = %zd\n", 
+    // DBG("correct = %s, has_dot = %s, e_sign = %d, exp_value_str.size() = %zd\n",
     // 	correct?"true":"false",has_dot?"true":"false",e_sign,exp_value_str.size());
-    if (!correct || (!has_dot && !(e_sign == -1 && exp_value_str.size())) || p_state == p_e) { 
+    if (!correct || (!has_dot && !(e_sign == -1 && exp_value_str.size())) || p_state == p_e) {
       // todo: check also some other error states
       for (std::string::reverse_iterator r_it=
     	     exp_str.rbegin(); r_it != exp_str.rend(); r_it++)
@@ -415,12 +415,12 @@ bool parse_float(std::istream& input, double* value) {
     	input.putback(*r_it);
       return false;
     }
-    
+
     if (value_str.size() > 0) {
         std::istringstream(value_str) >> *value;
 	*value*=sign;
 
-	if (exp_value_str.size()) {	  
+	if (exp_value_str.size()) {
 	  std::istringstream(exp_value_str) >> e_value;
 
 	  *value *= pow(10, e_sign*e_value);

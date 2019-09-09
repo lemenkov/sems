@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -41,7 +41,7 @@
 
 #include <assert.h>
 
-int _timer_type_lookup[] = { 
+int _timer_type_lookup[] = {
     0,1,2, // STIMER_A, STIMER_B, STIMER_D
     0,1,2, // STIMER_E, STIMER_F, STIMER_K
     0,1,2, // STIMER_G, STIMER_H, STIMER_I
@@ -79,7 +79,7 @@ sip_trans::sip_trans()
     memset(timers,0,SIP_TRANS_TIMERS*sizeof(void*));
 }
 
-sip_trans::~sip_trans() 
+sip_trans::~sip_trans()
 {
     reset_all_timers();
     delete msg;
@@ -182,7 +182,7 @@ const char* _state_name_lookup[] = {
 void sip_trans::reset_timer(trans_timer* t, unsigned int timer_type)
 {
     trans_timer** tp = fetch_timer(timer_type,timers);
-    
+
     if(*tp != NULL){
 
 	DBG("Clearing old timer of type %s (this=%p)\n",
@@ -242,7 +242,7 @@ void sip_trans::reset_timer(unsigned int timer_type, unsigned int expire_delay /
 
     unsigned int expires = expire_delay / (TIMER_RESOLUTION/1000);
     expires += wt->wall_clock;
-    
+
     DBG("New timer of type %s at time=%i (repeated=%i)\n",
 	timer_name(timer_type),expires,timer_type>>16);
 
@@ -260,7 +260,7 @@ void sip_trans::clear_timer(unsigned int timer_type)
 void sip_trans::reset_all_timers()
 {
     for(int i=0; i<SIP_TRANS_TIMERS; i++){
-	
+
 	if(timers[i]){
 	    wheeltimer::instance()->remove_timer((timer*)timers[i]);
 	    timers[i] = NULL;

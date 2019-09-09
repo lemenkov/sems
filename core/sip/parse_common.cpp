@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -46,7 +46,7 @@ int parse_sip_version(const char* beg, int len)
 	return MALFORMED_SIP_MSG;
     }
 
-    if( ((c[0] != 'S')&&(c[0] != 's')) || 
+    if( ((c[0] != 'S')&&(c[0] != 's')) ||
 	((c[1] != 'I')&&(c[1] != 'i')) ||
 	((c[2] != 'P')&&(c[2] != 'p')) ) {
 
@@ -64,7 +64,7 @@ int parse_sip_version(const char* beg, int len)
     return 0;
 }
 
-static int _parse_gen_params(list<sip_avp*>* params, const char** c, 
+static int _parse_gen_params(list<sip_avp*>* params, const char** c,
 			     int len, char stop_char, bool beg_w_sc)
 {
     enum {
@@ -97,7 +97,7 @@ static int _parse_gen_params(list<sip_avp*>* params, const char** c,
 	    case SP:
 	    case HTAB:
 		break;
-		
+
 	    case ';':
 		st = VP_PARAM_SEP_SWS;
 		break;
@@ -127,7 +127,7 @@ static int _parse_gen_params(list<sip_avp*>* params, const char** c,
 		break;
 	    }
 	    break;
-	    
+
 	case VP_PNAME:
 	    switch(**c){
 
@@ -198,7 +198,7 @@ static int _parse_gen_params(list<sip_avp*>* params, const char** c,
 	    case SP:
 	    case HTAB:
 		break;
-		
+
 	    case '\"':
 		st = VP_PVALUE_QUOTED;
 		beg = *c;
@@ -254,7 +254,7 @@ static int _parse_gen_params(list<sip_avp*>* params, const char** c,
 		params->push_back(avp.release());
 		avp.reset(new sip_avp());
 		break;
-		
+
 	    case '\\':
 		if(!*(++(*c))){
 		    DBG("Escape char in quoted str at EoT!!!\n");
@@ -265,7 +265,7 @@ static int _parse_gen_params(list<sip_avp*>* params, const char** c,
 	    break;
 
 	case_ST_CR(**c);
-	
+
 	case ST_LF:
 	case ST_CRLF:
 	    switch(saved_st){
@@ -285,7 +285,7 @@ static int _parse_gen_params(list<sip_avp*>* params, const char** c,
 	    st = saved_st;
 	}
     }
-    
+
     switch(st){
 
     case VP_PNAME:
@@ -315,7 +315,7 @@ static int _parse_gen_params(list<sip_avp*>* params, const char** c,
     return 0;
 }
 
-int parse_gen_params_sc(list<sip_avp*>* params, const char** c, 
+int parse_gen_params_sc(list<sip_avp*>* params, const char** c,
 			int len, char stop_char)
 {
     return _parse_gen_params(params,c,len,stop_char,true);

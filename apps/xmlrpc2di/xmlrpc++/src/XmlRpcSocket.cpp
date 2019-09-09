@@ -40,7 +40,7 @@ using namespace XmlRpc;
 
 
 #if defined(_WINDOWS)
-  
+
 static void initWinSock()
 {
   static bool wsInit = false;
@@ -113,7 +113,7 @@ XmlRpcSocket::setReuseAddr(int fd)
 
 
 // Bind to a specified port
-bool 
+bool
 XmlRpcSocket::bind(int fd, int port, const std::string& bind_ip)
 {
   struct sockaddr_in saddr;
@@ -135,7 +135,7 @@ XmlRpcSocket::bind(int fd, int port, const std::string& bind_ip)
 
 
 // Set socket in listen mode
-bool 
+bool
 XmlRpcSocket::listen(int fd, int backlog)
 {
   return (::listen(fd, backlog) == 0);
@@ -152,7 +152,7 @@ XmlRpcSocket::accept(int fd)
 }
 
 
-    
+
 // Connect a socket to a server (from a client)
 bool
 XmlRpcSocket::connect(int fd, std::string& host, int port)
@@ -177,7 +177,7 @@ XmlRpcSocket::connect(int fd, std::string& host, int port)
 
 
 // Read available text from the specified socket. Returns false on error.
-bool 
+bool
 XmlRpcSocket::nbRead(int fd, std::string& s, bool *eof, SSL* ssl)
 {
   const int READ_SIZE = 4096;   // Number of bytes to attempt to read at a time
@@ -215,7 +215,7 @@ XmlRpcSocket::nbRead(int fd, std::string& s, bool *eof, SSL* ssl)
 
 
 // Write text to the specified socket. Returns false on error.
-bool 
+bool
 XmlRpcSocket::nbWrite(int fd, std::string& s, int *bytesSoFar, SSL* ssl)
 {
   int nToWrite = int(s.length()) - *bytesSoFar;
@@ -268,7 +268,7 @@ XmlRpcSocket::getPort(int socket)
 
 
 // Returns last errno
-int 
+int
 XmlRpcSocket::getError()
 {
 #if defined(_WINDOWS)
@@ -280,14 +280,14 @@ XmlRpcSocket::getError()
 
 
 // Returns message corresponding to last errno
-std::string 
+std::string
 XmlRpcSocket::getErrorMsg()
 {
   return getErrorMsg(getError());
 }
 
 // Returns message corresponding to errno... well, it should anyway
-std::string 
+std::string
 XmlRpcSocket::getErrorMsg(int error)
 {
   char err[60];

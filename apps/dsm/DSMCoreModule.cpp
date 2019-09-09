@@ -21,8 +21,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -130,19 +130,19 @@ DSMAction* DSMCoreModule::getAction(const string& from_str) {
     SCDIAction * a = new SCDIAction(params, false);
     a->name = from_str;
     return a;
-  }  
+  }
 
   if (cmd == "DIgetResult") {
     SCDIAction * a = new SCDIAction(params, true);
     a->name = from_str;
     return a;
-  }  
+  }
 
   if (cmd == "DIgetResultArray") {
     SCDIAction * a = new SCDIAction(params, true);
     a->name = from_str;
     return a;
-  }  
+  }
 
   DEF_CMD("B2B.connectCallee", SCB2BConnectCalleeAction);
   DEF_CMD("B2B.terminateOtherLeg", SCB2BTerminateOtherLegAction);
@@ -190,50 +190,50 @@ DSMCondition* DSMCoreModule::getCondition(const string& from_str) {
   if ((cmd == "separatorTest") || (cmd == "separator"))
     return new TestDSMCondition(params, DSMCondition::PlaylistSeparator);
 
-  if (cmd == "hangup") 
-    return new TestDSMCondition(params, DSMCondition::Hangup);  
+  if (cmd == "hangup")
+    return new TestDSMCondition(params, DSMCondition::Hangup);
 
   if ((cmd == "eventTest") || (cmd == "event"))
-    return new TestDSMCondition(params, DSMCondition::DSMEvent);  
+    return new TestDSMCondition(params, DSMCondition::DSMEvent);
 
   if (cmd == "B2Bevent")
     return new TestDSMCondition(params, DSMCondition::B2BEvent);
 
-  if (cmd == "invite") 
-    return new TestDSMCondition(params, DSMCondition::Invite);  
+  if (cmd == "invite")
+    return new TestDSMCondition(params, DSMCondition::Invite);
 
   if (cmd == "earlySession")
     return new TestDSMCondition(params, DSMCondition::EarlySession);
 
-  if (cmd == "sessionStart") 
-    return new TestDSMCondition(params, DSMCondition::SessionStart);  
+  if (cmd == "sessionStart")
+    return new TestDSMCondition(params, DSMCondition::SessionStart);
 
-  if (cmd == "ringing") 
+  if (cmd == "ringing")
     return new TestDSMCondition(params, DSMCondition::Ringing);
 
-  if (cmd == "early") 
+  if (cmd == "early")
     return new TestDSMCondition(params, DSMCondition::EarlySession);
 
-  if (cmd == "failed") 
-    return new TestDSMCondition(params, DSMCondition::FailedCall);  
+  if (cmd == "failed")
+    return new TestDSMCondition(params, DSMCondition::FailedCall);
 
   if (cmd == "B2B.otherRequest")
     return new TestDSMCondition(params, DSMCondition::B2BOtherRequest);
 
-  if (cmd == "B2B.otherReply") 
-    return new TestDSMCondition(params, DSMCondition::B2BOtherReply);  
+  if (cmd == "B2B.otherReply")
+    return new TestDSMCondition(params, DSMCondition::B2BOtherReply);
 
-  if (cmd == "B2B.otherBye") 
-    return new TestDSMCondition(params, DSMCondition::B2BOtherBye);  
+  if (cmd == "B2B.otherBye")
+    return new TestDSMCondition(params, DSMCondition::B2BOtherBye);
 
-  if (cmd == "sipRequest") 
-    return new TestDSMCondition(params, DSMCondition::SipRequest);  
+  if (cmd == "sipRequest")
+    return new TestDSMCondition(params, DSMCondition::SipRequest);
 
-  if (cmd == "sipReply") 
-    return new TestDSMCondition(params, DSMCondition::SipReply);  
+  if (cmd == "sipReply")
+    return new TestDSMCondition(params, DSMCondition::SipReply);
 
-  if (cmd == "remoteDisappeared") 
-    return new TestDSMCondition(params, DSMCondition::RemoteDisappeared);  
+  if (cmd == "remoteDisappeared")
+    return new TestDSMCondition(params, DSMCondition::RemoteDisappeared);
 
   if (cmd == "sessionTimeout")
     return new TestDSMCondition(params, DSMCondition::SessionTimeout);
@@ -241,11 +241,11 @@ DSMCondition* DSMCoreModule::getCondition(const string& from_str) {
   if (cmd == "rtpTimeout")
     return new TestDSMCondition(params, DSMCondition::RtpTimeout);
 
-  if (cmd == "jsonRpcRequest") 
-    return new TestDSMCondition(params, DSMCondition::JsonRpcRequest);  
+  if (cmd == "jsonRpcRequest")
+    return new TestDSMCondition(params, DSMCondition::JsonRpcRequest);
 
-  if (cmd == "jsonRpcResponse") 
-    return new TestDSMCondition(params, DSMCondition::JsonRpcResponse);  
+  if (cmd == "jsonRpcResponse")
+    return new TestDSMCondition(params, DSMCondition::JsonRpcResponse);
 
   if (cmd == "subscription")
     return new TestDSMCondition(params, DSMCondition::SIPSubscription);
@@ -306,7 +306,7 @@ void setEventParameters(const DSMSession* sc_sess, const string& var, VarMapT& p
 
       if (varname.length() && varname[varname.length()-1]=='.') {
 	DBG("adding postEvent param %s (struct)\n", varname.c_str());
-	
+
 	map<string, string>::const_iterator lb = sc_sess->var.lower_bound(varname);
 	while (lb != sc_sess->var.end()) {
 	  if ((lb->first.length() < varname.length()) ||
@@ -369,19 +369,19 @@ EXEC_ACTION_START(SCB2BSetRelayOnlyAction) {
 
 CONST_ACTION_2P(SCPlayFileAction, ',', true);
 EXEC_ACTION_START(SCPlayFileAction) {
-  bool loop = 
+  bool loop =
     resolveVars(par2, sess, sc_sess, event_params) == "true";
   DBG("par1 = '%s', par2 = %s\n", par1.c_str(), par2.c_str());
-  sc_sess->playFile(resolveVars(par1, sess, sc_sess, event_params), 
+  sc_sess->playFile(resolveVars(par1, sess, sc_sess, event_params),
 		    loop);
 } EXEC_ACTION_END;
 
 CONST_ACTION_2P(SCPlayFileFrontAction, ',', true);
 EXEC_ACTION_START(SCPlayFileFrontAction) {
-  bool loop = 
+  bool loop =
     resolveVars(par2, sess, sc_sess, event_params) == "true";
   DBG("par1 = '%s', par2 = %s\n", par1.c_str(), par2.c_str());
-  sc_sess->playFile(resolveVars(par1, sess, sc_sess, event_params), 
+  sc_sess->playFile(resolveVars(par1, sess, sc_sess, event_params),
 		    loop, true);
 } EXEC_ACTION_END;
 
@@ -534,11 +534,11 @@ EXEC_ACTION_START(SCDisableDTMFDetection) {
 CONST_ACTION_2P(SCThrowAction, ',', true);
 EXEC_ACTION_START(SCThrowAction) {
   map<string, string> e_args;
-  e_args["type"] = resolveVars(par1, sess, sc_sess, event_params); 
+  e_args["type"] = resolveVars(par1, sess, sc_sess, event_params);
   DBG("throwing DSMException type '%s'\n", e_args["type"].c_str());
 
   string e_params = resolveVars(par2, sess, sc_sess, event_params);
-  
+
   // inefficient param-split
   vector<string> params = explode(e_params, ";");
   for (vector<string>::iterator it=
@@ -548,7 +548,7 @@ EXEC_ACTION_START(SCThrowAction) {
       e_args[n[0]]=n[1];
     }
   }
-  
+
   throw DSMException(e_args);
 
 } EXEC_ACTION_END;
@@ -562,7 +562,7 @@ EXEC_ACTION_START(SCThrowOnErrorAction) {
 
   DBG("throwing DSMException type '%s'\n", e_args["type"].c_str());
   e_args["text"] = sc_sess->var["strerror"];
-  
+
   throw DSMException(e_args);
 
 } EXEC_ACTION_END;
@@ -589,7 +589,7 @@ DSMAction::SEAction SCRepostAction::getSEAction(string& param,
 						AmSession* sess, DSMSession* sc_sess,
 						DSMCondition::EventType event,
 						map<string,string>* event_params) {
-  return Repost; 
+  return Repost;
 }
 
 DEF_SCModActionExec(SCJumpFSMAction);
@@ -598,7 +598,7 @@ DSMAction::SEAction SCJumpFSMAction::getSEAction(string& param,
 						 DSMCondition::EventType event,
 						 map<string,string>* event_params) {
   param = resolveVars(arg, sess, sc_sess, event_params);
-  return Jump; 
+  return Jump;
 }
 
 DEF_SCModActionExec(SCBreakAction);
@@ -607,7 +607,7 @@ DSMAction::SEAction SCBreakAction::getSEAction(string& param,
 						 DSMCondition::EventType event,
 						 map<string,string>* event_params) {
   param = resolveVars(arg, sess, sc_sess, event_params);
-  return Break; 
+  return Break;
 }
 
 DEF_SCModActionExec(SCCallFSMAction);
@@ -616,7 +616,7 @@ DSMAction::SEAction SCCallFSMAction::getSEAction(string& param,
 						 DSMCondition::EventType event,
 						 map<string,string>* event_params) {
   param = resolveVars(arg, sess, sc_sess, event_params);
-  return Call; 
+  return Call;
 }
 
 DEF_SCModActionExec(SCReturnFSMAction);
@@ -624,7 +624,7 @@ DSMAction::SEAction SCReturnFSMAction::getSEAction(string& param,
 						   AmSession* sess, DSMSession* sc_sess,
 						   DSMCondition::EventType event,
 						   map<string,string>* event_params) {
-  return Return; 
+  return Return;
 }
 
 #undef DEF_SCModActionExec
@@ -681,7 +681,7 @@ void log_vars(const string& l_arg, AmSession* sess,
   }
 
   _LOG((int)lvl, "FSM: variables set ---\n");
-  for (map<string, string>::iterator it = 
+  for (map<string, string>::iterator it =
 	 sc_sess->var.begin(); it != sc_sess->var.end(); it++) {
     _LOG((int)lvl, "FSM:  $%s='%s'\n", it->first.c_str(), it->second.c_str());
   }
@@ -706,7 +706,7 @@ void log_params(const string& l_arg, AmSession* sess,
   }
 
   _LOG((int)lvl, "FSM: params set ---\n");
-  for (map<string, string>::iterator it = 
+  for (map<string, string>::iterator it =
 	 event_params->begin(); it != event_params->end(); it++) {
     _LOG((int)lvl, "FSM:  #%s='%s'\n", it->first.c_str(), it->second.c_str());
   }
@@ -730,7 +730,7 @@ void log_selects(const string& l_arg, AmSession* sess,
 
 #define SELECT_LOG(select_name)					\
   _LOG((int)lvl, "FSM:  @%s='%s'\n", select_name,			\
-       resolveVars("@" select_name, sess, sc_sess, event_params).c_str());	
+       resolveVars("@" select_name, sess, sc_sess, event_params).c_str());
 
   SELECT_LOG("local_tag");
   SELECT_LOG("user");
@@ -772,20 +772,20 @@ EXEC_ACTION_START(SCSetAction) {
       par1.substr(1) : par1;
 
     sc_sess->var[var_name] = resolveVars(par2, sess, sc_sess, event_params);
-    
-    DBG("set $%s='%s'\n", 
+
+    DBG("set $%s='%s'\n",
 	var_name.c_str(), sc_sess->var[var_name].c_str());
   }
 } EXEC_ACTION_END;
 
-string replaceParams(const string& q, AmSession* sess, DSMSession* sc_sess, 
+string replaceParams(const string& q, AmSession* sess, DSMSession* sc_sess,
 		     map<string,string>* event_params) {
   string res = q;
   size_t repl_pos = 0;
   while (repl_pos<res.length()) {
     size_t rstart = res.find_first_of("$#@", repl_pos);
     repl_pos = rstart+1;
-    if (rstart == string::npos) 
+    if (rstart == string::npos)
       break;
     if (rstart && (res.length() > rstart) && (res[rstart]==res[repl_pos])) {
       res.erase(rstart, 1);
@@ -794,13 +794,13 @@ string replaceParams(const string& q, AmSession* sess, DSMSession* sc_sess,
     if (rstart && res[rstart-1] == '\\') // escaped
       continue;
     size_t rend;
-    if (res.length() > rstart+1 && 
+    if (res.length() > rstart+1 &&
 	(res[rstart+1] == '(' ||
 	 res[rstart+1] == '"' ||
 	 res[rstart+1] == '\''
 	 ))
       rend = res.find_first_of(" ,()[]$#@\t;:'\"", rstart+2);
-    else 
+    else
       rend = res.find_first_of(" ,()[]$#@\t;:'\"", rstart+1);
     if (rend==string::npos)
       rend = res.length();
@@ -821,7 +821,7 @@ string replaceParams(const string& q, AmSession* sess, DSMSession* sc_sess,
       if (sc_sess->var.find(keyname) == sc_sess->var.end()) {
 	res.erase(rstart, rend-rstart);
 	if (repl_pos) repl_pos--; // repl_pos was after $
-      } else { 
+      } else {
 	res.replace(rstart, rend-rstart, sc_sess->var[keyname]);
 	if (sc_sess->var[keyname].size())
 	  repl_pos+=sc_sess->var[keyname].size()-1; // skip after new string
@@ -871,8 +871,8 @@ EXEC_ACTION_START(SCSetSAction) {
       par1.substr(1) : par1;
 
     sc_sess->var[var_name] = replaceParams(par2, sess, sc_sess, event_params);
-    
-    DBG("set $%s='%s'\n", 
+
+    DBG("set $%s='%s'\n",
 	var_name.c_str(), sc_sess->var[var_name].c_str());
   }
 } EXEC_ACTION_END;
@@ -883,7 +883,7 @@ EXEC_ACTION_START(SCEvalAction) {
     par1.substr(1) : par1;
 
   sc_sess->var[var_name] = resolveVars(par2, sess, sc_sess, event_params, true);
-  DBG("eval $%s='%s'\n", 
+  DBG("eval $%s='%s'\n",
       var_name.c_str(), sc_sess->var[var_name].c_str());
 } EXEC_ACTION_END;
 
@@ -891,7 +891,7 @@ CONST_ACTION_2P(SCSetVarAction,'=', false);
 EXEC_ACTION_START(SCSetVarAction) {
   string var_name = resolveVars(par1, sess, sc_sess, event_params);
   sc_sess->var[var_name] = resolveVars(par2, sess, sc_sess, event_params);
-  DBG("set $%s='%s'\n", 
+  DBG("set $%s='%s'\n",
       var_name.c_str(), sc_sess->var[var_name].c_str());
 } EXEC_ACTION_END;
 
@@ -901,7 +901,7 @@ EXEC_ACTION_START(SCGetParamAction){
   string dst_var_name = (par1.length() && par1[0] == '$')?
     par1.substr(1) : par1;
   string param_name = resolveVars(par2, sess, sc_sess, event_params);
-  
+
   DBG("param_name = %s, dst = %s\n", param_name.c_str(), dst_var_name.c_str());
 
   if (NULL==event_params) {
@@ -915,8 +915,8 @@ EXEC_ACTION_START(SCGetParamAction){
   } else {
     sc_sess->var[dst_var_name] = "";
   }
-  
-  DBG("set $%s='%s'\n", 
+
+  DBG("set $%s='%s'\n",
       dst_var_name.c_str(), sc_sess->var[dst_var_name].c_str());
 } EXEC_ACTION_END;
 
@@ -925,10 +925,10 @@ EXEC_ACTION_START(SCGetVarAction){
   string dst_var_name = (par1.length() && par1[0] == '$')?
     par1.substr(1) : par1;
   string var_name = resolveVars(par2, sess, sc_sess, event_params);
-  
+
   DBG("var_name = %s, dst = %s\n", var_name.c_str(), dst_var_name.c_str());
   sc_sess->var[dst_var_name] = sc_sess->var[var_name];
-  DBG("set $%s='%s'\n", 
+  DBG("set $%s='%s'\n",
       dst_var_name.c_str(), sc_sess->var[dst_var_name].c_str());
 } EXEC_ACTION_END;
 
@@ -953,7 +953,7 @@ EXEC_ACTION_START(SCClearStructAction) {
       break;
     map<string, string>::iterator lb_d = lb;
     lb++;
-    sc_sess->var.erase(lb_d);    
+    sc_sess->var.erase(lb_d);
   }
 
 } EXEC_ACTION_END;
@@ -1041,7 +1041,7 @@ EXEC_ACTION_START(SCAppendAction) {
 
   sc_sess->var[var_name] += resolveVars(par2, sess, sc_sess, event_params);
 
-  DBG("$%s now '%s'\n", 
+  DBG("$%s now '%s'\n",
       var_name.c_str(), sc_sess->var[var_name].c_str());
 } EXEC_ACTION_END;
 
@@ -1075,14 +1075,14 @@ EXEC_ACTION_START(SCSubStrAction) {
   try {
     if (pos2 == 0)
       sc_sess->var[var_name] = sc_sess->var[var_name].substr(pos);
-    else 
+    else
       sc_sess->var[var_name] = sc_sess->var[var_name].substr(pos, pos2);
   } catch(...) {
     ERROR("in substr\n");
     return false;
-  }  
+  }
 
-  DBG("$%s now '%s'\n", 
+  DBG("$%s now '%s'\n",
       var_name.c_str(), sc_sess->var[var_name].c_str());
 } EXEC_ACTION_END;
 
@@ -1093,7 +1093,7 @@ EXEC_ACTION_START(SCIncAction) {
   str2i(sc_sess->var[var_name], val);
   sc_sess->var[var_name] = int2str(val+1);
 
-  DBG("inc: $%s now '%s'\n", 
+  DBG("inc: $%s now '%s'\n",
       var_name.c_str(), sc_sess->var[var_name].c_str());
 
 } EXEC_ACTION_END;
@@ -1103,7 +1103,7 @@ EXEC_ACTION_START(SCSetTimerAction) {
 
   unsigned int timerid;
   if (str2i(resolveVars(par1, sess, sc_sess, event_params), timerid)) {
-    ERROR("timer id '%s' not decipherable\n", 
+    ERROR("timer id '%s' not decipherable\n",
 	  resolveVars(par1, sess, sc_sess, event_params).c_str());
     sc_sess->SET_ERRNO(DSM_ERRNO_UNKNOWN_ARG);
     sc_sess->SET_STRERROR("timer id '"+
@@ -1114,7 +1114,7 @@ EXEC_ACTION_START(SCSetTimerAction) {
 
   unsigned int timeout;
   if (str2i(resolveVars(par2, sess, sc_sess, event_params), timeout)) {
-    ERROR("timeout value '%s' not decipherable\n", 
+    ERROR("timeout value '%s' not decipherable\n",
 	  resolveVars(par2, sess, sc_sess, event_params).c_str());
     sc_sess->SET_ERRNO(DSM_ERRNO_UNKNOWN_ARG);
     sc_sess->SET_STRERROR("timeout value '"+
@@ -1170,7 +1170,7 @@ EXEC_ACTION_START(SCRemoveTimersAction) {
 
 
 
-// TODO: replace with real expression matching 
+// TODO: replace with real expression matching
 TestDSMCondition::TestDSMCondition(const string& expr, DSMCondition::EventType evt) {
 
   type = evt;
@@ -1179,9 +1179,9 @@ TestDSMCondition::TestDSMCondition(const string& expr, DSMCondition::EventType e
     ttype = Always;
     return;
   }
- 
+
   ttype = None;
-  
+
   size_t p = expr.find("==");
   size_t p2;
   if (p != string::npos) {
@@ -1199,7 +1199,7 @@ TestDSMCondition::TestDSMCondition(const string& expr, DSMCondition::EventType e
 	if (p != string::npos)  {
 	  ttype = Gt; p2 = p+1;
 	} else {
-	  ERROR("expression '%s' not understood\n", 
+	  ERROR("expression '%s' not understood\n",
 		expr.c_str());
 	  return;
 	}
@@ -1225,19 +1225,19 @@ bool TestDSMCondition::match(AmSession* sess, DSMSession* sc_sess, DSMCondition:
     ERROR("wrong session type\n");
     return false;
   }
-  
+
   string l;
   string r;
-  if (lhs.length() > 5 && 
+  if (lhs.length() > 5 &&
       (lhs.substr(0, 4) == "len(") && lhs[lhs.length()-1] == ')') {
     l = int2str((unsigned int)resolveVars(lhs.substr(4, lhs.length()-5), sess, sc_sess, event_params).length());
-  } else {    
+  } else {
     l   = resolveVars(lhs, sess, sc_sess, event_params);
   }
-  if (rhs.length() > 5 && 
+  if (rhs.length() > 5 &&
       rhs.substr(0, 4) == "len(" && rhs[rhs.length()-1] == ')') {
     r = resolveVars(rhs.substr(4, rhs.length()-5), sess, sc_sess, event_params).length();
-  } else {    
+  } else {
     r   = resolveVars(rhs, sess, sc_sess, event_params);
   }
 
@@ -1262,7 +1262,7 @@ bool TestDSMCondition::match(AmSession* sess, DSMSession* sc_sess, DSMCondition:
     long l_i = strtol(l.c_str(), &endptr, 10);
     if (endptr && *endptr  == '\0') {
       long r_i = strtol(r.c_str(), &endptr, 10);
-      if (endptr && *endptr  == '\0') 
+      if (endptr && *endptr  == '\0')
 	return l_i < r_i;
       }
     return l < r;
@@ -1272,17 +1272,17 @@ bool TestDSMCondition::match(AmSession* sess, DSMSession* sc_sess, DSMCondition:
     long l_i = strtol(l.c_str(), &endptr, 10);
     if (endptr && *endptr  == '\0') {
       long r_i = strtol(r.c_str(), &endptr, 10);
-      if (endptr && *endptr  == '\0') 
+      if (endptr && *endptr  == '\0')
 	return l_i > r_i;
       }
     return l > r;
-  } 
+  }
   default: return false;
-  }  
+  }
 }
 
 
-SCDIAction::SCDIAction(const string& arg, bool get_res) 
+SCDIAction::SCDIAction(const string& arg, bool get_res)
   : get_res(get_res) {
   // TODO: don't ignore "" (don't use explode here)
   params = explode(arg,",");
@@ -1298,7 +1298,7 @@ void string2argarray(const string& key, const string& val, AmArg& res) {
     return;
 
   if (!(isArgStruct(res) || isArgUndef(res))) {
-    WARN("array element [%s] is shadowed by value '%s'\n", 
+    WARN("array element [%s] is shadowed by value '%s'\n",
 	 key.c_str(), AmArg::print(res).c_str());
     return;
   }
@@ -1324,7 +1324,7 @@ EXEC_ACTION_START(SCDIAction) {
 
   vector<string>::iterator p_it=params.begin();
   string fact_name = trim(*p_it, " \"");
-  AmDynInvokeFactory* fact = 
+  AmDynInvokeFactory* fact =
     AmPlugIn::instance()->getFactory4Di(fact_name);
 
   if(!fact) {
@@ -1340,18 +1340,18 @@ EXEC_ACTION_START(SCDIAction) {
     sc_sess->SET_STRERROR("load module for factory '"+fact_name+"'.\n");
     EXEC_ACTION_STOP;
   }
-  p_it++; 
+  p_it++;
 
-  string func_name = trim(*p_it, " \""); 
+  string func_name = trim(*p_it, " \"");
   p_it++;
 
   AmArg di_args;
-  
+
   while (p_it != params.end()) {
     string p = trim(*p_it, " \t");
     if (p.length() && p[0] == '"') {
       di_args.push(trim(p,"\"").c_str());
-    } else if (p.length() > 5 && 
+    } else if (p.length() > 5 &&
 	       p.substr(0, 5) =="(int)") {
       p = resolveVars(p.substr(5), sess, sc_sess, event_params);
       char* endptr = NULL;
@@ -1359,13 +1359,13 @@ EXEC_ACTION_START(SCDIAction) {
       if (endptr && *endptr  == '\0') {
 	di_args.push((int)p_i);
       } else {
-	ERROR("converting value '%s' to int\n", 
+	ERROR("converting value '%s' to int\n",
 	      p.c_str());
 	sc_sess->SET_ERRNO(DSM_ERRNO_UNKNOWN_ARG);
 	sc_sess->SET_STRERROR("converting value '"+p+"' to int\n");
 	EXEC_ACTION_STOP;
       }
-    } else if (p.length() > 8 &&  
+    } else if (p.length() > 8 &&
 	       p.substr(0, 8) =="(struct)") {
       p.erase(0, 8);
       AmArg var_struct;
@@ -1376,33 +1376,33 @@ EXEC_ACTION_START(SCDIAction) {
 	if ((lb->first.length() < varprefix.length()) ||
 	    strncmp(lb->first.c_str(), varprefix.c_str(),varprefix.length()))
 	  break;
-	
+
 	string varname = lb->first.substr(varprefix.length());
 	if (varname.find(".") == string::npos)
 	  var_struct[varname] = lb->second;
 	else
 	  string2argarray(varname, lb->second, var_struct);
-	
+
 	lb++;
 	//has_vars = true;
       }
       di_args.push(var_struct);
-    } else if (p.length() > 7 &&  
+    } else if (p.length() > 7 &&
 	       p.substr(0, 7) =="(array)") {
       p.erase(0, 7);
       di_args.push(AmArg());
       AmArg& var_array = di_args.get(di_args.size()-1);
-      
+
       unsigned int i=0;
       while (true) {
-	map<string, string>::iterator it = 
+	map<string, string>::iterator it =
 	  sc_sess->var.find(p+"["+int2str(i)+"]");
 	if (it == sc_sess->var.end())
 	  break;
 	var_array.push(it->second);
 	i++;
       }
-    } else if (p.length() > 6 &&  
+    } else if (p.length() > 6 &&
 	       p.substr(0, 6) == "(json)") {
       p.erase(0, 6);
       if (p.length() && p[0] == '"') {
@@ -1416,8 +1416,8 @@ EXEC_ACTION_START(SCDIAction) {
       AmArg& var_json = di_args.get(di_args.size()-1);
       if (!json2arg(p, var_json)) {
 	WARN("Error parsing JSON object '%s'\n", p.c_str());
-	// todo: throw exception? 
-      }      
+	// todo: throw exception?
+      }
     } else {
       di_args.push(resolveVars(p, sess, sc_sess, event_params).c_str());
     }
@@ -1429,25 +1429,25 @@ EXEC_ACTION_START(SCDIAction) {
   try {
     di_inst->invoke(func_name, di_args, sc_sess->di_res);
   } catch (const AmDynInvoke::NotImplemented& ni) {
-    ERROR("not implemented DI function '%s'\n", 
+    ERROR("not implemented DI function '%s'\n",
 	  ni.what.c_str());
     sc_sess->SET_ERRNO(DSM_ERRNO_UNKNOWN_ARG);
     sc_sess->SET_STRERROR("not implemented DI function '"+ni.what+"'\n");
     EXEC_ACTION_STOP;
   } catch (const AmArg::OutOfBoundsException& oob) {
-    ERROR("out of bounds in  DI call '%s'\n", 
+    ERROR("out of bounds in  DI call '%s'\n",
 	  name.c_str());
     sc_sess->SET_ERRNO(DSM_ERRNO_UNKNOWN_ARG);
     sc_sess->SET_STRERROR("out of bounds in  DI call '"+name+"'\n");
     EXEC_ACTION_STOP;
   } catch (const AmArg::TypeMismatchException& oob) {
-    ERROR("type mismatch  in  DI call '%s'\n", 
+    ERROR("type mismatch  in  DI call '%s'\n",
 	  name.c_str());
     sc_sess->SET_ERRNO(DSM_ERRNO_UNKNOWN_ARG);
     sc_sess->SET_STRERROR("type mismatch in  DI call '"+name+"'\n");
     EXEC_ACTION_STOP;
   } catch (...) {
-    ERROR("unexpected Exception  in  DI call '%s'\n", 
+    ERROR("unexpected Exception  in  DI call '%s'\n",
 	  name.c_str());
     sc_sess->SET_ERRNO(DSM_ERRNO_UNKNOWN_ARG);
     sc_sess->SET_STRERROR("unexpected Exception in  DI call '"+name+"'\n");
@@ -1457,9 +1457,9 @@ EXEC_ACTION_START(SCDIAction) {
   bool flag_error = false;
   if (get_res) {
     // rudimentary variables conversion...
-    if (isArgCStr(sc_sess->di_res)) 
+    if (isArgCStr(sc_sess->di_res))
       sc_sess->var["DI_res"] = sc_sess->di_res.asCStr();
-    else if (isArgInt(sc_sess->di_res)) 
+    else if (isArgInt(sc_sess->di_res))
       sc_sess->var["DI_res"] = int2str(sc_sess->di_res.asInt());
     else if (isArgArray(sc_sess->di_res)) {
       if (name.compare(0, 12, "DIgetResult(") == 0) {
@@ -1511,10 +1511,10 @@ EXEC_ACTION_START(SCDIAction) {
   }
 
 } EXEC_ACTION_END;
-  
+
 
 CONST_ACTION_2P(SCB2BConnectCalleeAction,',', false);
-EXEC_ACTION_START(SCB2BConnectCalleeAction) {  
+EXEC_ACTION_START(SCB2BConnectCalleeAction) {
   string remote_party = resolveVars(par1, sess, sc_sess, event_params);
   string remote_uri = resolveVars(par2, sess, sc_sess, event_params);
   bool relayed_invite = false;
@@ -1525,7 +1525,7 @@ EXEC_ACTION_START(SCB2BConnectCalleeAction) {
       remote_party.c_str(), remote_uri.c_str(), relayed_invite?"yes":"no");
   sc_sess->B2BconnectCallee(remote_party, remote_uri, relayed_invite);
 } EXEC_ACTION_END;
- 
+
 EXEC_ACTION_START(SCB2BTerminateOtherLegAction) {
   sc_sess->B2BterminateOtherLeg();
 } EXEC_ACTION_END;
@@ -1561,7 +1561,7 @@ EXEC_ACTION_START(SCB2BSetHeadersAction) {
   bool replace_crlf = false;
   if (repl == "true")
     replace_crlf = true;
-  DBG("setting B2B headers to '%s' (%sreplacing CRLF)\n", 
+  DBG("setting B2B headers to '%s' (%sreplacing CRLF)\n",
       val.c_str(), replace_crlf?"":"not ");
   sc_sess->B2BsetHeaders(val, replace_crlf);
 } EXEC_ACTION_END;
@@ -1574,8 +1574,8 @@ EXEC_ACTION_START(SCB2BClearHeadersAction) {
 CONST_ACTION_2P(SCSendDTMFAction,',', true);
 EXEC_ACTION_START(SCSendDTMFAction) {
   string event = resolveVars(par1, sess, sc_sess, event_params);
-  string duration = resolveVars(par2, sess, sc_sess, event_params);  
-  
+  string duration = resolveVars(par2, sess, sc_sess, event_params);
+
   unsigned int event_i;
   if (str2i(event, event_i)) {
     ERROR("event '%s' not a valid DTMF event\n", event.c_str());
@@ -1657,14 +1657,14 @@ EXEC_ACTION_START(SCCreateSystemDSMAction) {
 		       "need both conf_name and script_name for createSystemDSM");
   }
 
-  DBG("creating system DSM conf_name %s, script_name %s\n", 
+  DBG("creating system DSM conf_name %s, script_name %s\n",
       conf_name.c_str(), script_name.c_str());
   string status;
   if (!DSMFactory::instance()->createSystemDSM(conf_name, script_name, false, status)) {
     ERROR("creating system DSM: %s\n", status.c_str());
     throw DSMException("core", "cause", status);
   }
-  
+
 } EXEC_ACTION_END;
 
 DSMDisposable* getObjectFromVariable(DSMSession* sc_sess, const string& var_name) {

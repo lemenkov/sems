@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -35,13 +35,13 @@
 sip_uri::sip_uri()
     : scheme(UNKNOWN),
       trsp(NULL)
-{   
+{
 }
 
 sip_uri::~sip_uri()
 {
     list<sip_avp*>::iterator it;
-    
+
     for(it = params.begin();
 	it != params.end(); ++it) {
 
@@ -59,7 +59,7 @@ sip_uri::~sip_uri()
 static int parse_sip_uri(sip_uri* uri, const char* beg, int len)
 {
     enum {
-	URI_USER=0, 
+	URI_USER=0,
 	URI_PW,
 	URI_HOST,
 	URI_HOST_V6,
@@ -78,7 +78,7 @@ static int parse_sip_uri(sip_uri* uri, const char* beg, int len)
 
     // Search for '@', so that we can decide
     // wether to start in URI_USER or URI_HOST state.
-    // This is not very efficient, but it makes the 
+    // This is not very efficient, but it makes the
     // parser much easier!
 
     for(;c!=beg+len;c++){
@@ -137,7 +137,7 @@ static int parse_sip_uri(sip_uri* uri, const char* beg, int len)
 		break;
 
 	    case URI_PW:
-		uri->passwd.len = c - uri->passwd.s; 
+		uri->passwd.len = c - uri->passwd.s;
 		st = URI_HOST;
 		uri->host.set(c+1,0);
 		break;
@@ -161,7 +161,7 @@ static int parse_sip_uri(sip_uri* uri, const char* beg, int len)
 		uri->port_str.len = c - uri->port_str.s;
 		st = URI_PNAME;
 		tmp1.set(c+1,0);
-		break; 
+		break;
 
 	    case URI_PNAME:
 		//DBG("Empty URI parameter\n");
@@ -290,7 +290,7 @@ static int parse_sip_uri(sip_uri* uri, const char* beg, int len)
 	break;
 
     case URI_PORT:
-	uri->port_str.len = c - uri->port_str.s; 
+	uri->port_str.len = c - uri->port_str.s;
 	break;
 
     case URI_PNAME:
@@ -304,12 +304,12 @@ static int parse_sip_uri(sip_uri* uri, const char* beg, int len)
     case URI_PVALUE:
 	tmp2.len = c - tmp2.s;
 	uri->params.push_back(new sip_avp(tmp1,tmp2));
-	
+
 	//DBG("uri param: \"%.*s\"=\"%.*s\"\n",
 	//    tmp1.len, tmp1.s,
 	//    tmp2.len, tmp2.s);
 	break;
-	
+
     case URI_HNAME:
 	DBG("Empty URI header\n");
 	return MALFORMED_URI;
@@ -317,7 +317,7 @@ static int parse_sip_uri(sip_uri* uri, const char* beg, int len)
     case URI_HVALUE:
 	tmp2.len = c - tmp2.s;
 	uri->hdrs.push_back(new sip_avp(tmp1,tmp2));
-	
+
 	//DBG("uri hdr: \"%.*s\"=\"%.*s\"\n",
 	//    tmp1.len, tmp1.s,
 	//    tmp2.len, tmp2.s);

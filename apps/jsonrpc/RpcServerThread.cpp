@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 TelTech Systems Inc.
- * 
+ *
  * This file is part of SEMS, a free SIP media server.
  *
  * SEMS is free software; you can redistribute it and/or modify
@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -67,7 +67,7 @@ void RpcServerThread::process(AmEvent* event) {
   // todo: check event type - for now handle all types equally
 
   if (server_event->event_id == JsonServerEvent::SendMessage) {
-    JsonServerSendMessageEvent* snd_msg_ev = 
+    JsonServerSendMessageEvent* snd_msg_ev =
       dynamic_cast<JsonServerSendMessageEvent*>(server_event);
 
     if (NULL == snd_msg_ev) {
@@ -78,8 +78,8 @@ void RpcServerThread::process(AmEvent* event) {
     if (NULL == connection) {
       DBG("getting connection for id %s\n", snd_msg_ev->connection_id.c_str());
       JsonrpcPeerConnection* js_connection = JsonRPCServerLoop::getConnection(snd_msg_ev->connection_id);
-      if ((NULL == js_connection) || 
-	  (NULL == 
+      if ((NULL == js_connection) ||
+	  (NULL ==
 	   (connection = dynamic_cast<JsonrpcNetstringsConnection*>(js_connection))))  {
 	ERROR("getting connection for id %s - message will not be sent\n",
 	      snd_msg_ev->connection_id.c_str());
@@ -88,7 +88,7 @@ void RpcServerThread::process(AmEvent* event) {
     }
 
     if (!snd_msg_ev->is_reply) {
-      if (JsonRpcServer::createRequest(snd_msg_ev->reply_link, snd_msg_ev->method, 
+      if (JsonRpcServer::createRequest(snd_msg_ev->reply_link, snd_msg_ev->method,
 				       snd_msg_ev->params, connection,
 				       snd_msg_ev->udata,
 				       snd_msg_ev->id.empty())) {
@@ -114,7 +114,7 @@ void RpcServerThread::process(AmEvent* event) {
   int res = 0;
   if (connection->messagePending() && connection->messageIsRecv()) {
     DBG("processing message >%.*s<\n", connection->msg_size, connection->msgbuf);
-    res = JsonRpcServer::processMessage(connection->msgbuf, &connection->msg_size, 
+    res = JsonRpcServer::processMessage(connection->msgbuf, &connection->msg_size,
 					connection);
     if (res<0) {
       INFO("error processing message - closing connection\n");
@@ -142,7 +142,7 @@ void RpcServerThread::process(AmEvent* event) {
     }
   }
 
-  if (processed_message && 
+  if (processed_message &&
       (connection->flags & JsonrpcPeerConnection::FL_CLOSE_ALWAYS)) {
     DBG("closing connection marked as FL_CLOSE_ALWAYS\n");
     connection->close();
@@ -153,17 +153,17 @@ void RpcServerThread::process(AmEvent* event) {
   }
 
   // give back connection into server loop
-  JsonRPCServerLoop::returnConnection(connection);  
+  JsonRPCServerLoop::returnConnection(connection);
 
   // ev_io_init(&cli->ev_write,write_cb,cli->fd,EV_WRITE);
-  // ev_io_start(loop,&cli->ev_write);   
+  // ev_io_start(loop,&cli->ev_write);
 }
 
 
 RpcServerThreadpool::RpcServerThreadpool() {
-  // one thread is started here so that 
+  // one thread is started here so that
   // in app initialization code, there is already
-  // a server thread available to receive events 
+  // a server thread available to receive events
   DBG("starting one server thread for startup requests...\n");
   addThreads(1);
 }
@@ -171,7 +171,7 @@ RpcServerThreadpool::RpcServerThreadpool() {
 RpcServerThreadpool::~RpcServerThreadpool() {
 }
 
-/** round-robin dispatch to one thread */  
+/** round-robin dispatch to one thread */
 void RpcServerThreadpool::dispatch(AmEvent* ev) {
   threads_mut.lock();
   if (!threads.size()) {

@@ -14,7 +14,7 @@ int raw_sender::init()
   if(rsock >= 0) {
     return 0;
   }
-  
+
   rsock = raw_udp_socket(1);
   if(rsock < 0) {
     if(errno == EPERM) {

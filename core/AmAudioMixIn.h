@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmAudioMixIn.h */
@@ -36,13 +36,13 @@
 
 /**
  * \brief \ref AmAudio to mix in every n seconds a file
- * 
+ *
  * This is only for output (e.g. mixing in some tones into a call)
- *  
- * AmAudio that plays Audio A and 
+ *
+ * AmAudio that plays Audio A and
  * every s seconds mixes in AudioFile B with level l.
  * If l == 0, playback of A is not continued when playing B,
- * which means that it continues right where it was before 
+ * which means that it continues right where it was before
  * playback of B started.
  *
  */
@@ -68,8 +68,8 @@ class AmAudioMixIn : public AmAudio {
 
 
  public:
-  AmAudioMixIn(AmAudio* A, AmAudio* B, 
-	       unsigned int s, double l, 
+  AmAudioMixIn(AmAudio* A, AmAudio* B,
+	       unsigned int s, double l,
 	       unsigned int flags = 0);
   ~AmAudioMixIn();
 
@@ -79,7 +79,7 @@ class AmAudioMixIn : public AmAudio {
   // not used
   int read(unsigned int user_ts, unsigned int size){ return -1; }
   int write(unsigned int user_ts, unsigned int size){ return -1; }
-    
+
   // override AmAudio
   int get(unsigned long long system_ts, unsigned char* buffer,
 	  int output_sample_rate, unsigned int nb_samples);

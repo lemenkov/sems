@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -149,7 +149,7 @@ string long2hex(unsigned long val)
 /** Convert a double to a string. (from jsoncpp) */
 string double2str(double val) {
   char buffer[32];
-  sprintf(buffer, "%#.16g", val); 
+  sprintf(buffer, "%#.16g", val);
   char* ch = buffer + strlen(buffer) - 1;
   if (*ch != '0') return buffer; // nothing to truncate, so save time
   while(ch > buffer && *ch == '0'){
@@ -185,7 +185,7 @@ string double2str(double val) {
  * Convert a reversed hex string to uint.
  * @param str    [in]  string to convert.
  * @param result [out] result integer.
- * @return true if failed. 
+ * @return true if failed.
  */
 bool reverse_hex2int(const string& str, unsigned int& result)
 {
@@ -198,13 +198,13 @@ bool reverse_hex2int(const string& str, unsigned int& result)
     result <<= 4;
     mychar=*pc;
 
-    if ( mychar >='0' && mychar <='9') 
+    if ( mychar >='0' && mychar <='9')
       result += mychar -'0';
-    else if (mychar >='a' && mychar <='f') 
+    else if (mychar >='a' && mychar <='f')
       result += mychar -'a'+10;
-    else if (mychar  >='A' && mychar <='F') 
+    else if (mychar  >='A' && mychar <='F')
       result += mychar -'A'+10;
-    else 
+    else
       return true;
   }
 
@@ -496,7 +496,7 @@ int parse_return_code(const char* lbuf, unsigned int& res_code, string& res_msg 
   }
 
   // wrap spaces and tabs
-  while( (*cur == ' ') || (*cur == '\t') || (*cur =='-')) 
+  while( (*cur == ' ') || (*cur == '\t') || (*cur =='-'))
     cur++;
 
   res_msg = cur;
@@ -555,7 +555,7 @@ string add2path( const string& path, int n_suffix, ...)
 {
   va_list ap;
   string outpath = path;
-    
+
   va_start(ap,n_suffix);
 
   for(int i=0; i<n_suffix; i++){
@@ -583,8 +583,8 @@ int get_local_addr_for_dest(sockaddr_storage* remote_ip, sockaddr_storage* local
   }
 
   socklen_t len=sizeof(sockaddr_storage);
-  if (connect(temp_sock, (sockaddr*)remote_ip, 
-	      remote_ip->ss_family == AF_INET ? 
+  if (connect(temp_sock, (sockaddr*)remote_ip,
+	      remote_ip->ss_family == AF_INET ?
 	      sizeof(sockaddr_in) : sizeof(sockaddr_in6))==-1) {
 
       ERROR("connect failed: %s\n",
@@ -656,7 +656,7 @@ int get_local_addr_for_dest(const string& remote_ip, string& local)
     local = tmp_addr;
     return 0;
   }
-  
+
   return -1;
 }
 
@@ -677,8 +677,8 @@ string extract_tag(const string& addr)
   return addr.substr(p,p_end-p);
 }
 
-bool key_in_list(const string& s_list, const string& key, 
-		 char list_delim) 
+bool key_in_list(const string& s_list, const string& key,
+		 char list_delim)
 {
   size_t pos = 0;
   size_t pos2 = 0;
@@ -695,7 +695,7 @@ bool key_in_list(const string& s_list, const string& key,
       return true;
     if (pos_n == string::npos)
       return false;
-    while ((pos_n<s_list.length()) && 
+    while ((pos_n<s_list.length()) &&
 	   ((s_list[pos_n] == ' ')||(s_list[pos_n] == list_delim)||
 	    (s_list[pos_n] == '\n')))
       pos_n++;
@@ -706,28 +706,28 @@ bool key_in_list(const string& s_list, const string& key,
   return false;
 }
 
-string strip_header_params(const string& hdr_string) 
+string strip_header_params(const string& hdr_string)
 {
   size_t val_begin = 0; // skip trailing ' '
-  for (;(val_begin<hdr_string.length()) && 
+  for (;(val_begin<hdr_string.length()) &&
 	 hdr_string[val_begin]==' ';val_begin++);
   // strip parameters
   size_t val_end = hdr_string.find(';', val_begin);
-  if (val_end == string::npos) 
+  if (val_end == string::npos)
     val_end=hdr_string.length();
   return hdr_string.substr(val_begin, val_end-val_begin);
 }
 
-string get_header_param(const string& hdr_string, 
-			const string& param_name) 
+string get_header_param(const string& hdr_string,
+			const string& param_name)
 {
   size_t pos = 0;
   while (pos<hdr_string.length()) {
     pos = hdr_string.find(';',pos);
-    if (pos == string::npos) 
+    if (pos == string::npos)
       return "";
     if ((hdr_string.length()>pos+param_name.length()+1)
-	&& hdr_string.substr(++pos, param_name.length())==param_name 
+	&& hdr_string.substr(++pos, param_name.length())==param_name
 	&& hdr_string[pos+param_name.length()] == '=') {
       size_t pos2 = pos+param_name.length()+1;
       while(pos2<hdr_string.length()){
@@ -745,7 +745,7 @@ string get_header_param(const string& hdr_string,
 
 	  break;
       }
-      return hdr_string.substr(pos + param_name.length() + 1, // skip 'param=' 
+      return hdr_string.substr(pos + param_name.length() + 1, // skip 'param='
 			       pos2 - pos - param_name.length() - 1);
     }
     pos +=param_name.length();
@@ -762,7 +762,7 @@ string get_header_keyvalue(const string& param_hdr, const string& short_name, co
   return get_header_keyvalue(param_hdr, name);
 }
 
-/** 
+/**
  * get value from parameter header with the name @param name
  * while skipping escaped values
  */
@@ -789,14 +789,14 @@ string get_header_keyvalue_single(const string& param_hdr, const string& name) {
 #define ST_VALUE    6
 #define ST_VAL_ESC  7
 
-  size_t p=0, k_begin=0, corr=0, 
+  size_t p=0, k_begin=0, corr=0,
     v_begin=0, v_end=0;
 
   char last = ' ';
   char esc_char = ' ';
 
   unsigned int st = ST_BEGINKEY;
-  
+
   while (p<param_hdr.length() && !v_end) {
     char curr = param_hdr[p];
     // DBG("curr %c, st=%d, corr=%d\n", curr, st, corr);
@@ -860,9 +860,9 @@ string get_header_keyvalue_single(const string& param_hdr, const string& name) {
       case ' ':
       case '\t':
 	break;
-      case '=': 
+      case '=':
 	st = ST_FINDVAL; break;
-      default: { 
+      default: {
 	  st = ST_FINDBGN;
 	  corr=0;
 	  p=k_begin; // will continue searching one after k_begin
@@ -882,7 +882,7 @@ string get_header_keyvalue_single(const string& param_hdr, const string& name) {
 	esc_char = curr;
 	v_begin=p;
       } break;
-      default: 
+      default:
 	st = ST_VALUE;
 	v_begin=p;
       }
@@ -916,7 +916,7 @@ string get_header_keyvalue_single(const string& param_hdr, const string& name) {
 
   if (!v_end && (st == ST_VALUE || st == ST_VAL_ESC))
     v_end = p;
-  
+
   if (v_begin && v_end) {
     if ((v_end - v_begin > 1) &&
 	(param_hdr[v_begin] == param_hdr[v_end-1]) &&
@@ -924,7 +924,7 @@ string get_header_keyvalue_single(const string& param_hdr, const string& name) {
 	return param_hdr.substr(v_begin+1, v_end-v_begin-2); // whole value quoted
 
     return param_hdr.substr(v_begin, v_end-v_begin);
-  }  else 
+  }  else
     return "";
 }
 
@@ -944,7 +944,7 @@ void parse_app_params(const string& hdrs, map<string,string>& app_params)
 {
   // TODO: use real parser with quoting and optimize
   vector<string> items = explode(getHeader(hdrs, PARAM_HDR, true), ";");
-  for (vector<string>::iterator it=items.begin(); 
+  for (vector<string>::iterator it=items.begin();
        it != items.end(); it++) {
     vector<string> kv = explode(*it, "=");
     if (kv.size() == 2) {
@@ -982,13 +982,13 @@ unsigned int get_random()
   _s_rand_mut.lock();
   unsigned int r = rand_r(&_s_rand);
   _s_rand_mut.unlock();
-    
+
   return r;
 }
 
 // Explode string by a separator to a vector
 // see http://stackoverflow.com/questions/236129/c-how-to-split-a-string
-std::vector<string> explode(const string& s, const string& delim, 
+std::vector<string> explode(const string& s, const string& delim,
 			    const bool keep_empty) {
   vector<string> result;
   if (delim.empty()) {
@@ -1025,12 +1025,12 @@ void add_env_path(const char* name, const string& path)
   assert(name);
   if((old_path = getenv((char*)name)) != 0) {
     if(strlen(old_path)){
-	    
+
       if(regcomp(&path_reg,("[:|^]" + path + "[:|$]").c_str(),REG_NOSUB)){
 	ERROR("could not compile regex\n");
 	return;
       }
-	    
+
       if(!regexec(&path_reg,old_path,0,0,0)) { // match
 	regfree(&path_reg);
 	return; // do nothing
@@ -1049,7 +1049,7 @@ void add_env_path(const char* name, const string& path)
 #endif
 }
 
-/** skip to the end of a string enclosed in round brackets, skipping more 
+/** skip to the end of a string enclosed in round brackets, skipping more
     bracketed items, too */
 size_t skip_to_end_of_brackets(const string& s, size_t start) {
   size_t res = start;
@@ -1095,7 +1095,7 @@ bool read_regex_mapping(const string& fname, const char* sep,
       }
       regex_t app_re;
       if (regcomp(&app_re, re_v[0].c_str(), REG_EXTENDED)) {
-	ERROR("compiling regex '%s' in %s.\n", 
+	ERROR("compiling regex '%s' in %s.\n",
 	      re_v[0].c_str(), fname.c_str());
 	return false;
       }
@@ -1144,7 +1144,7 @@ bool run_regex_mapping(const RegexMappingVector& mapping, const char* test_s,
   return false;
 }
 
-// These function comes basically from ser's uac module 
+// These function comes basically from ser's uac module
 void cvt_hex(HASH bin, HASHHEX hex)
 {
   unsigned short i;

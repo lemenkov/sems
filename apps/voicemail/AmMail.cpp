@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -39,7 +39,7 @@
 
 
 AmMail::AmMail(const string& _from, const string& _subject,
-	       const string& _to, const string& _body, 
+	       const string& _to, const string& _body,
 	       const string& _header)
   : from(_from), subject(_subject), body(_body), to(_to),
     header(_header), clean_up(0), error_count(0)
@@ -78,7 +78,7 @@ int AmMailDeamon::sendQueued(AmMail* mail)
   //     FILE* tst_fp;
   //     for( Attachements::const_iterator att_it = mail->attachements.begin();
   // 	 att_it != mail->attachements.end(); ++att_it ){
-	
+
   // 	if(!(tst_fp = fopen(att_it->fullname.c_str(),"r"))){
   // 	    ERROR("%s\n",strerror(errno));
   // 	    return -1;
@@ -105,7 +105,7 @@ void AmMailDeamon::run()
     AmSmtpClient smtp;
     if (smtp.connect(AnswerMachineFactory::SmtpServerAddress,
 		     AnswerMachineFactory::SmtpServerPort)) {
-	    
+
       WARN("Mail deamon could not connect to SMTP server at <%s:%i>\n",
 	   AnswerMachineFactory::SmtpServerAddress.c_str(),
 	   AnswerMachineFactory::SmtpServerPort);
@@ -133,7 +133,7 @@ void AmMailDeamon::run()
 	cur_mail->error_count++;
       }
       else {
-	// todo: save messages with errors somewhere? 
+	// todo: save messages with errors somewhere?
 	if(cur_mail->clean_up)
 	  (*(cur_mail->clean_up))(cur_mail);
 	delete cur_mail;

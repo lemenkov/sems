@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -65,7 +65,7 @@ class RtmpFactory
   // to enable inbound calls to RTMP clients
   map<string,RtmpConnection*> connections;
   AmMutex                     m_connections;
-  
+
   // registrar_client instance pointer
   AmDynInvoke* di_reg_client;
 
@@ -84,7 +84,7 @@ public:
 
   const RtmpConfig* getConfig() { return &cfg; }
   AmDynInvoke* getRegClient() { return di_reg_client; }
-  
+
   int addConnection(const string& ident, RtmpConnection*);
   void removeConnection(const string& ident);
 };

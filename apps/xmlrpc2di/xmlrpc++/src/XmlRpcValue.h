@@ -59,7 +59,7 @@ namespace XmlRpc {
     XmlRpcValue(double value)  : _type(TypeDouble) { _value.asDouble = value; }
 
     //! Construct an XmlRpcValue with a string value
-    XmlRpcValue(std::string const& value) : _type(TypeString) 
+    XmlRpcValue(std::string const& value) : _type(TypeString)
     { _value.asString = new std::string(value); }
 
     //! Construct an XmlRpcValue with a string value.
@@ -69,7 +69,7 @@ namespace XmlRpc {
 
     //! Construct an XmlRpcValue with a date/time value.
     //! @param value A pointer to a struct tm (see localtime)
-    XmlRpcValue(struct tm* value)  : _type(TypeDateTime) 
+    XmlRpcValue(struct tm* value)  : _type(TypeDateTime)
     { _value.asTime = new struct tm(*value); }
 
     //! Construct an XmlRpcValue with a binary data value
@@ -114,32 +114,32 @@ namespace XmlRpc {
     bool operator!=(XmlRpcValue const& other) const;
 
     //! Treat an XmlRpcValue as a bool.
-    //! Throws XmlRpcException if the value is initialized to 
+    //! Throws XmlRpcException if the value is initialized to
     //! a type that is not TypeBoolean.
     operator bool&()          { assertTypeOrInvalid(TypeBoolean); return _value.asBool; }
 
     //! Treat an XmlRpcValue as an int.
-    //! Throws XmlRpcException if the value is initialized to 
+    //! Throws XmlRpcException if the value is initialized to
     //! a type that is not TypeInt.
     operator int&()           { assertTypeOrInvalid(TypeInt); return _value.asInt; }
 
     //! Treat an XmlRpcValue as a double.
-    //! Throws XmlRpcException if the value is initialized to 
+    //! Throws XmlRpcException if the value is initialized to
     //! a type that is not TypeDouble.
     operator double&()        { assertTypeOrInvalid(TypeDouble); return _value.asDouble; }
 
     //! Treat an XmlRpcValue as a string.
-    //! Throws XmlRpcException if the value is initialized to 
+    //! Throws XmlRpcException if the value is initialized to
     //! a type that is not TypeString.
     operator std::string&()   { assertTypeOrInvalid(TypeString); return *_value.asString; }
 
     //! Access the BinaryData value.
-    //! Throws XmlRpcException if the value is initialized to 
+    //! Throws XmlRpcException if the value is initialized to
     //! a type that is not TypeBase64.
     operator BinaryData&()    { assertTypeOrInvalid(TypeBase64); return *_value.asBinary; }
 
     //! Access the DateTime value.
-    //! Throws XmlRpcException if the value is initialized to 
+    //! Throws XmlRpcException if the value is initialized to
     //! a type that is not TypeDateTime.
     operator struct tm&()     { assertTypeOrInvalid(TypeDateTime); return *_value.asTime; }
 
@@ -165,7 +165,7 @@ namespace XmlRpc {
 
     //! Access the struct value map.
     //! Can be used to iterate over the entries in the map to find all defined entries.
-    operator ValueStruct const&() { assertStruct(); return *_value.asStruct; } 
+    operator ValueStruct const&() { assertStruct(); return *_value.asStruct; }
 
     // Accessors
     //! Return true if the value has been set to something.
@@ -248,7 +248,7 @@ namespace XmlRpc {
       ValueArray*   asArray;
       ValueStruct*  asStruct;
     } _value;
-    
+
   };
 } // namespace XmlRpc
 

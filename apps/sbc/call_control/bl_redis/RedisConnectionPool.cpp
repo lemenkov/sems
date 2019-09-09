@@ -2,7 +2,7 @@
 #include "log.h"
 
 
-RedisConnectionPool::RedisConnectionPool() 
+RedisConnectionPool::RedisConnectionPool()
   : total_connections(0), failed_connections(0),
     have_active_connection(false), try_connect(true)
 {
@@ -13,7 +13,7 @@ RedisConnectionPool::~RedisConnectionPool() {
   //     redisFree(redis_context);
 }
 
-void RedisConnectionPool::set_config(string& server, unsigned int port, 
+void RedisConnectionPool::set_config(string& server, unsigned int port,
 				     vector<unsigned int> timers,
 				     unsigned int max_conn_wait) {
   redis_server = server;

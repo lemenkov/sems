@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -56,7 +56,7 @@ int AnnounceB2BFactory::onLoad()
   configureModule(cfg);
 
   AnnouncePath = cfg.getParameter("announce_path",ANNOUNCE_PATH);
-  if( !AnnouncePath.empty() 
+  if( !AnnouncePath.empty()
       && AnnouncePath[AnnouncePath.length()-1] != '/' )
     AnnouncePath += "/";
 
@@ -79,16 +79,16 @@ AmSession* AnnounceB2BFactory::onInvite(const AmSipRequest& req, const string& a
   string announce_path = AnnouncePath;
   string announce_file = announce_path + req.domain
     + "/" + req.user + ".wav";
-    
+
   DBG("trying '%s'\n",announce_file.c_str());
   if(file_exists(announce_file))
     return new AnnounceCallerDialog(announce_file);
-    
+
   announce_file = announce_path + req.user + ".wav";
   DBG("trying '%s'\n",announce_file.c_str());
   if(file_exists(announce_file))
     return new AnnounceCallerDialog(announce_file);
-    
+
   announce_file = AnnouncePath + AnnounceFile;
   return new AnnounceCallerDialog(announce_file);
 }
@@ -118,7 +118,7 @@ void AnnounceCallerDialog::onSessionStart()
 
   if(wav_file.open(filename,AmAudioFile::Read))
     throw string("AnnouncementDialog::onSessionStart: Cannot open file\n");
-    
+
   setOutput(&wav_file);
 
   AmB2BCallerSession::onSessionStart();
@@ -132,7 +132,7 @@ void AnnounceCallerDialog::process(AmEvent* event)
 
     if (getCalleeStatus() != None)
       return;
-	
+
     // detach this session from the media
     // because we will stay in signaling only
     AmMediaProcessor::instance()->removeSession(this);
@@ -140,6 +140,6 @@ void AnnounceCallerDialog::process(AmEvent* event)
     connectCallee(callee_addr, callee_uri);
     return;
   }
-    
+
   AmB2BCallerSession::process(event);
 }

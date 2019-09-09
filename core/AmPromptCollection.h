@@ -19,8 +19,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmPromptCollection.h */
@@ -30,7 +30,7 @@
 /**
  *
  * Example how to use:
- * 
+ *
  *  AM_PROMPT_START;
  *  AM_PROMPT_ADD("enter_pin", "path/to/default/enter_pin.wav");
  *  AM_PROMPT_ADD("ok", "path/to/default/ok.wav");
@@ -75,19 +75,19 @@ class AmPromptCollection {
  public:
   AmPromptCollection();
   ~AmPromptCollection();
-  
+
   /**
    * get configuration for announcements from cfg,
    * check for file existence
    * @param announcements : name, default file for announcement
    */
-  int configureModule(AmConfigReader& cfg, 
+  int configureModule(AmConfigReader& cfg,
 		      vector<std::pair<string, string> >& announcements,
-		      const char* mod_name); 
+		      const char* mod_name);
   /**
    * add a prompt with explicit filename
    */
-  int setPrompt(const string& name, 
+  int setPrompt(const string& name,
 		const string& filename,
 		const char* mod_name);
 
@@ -97,11 +97,11 @@ class AmPromptCollection {
   bool hasPrompt(const string& name);
 
   /**
-   * add the announcement identified with  @param name 
+   * add the announcement identified with  @param name
    * to the playlist @list
    */
-  int addToPlaylist(const string& name, long sess_id, 
-		    AmPlaylist& list, bool front=false, 
+  int addToPlaylist(const string& name, long sess_id,
+		    AmPlaylist& list, bool front=false,
 		    bool loop=false);
   /**
    * cleanup allocated object of sess_id
@@ -109,8 +109,8 @@ class AmPromptCollection {
   void cleanup(long sess_id);
 };
 
-/** 
- *  \brief AmAudioFile with filename and open flag 
+/**
+ *  \brief AmAudioFile with filename and open flag
  */
 
 class AudioFileEntry : public AmAudioFile {
@@ -120,7 +120,7 @@ class AudioFileEntry : public AmAudioFile {
 public:
   AudioFileEntry();
   ~AudioFileEntry();
-  
+
   int load(const std::string& filename);
   bool isOpen() { return isopen; }
 

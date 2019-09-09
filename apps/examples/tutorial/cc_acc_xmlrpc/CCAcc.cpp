@@ -50,7 +50,7 @@ void CCAcc::invoke(const string& method, const AmArg& args, AmArg& ret)
        ret.push(getCredit(args.get(0).asCStr()));
      } else if(method == "subtractCredit"){
        ret.push(subtractCredit(args.get(0).asCStr(),
-			      args.get(1).asInt()));	
+			      args.get(1).asInt()));
      } else if(method == "connectCall"){
        //
      } else if(method == "_list"){
@@ -63,7 +63,7 @@ void CCAcc::invoke(const string& method, const AmArg& args, AmArg& ret)
 }
 
 /* accounting functions... */;
-int CCAcc::getCredit(string pin) {	
+int CCAcc::getCredit(string pin) {
    const char* serverAddress;
    int port;
    serverAddress = "localhost";
@@ -90,8 +90,8 @@ int CCAcc::subtractCredit(string pin, int amount) {
    XmlRpcValue xmlArg;
    xmlArg[0][0]["methodName"] = "subtractCredit";
    xmlArg[0][0]["pin"] = pin;
-   xmlArg[0][0]["amount"] = amount;	
-   DBG("subtractCredit pin# '%s', Seconds '%u'.\n", pin.c_str(),  
+   xmlArg[0][0]["amount"] = amount;
+   DBG("subtractCredit pin# '%s', Seconds '%u'.\n", pin.c_str(),
 amount );
    xmlrpccall.execute("subtractCredit", xmlArg, result);
    int res = result;

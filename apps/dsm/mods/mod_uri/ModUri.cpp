@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "ModUri.h"
@@ -70,7 +70,7 @@ EXEC_ACTION_START(URIParseAction) {
     sc_sess->SET_STRERROR("parsing URI '"+uri+"%s' failed");
     return false;
   }
-  
+
   sc_sess->var[prefix+"user"]         = p.uri_user;
   sc_sess->var[prefix+"host"]         = p.uri_host;
   sc_sess->var[prefix+"port"]         = p.uri_port;
@@ -93,7 +93,7 @@ EXEC_ACTION_START(URIParseNameaddrAction) {
     sc_sess->SET_STRERROR("parsing nameaddr '"+uri+"%s' failed");
     return false;
   }
-  
+
   sc_sess->var[prefix+"display_name"] = p.display_name;
   sc_sess->var[prefix+"user"]         = p.uri_user;
   sc_sess->var[prefix+"host"]         = p.uri_host;
@@ -115,8 +115,8 @@ EXEC_ACTION_START(URIGetHeaderAction) {
   string hname  = resolveVars(par1, sess, sc_sess, event_params);
   string dstname = resolveVars(par2, sess, sc_sess, event_params);
 
-  sc_sess->var[dstname] = getHeader(sc_sess->var["hdrs"], hname, true);  
-  DBG("got header '%s' value '%s' as $%s\n", 
+  sc_sess->var[dstname] = getHeader(sc_sess->var["hdrs"], hname, true);
+  DBG("got header '%s' value '%s' as $%s\n",
       hname.c_str(), sc_sess->var[dstname].c_str(), dstname.c_str());
 
 } EXEC_ACTION_END;

@@ -28,7 +28,7 @@ UACAuthCred* AmUACAuth::unpackCredentials(const AmArg& arg) {
 bool AmUACAuth::enable(AmSession* s) {
   bool res = false;
 
-  AmSessionEventHandlerFactory* uac_auth_f = 
+  AmSessionEventHandlerFactory* uac_auth_f =
     AmPlugIn::instance()->getFactory4Seh("uac_auth");
   if (uac_auth_f != NULL) {
     AmSessionEventHandler* h = uac_auth_f->getHandler(s);

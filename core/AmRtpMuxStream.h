@@ -8,12 +8,12 @@
 #define MAX_RTP_HDR_LEN 64
 #define MAX_MUX_QUEUE_SIZE 4096 // way too much over MTU anyway
 
-#define MAX_RTP_PACKET_LEN 512 // way too long - restricted by max mux frame length 
+#define MAX_RTP_PACKET_LEN 512 // way too long - restricted by max mux frame length
 
 #define MUX_PERIODIC_SETUP_FRAME_MS  500
 #define MUX_SETUP_FRAME_REPEAT       3
 
-#define RESYNC_MAX_DELAY 10*8000   // TS resync assumed if out of that window 
+#define RESYNC_MAX_DELAY 10*8000   // TS resync assumed if out of that window
 
 #define DEFAULT_TS_INCREMENT 160
 #include <map>
@@ -113,7 +113,7 @@ class AmRtpMuxStream
 
 {
   MuxStreamState recv_streamstates[256];
-  
+
  public:
   AmRtpMuxStream();
   ~AmRtpMuxStream();

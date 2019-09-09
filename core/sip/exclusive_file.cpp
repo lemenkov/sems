@@ -2,7 +2,7 @@
 #include "singleton.h"
 #include "log.h"
 
-#include <sys/stat.h> 
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <string.h>
 #include <errno.h>
@@ -12,7 +12,7 @@ using std::map;
 
 #ifndef EXCL_BUFFER_SIZE
 #define EXCL_BUFFER_SIZE 1024*1024 /* 1 MB */
-#endif 
+#endif
 
 class _excl_file_reg
 {
@@ -29,7 +29,7 @@ class _excl_file_reg
 
   map<string,excl_file_entry> files;
   AmMutex                     files_mut;
-  
+
 public:
   exclusive_file* get(const string& name, bool& is_new) {
     AmLock l(files_mut);
@@ -116,7 +116,7 @@ int exclusive_file::open(bool& is_new)
     ERROR("file already open\n");
     return -1;
   }
-  
+
   fd = ::open(name.c_str(),O_WRONLY | O_CREAT | O_APPEND,
 	      S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
   if(fd < 0) {
@@ -142,7 +142,7 @@ int exclusive_file::write_to_file(const void* buf, unsigned int len)
   do {
     res = ::write(fd, buf, len);
 
-  } while((res < 0) 
+  } while((res < 0)
           && (errno == EINTR)
           && (++retries < 10));
 
@@ -162,7 +162,7 @@ void exclusive_file::on_flushed()
 }
 
 int exclusive_file::open(const char* filename,
-                         exclusive_file*& excl_fp, 
+                         exclusive_file*& excl_fp,
                          bool& is_new)
 {
   excl_fp = excl_file_reg::instance()->get(filename,is_new);
@@ -187,7 +187,7 @@ int exclusive_file::writev(const struct iovec* iov, int iovcnt)
 {
   // int len=0;
   // for(int i=0; i<iovcnt; i++)
-  //   len += iov[i].iov_len;    
+  //   len += iov[i].iov_len;
   //DBG("async writting (iov) %i bytes to %s",len,name.c_str());
 
   return (int)async_file::writev(iov,iovcnt);

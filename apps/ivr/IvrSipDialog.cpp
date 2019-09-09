@@ -5,7 +5,7 @@
 
 /** \brief IVR wrapper class of AmSipDialog */
 typedef struct {
-    
+
   PyObject_HEAD
   AmSipDialog* p_dlg;
 } IvrSipDialog;
@@ -18,20 +18,20 @@ static PyObject* IvrSipDialog_new(PyTypeObject *type, PyObject *args, PyObject *
 
   self = (IvrSipDialog *)type->tp_alloc(type, 0);
   if (self != NULL) {
-	
+
     PyObject* o_dlg = NULL;
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "O", kwlist, &o_dlg)){
-	    
+
       Py_DECREF(self);
       return NULL;
     }
-    
+
     if ((NULL == o_dlg) || !PyCObject_Check(o_dlg)){
-	    
+
       Py_DECREF(self);
       return NULL;
     }
-	
+
     self->p_dlg = (AmSipDialog*)PyCObject_AsVoidPtr(o_dlg);
   }
 
@@ -40,7 +40,7 @@ static PyObject* IvrSipDialog_new(PyTypeObject *type, PyObject *args, PyObject *
 }
 
 // static void
-// IvrSipDialog_dealloc(IvrSipDialog* self) 
+// IvrSipDialog_dealloc(IvrSipDialog* self)
 // {
 //   self->ob_type->tp_free((PyObject*)self);
 // }
@@ -51,7 +51,7 @@ static PyObject* IvrSipDialog_new(PyTypeObject *type, PyObject *args, PyObject *
   {								\
     return PyString_FromString(self->p_dlg->attr.c_str());	\
   }								\
-								
+
 def_IvrSipDialog_GETTER(IvrSipDialog_getuser,         getUser())
 def_IvrSipDialog_GETTER(IvrSipDialog_getdomain,       getDomain())
 def_IvrSipDialog_GETTER(IvrSipDialog_getlocal_uri,    getLocalUri())
@@ -75,7 +75,7 @@ def_IvrSipDialog_GETTER(IvrSipDialog_getoutbound_proxy, outbound_proxy)
 									\
     self->p_dlg->attr(text);						\
     return 0;								\
-  } 
+  }
 
 def_IvrSipDialog_SETTER(IvrSipDialog_setremote_uri,   setRemoteUri)
 
@@ -120,7 +120,7 @@ static PyGetSetDef IvrSipDialog_getset[] = {
 };
 
 PyTypeObject IvrSipDialogType = {
-    
+
   PyObject_HEAD_INIT(NULL)
   0,                         /*ob_size*/
   "ivr.IvrSipDialog",        /*tp_name*/
@@ -167,9 +167,9 @@ PyObject* IvrSipDialog_FromPtr(AmSipDialog* dlg)
 {
   PyObject* c_dlg = PyCObject_FromVoidPtr(dlg,NULL);
   PyObject* args = Py_BuildValue("(O)",c_dlg);
-    
+
   PyObject* py_dlg = IvrSipDialog_new(&IvrSipDialogType,args,NULL);
-    
+
   Py_DECREF(args);
   Py_DECREF(c_dlg);
 

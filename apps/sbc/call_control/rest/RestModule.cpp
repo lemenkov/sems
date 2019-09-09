@@ -75,7 +75,7 @@ RestModule::RestModule()
 
 RestModule::~RestModule() { }
 
-int RestModule::onLoad() 
+int RestModule::onLoad()
 {
   // FIXME: integrate with other modules using libcurl, better handling of
   // multithreaded access could be helpful, etc...
@@ -155,7 +155,7 @@ void RestModule::invoke(const string& method, const AmArg& args, AmArg& ret)
     // INFO("--------------------------------------------------------------\n");
 
     // cc_name, ltag, call_profile, end_ts_sec, end_ts_usec
-    // args.assertArrayFmt("ssoa"); 
+    // args.assertArrayFmt("ssoa");
     // args[CC_API_PARAMS_TIMESTAMPS].assertArrayFmt("iiiiii");
 
     SBCCallProfile* call_profile =
@@ -191,12 +191,12 @@ static RestParams::Format getFormat(const AmArg &values, RestParams::Format _def
   }
 
   throw string("invalid format parameter value\n");
-  
+
   return _default;
 }
 
 static void setHeaderFilter(SBCCallProfile* call_profile,
-    const string &type, const string &list) 
+    const string &type, const string &list)
 {
   call_profile->headerfilter.push_back(FilterEntry());
 
@@ -228,9 +228,9 @@ void RestModule::start(const string& cc_name, const string& ltag,
   try {
     string url;
 
-    if (!values.hasMember("url")) 
+    if (!values.hasMember("url"))
       throw string("configuration error: url must be configured for REST queries\n");
-      
+
     if (!isArgCStr(values["url"]) || !strlen(values["url"].asCStr())) {
       throw string("configuration error: invalid value of url\n");
     }
@@ -253,9 +253,9 @@ void RestModule::start(const string& cc_name, const string& ltag,
       string hf_type, hf_list;
       params.getIfSet("header_filter", hf_type);
       params.getIfSet("header_list", hf_list);
-      if ( (!hf_type.empty()) || (!hf_list.empty())) 
+      if ( (!hf_type.empty()) || (!hf_list.empty()))
 	setHeaderFilter(call_profile, hf_type, hf_list);
-      
+
       //messagefilter
 
       // sdpfilter, anonymize_sdp

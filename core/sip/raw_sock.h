@@ -20,7 +20,7 @@
  *  @ingroup core
  *  Module: @ref core
  */
-/* 
+/*
  * History:
  * --------
  *  2010-06-07  initial version (from older code) andrei

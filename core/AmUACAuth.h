@@ -10,8 +10,8 @@ class AmUACAuth {
   ~AmUACAuth();
  public:
   /**
-     unpack UAC auth credentials from an AmArg 
-     @return UACAuthCred object, NULL if failed 
+     unpack UAC auth credentials from an AmArg
+     @return UACAuthCred object, NULL if failed
   */
 
   static UACAuthCred* unpackCredentials(const AmArg& arg);

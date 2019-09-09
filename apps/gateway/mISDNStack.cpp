@@ -54,7 +54,7 @@ mISDNChannel* mISDNStack::NewCR(mISDNport *port,mISDN::iframe_t *frame) {
         return iter->second;
     }
 }
-                                                                                                                                                                                        
+
 mISDNChannel* mISDNStack::FindCR(mISDN::iframe_t *frame) {
     std::map<int,mISDNChannel*>::iterator iter=CR_map.find(frame->dinfo);;
     if(iter!=CR_map.end()) {
@@ -75,7 +75,7 @@ mISDNChannel* mISDNStack::FindBC(mISDN::iframe_t *frame) {
         return NULL;
     }
 }
-                                                                                                                                                                                
+
 int mISDNStack::placeCall(const AmSipRequest &req, GWSession *session, const std::string &tonumber, const std::string &fromnumber) {
     //we will have code to choose right port here.
     mISDNChannel *chan = new mISDNChannel(); //(device);
@@ -88,7 +88,7 @@ int mISDNStack::placeCall(const AmSipRequest &req, GWSession *session, const std
     DBG("calling ((mISDNChannel*)m_pstndevice)->placeCall(m_req, tonumber, fromnumber);\n");
     return chan->placeCall(req, tonumber, fromnumber);
 }
-                                            
+
 
 int mISDNStack::GetPortInfo() {
 	int err;
@@ -98,7 +98,7 @@ int mISDNStack::GetPortInfo() {
         iframe_t *frm = (iframe_t *)buff;
         stack_info_t *stinf;
         int device;
-    
+
 	if ((device = mISDN_open()) < 0)  {
                 ERROR("mISDNStack::mISDNStack: mISDN_open() failed: ret=%d errno=%d (%s) Check for mISDN modules and device.\n", device, errno, strerror(errno));
                 return FAIL;
@@ -111,7 +111,7 @@ int mISDNStack::GetPortInfo() {
                 ERROR("Found no card. Please be sure to load card drivers.\n");
                 return FAIL;
         }
-                                                                                
+
         /* loop the number of cards and get their info */
         while(i <= num_cards) {
                 err = mISDN_get_stack_info(device, i, buff, sizeof(buff));
@@ -137,7 +137,7 @@ int mISDNStack::GetPortInfo() {
                         if (stinf->pid.protocol[1] == 0) { useable = 0; INFO(" -> Missing layer 1 protocol.\n"); }
                         if (stinf->pid.protocol[2] == 0) { useable = 0; INFO(" -> Missing layer 2 protocol.\n"); }
                         if (stinf->pid.protocol[2] & ISDN_PID_L2_DF_PTP) { INFO(" -> Interface is Poin-To-Point.\n"); }
-                        if (stinf->pid.protocol[3] == 0) { useable = 0; INFO(" -> Missing layer 3 protocol.\n"); } 
+                        if (stinf->pid.protocol[3] == 0) { useable = 0; INFO(" -> Missing layer 3 protocol.\n"); }
                         else {	switch(stinf->pid.protocol[3] & ~ISDN_PID_FEATURE_MASK) {
                                         case ISDN_PID_L3_DSS1USER: INFO(" -> Protocol: DSS1 (Euro ISDN)\n"); break;
                                         default: useable = 0; INFO(" -> Protocol: unknown protocol 0x%08x\n",stinf->pid.protocol[3]);
@@ -150,7 +150,7 @@ int mISDNStack::GetPortInfo() {
                 i++;
         }
         /* close mISDN */
-        if ((err = mISDN_close(device))) { 
+        if ((err = mISDN_close(device))) {
     		ERROR("mISDN_close() failed: err=%d '%s'\n", err, strerror(err));
                 return FAIL;
         }
@@ -175,7 +175,7 @@ int mISDNStack::init() {
         //manager_t *mgr;
         layer_info_t li;
         stack_info_t *stinf;
-                                
+
 
 	if ((m_mISDNdevice = mISDN_open()) < 0)  { ERROR("mISDNStack::init: mISDN_open() failed: ret=%d errno=%d (%s) Check for mISDN modules and device.\n", m_mISDNdevice, errno, strerror(errno)); return FAIL; }
         DBG("mISDNStack::init: mISDN_opened %d\n",m_mISDNdevice);
@@ -187,10 +187,10 @@ int mISDNStack::init() {
         if (!m_entity) {			ERROR("Cannot request MGR_NEWENTITY from mISDN. Exitting due to software bug.\n"); return FAIL; }
 	DBG("our entity for l3-processes is 0x%08x.\n", m_entity);
 	m_crcount=1; //entity and crcount is used to generate uniqe addr for outgoing calls
-	
+
 	cnt = mISDN_get_stack_count(m_mISDNdevice);
 	if(cnt<=0) { 				ERROR("no devices\n"); return FAIL;}
-	for(port=1;port<=cnt;port++) {	
+	for(port=1;port<=cnt;port++) {
 		pri = ports = nt = 0;
 		ret = mISDN_get_stack_info(m_mISDNdevice, port, buff, sizeof(buff));
 	        if (ret < 0) {	ERROR("Cannot get stack info for port %d (ret=%d)\n", port, ret); }
@@ -213,8 +213,8 @@ int mISDNStack::init() {
 	    	    DBG("Port %d (te)  proto1=0x%08x proto2=0x%08x proto3=0x%08x proto4=0x%08x (nul proto4 is good here)\n",port, stinf->pid.protocol[1],stinf->pid.protocol[2],stinf->pid.protocol[3],stinf->pid.protocol[4]);
                     if (stinf->pid.protocol[1] == 0) { ERROR("Given port %d: Missing layer 1 protocol.\n", port);}
 	            if (stinf->pid.protocol[2] == 0) { ERROR("Given port %d: Missing layer 2 protocol.\n", port);}
-	            if (stinf->pid.protocol[2] & ISDN_PID_L2_DF_PTP) { ptp=1;DBG("Port %d is point-to-point.\n",port); } else { ptp=0;} 
-    	            if (stinf->pid.protocol[3] == 0) { ERROR("Given port %d: Missing layer 3 protocol.\n", port);} 
+	            if (stinf->pid.protocol[2] & ISDN_PID_L2_DF_PTP) { ptp=1;DBG("Port %d is point-to-point.\n",port); } else { ptp=0;}
+    	            if (stinf->pid.protocol[3] == 0) { ERROR("Given port %d: Missing layer 3 protocol.\n", port);}
     	            else {
                 	switch(stinf->pid.protocol[3] & ~ISDN_PID_FEATURE_MASK) {
                     	    case ISDN_PID_L3_DSS1USER: break;
@@ -335,7 +335,7 @@ int mISDNStack::GenerateCR() {
 }
 
 
-                                                                                                                                        
+
 void mISDNStack::run()
 {
 	DBG("running mISDNStack::run...\n");
@@ -366,14 +366,14 @@ void mISDNStack::run()
                 }
 //		DBG("Got something msg_buf_s=%d prim=0x%08x addr=0x%08x dinfo=0x%08x\n",msg_buf_s,frame->prim,frame->addr,frame->dinfo);
 	        port = mISDNport_first;
-                while(port) {	
-            	    if ((frame->addr&MASTER_ID_MASK) == (unsigned int)(port->upper_id&MASTER_ID_MASK)) 
-            		    break; 
-            	    port = port->next; 
+                while(port) {
+            	    if ((frame->addr&MASTER_ID_MASK) == (unsigned int)(port->upper_id&MASTER_ID_MASK))
+            		    break;
+            	    port = port->next;
             	}
-		if (!port) {	
-		    ERROR("message belongs to no mISDNport: prim(0x%x) addr(0x%x) msg->len(%d)\n", frame->prim, frame->addr, msg_buf_s); 
-		    continue; 
+		if (!port) {
+		    ERROR("message belongs to no mISDNport: prim(0x%x) addr(0x%x) msg->len(%d)\n", frame->prim, frame->addr, msg_buf_s);
+		    continue;
 		}
 	        if (frame->addr&FLG_CHILD_STACK) { 		/* child stack */
                 /* b-channel data and messages */
@@ -456,10 +456,10 @@ void mISDNStack::run()
                 	/* l3-data is sent to channel object for processing */
                 	channel=FindCR(frame);
                 	if(channel==NULL) {
-                		ERROR("Cant find channel for message\n"); 
+                		ERROR("Cant find channel for message\n");
                 		continue;
                 	}
-                	if(channel->processMsg(msg_buf,msg_buf_s)!=OK) 	
+                	if(channel->processMsg(msg_buf,msg_buf_s)!=OK)
                 		ERROR("Error processing msg in channel object\n");
                 	continue;
             	    }
@@ -474,11 +474,11 @@ void mISDNStack::l1l2l3_trace_header(struct mISDNport *mISDNport, int port, unsi
         string msgtext;
 	msgtext.assign(mISDNNames::Message(prim&0xffffff00));
 	msgtext.append(mISDNNames::isdn_prim[prim&0x00000003]);
-	
+
         /* add direction */
         if (direction && (prim&0xffffff00)!=CC_NEW_CR && (prim&0xffffff00)!=CC_RELEASE_CR) {
                 if (mISDNport) {
-                        if (mISDNport->ntmode)	{ if (direction == DIRECTION_OUT) msgtext.append(" N->U"); else msgtext.append(" N<-U"); } 
+                        if (mISDNport->ntmode)	{ if (direction == DIRECTION_OUT) msgtext.append(" N->U"); else msgtext.append(" N<-U"); }
                         else 			{ if (direction == DIRECTION_OUT) msgtext.append(" U->N"); else  msgtext.append(" U<-N"); }
                 }
         }
@@ -523,15 +523,15 @@ std::string mISDNStack::dumpIE(char *buf,int len) {
 		if((ie[i].repeated>0) || (ie[i].ridx>0)) {
 		    QI_DUMP(ext[i].ie,"extinfo                  ")
 		    sprintf(x," extinfo[%d]:               cs.codeset=0x%04x cs.locked=0x%04x cs.res1=0x%04x cs.len=0x%04x | v.codeset=0x%04x v.res1=0x%04x v.val=0x%04x\n",
-			i,qi->ext[i].cs.codeset,qi->ext[i].cs.locked,qi->ext[i].cs.res1,qi->ext[i].cs.len, 
+			i,qi->ext[i].cs.codeset,qi->ext[i].cs.locked,qi->ext[i].cs.res1,qi->ext[i].cs.len,
 			qi->ext[i].v.codeset,qi->ext[i].v.res1,qi->ext[i].v.val);
-		    ret.append(x);	
+		    ret.append(x);
 		}
 	    }
 	}
 	ret.append("=========================\n");
 	for(i=0;i<=(len-mISDN_HEADER_LEN)/2;i++) {
-	    sprintf(x," 0x%04x (%c %c),",arr[i], 
+	    sprintf(x," 0x%04x (%c %c),",arr[i],
 	    (p[2*i]>=32)?p[2*i]:'.',
 	     ((p[2*i+1])>=32)?p[2*i+1]:'.');
 	    ret.append(x);
@@ -544,7 +544,7 @@ std::string mISDNStack::dumpIE(char *buf,int len) {
 		}
 		ret.append("\n");
 	} else ret.append("no tail\n");
-	                                
+
 
 	return ret;
 }

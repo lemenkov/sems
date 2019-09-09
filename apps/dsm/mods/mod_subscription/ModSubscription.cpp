@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "ModSubscription.h"
@@ -58,7 +58,7 @@ EXEC_ACTION_START(SIPSUBCreateAction) {
   info.accept = sc_sess->var[params_s+".accept"];
   info.id = sc_sess->var[params_s+".id"];
   unsigned int expires = 0;
-  
+
   if (sc_sess->var.find(params_s+".expires") != sc_sess->var.end()) {
     str2i(sc_sess->var[params_s+".expires"], expires);
   }

@@ -21,8 +21,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -57,7 +57,7 @@ using std::string;
 
 //     if(!len)
 // 	return 0;
-    
+
 //     for(l=len; l && (*msg_c) && (*msg_c !='\n'); msg_c++ ){
 // 	if(*msg_c!='\r'){
 // 	    *(s++) = *msg_c;
@@ -166,7 +166,7 @@ int StatsUDPServer::init()
   memset(&sa,0,sizeof(sa));
   sa.sin_family = AF_INET;
   sa.sin_port = htons(udp_port);
-    
+
   if(!inet_aton(udp_addr.c_str(),(in_addr*)&sa.sin_addr.s_addr)){
     // non valid address
     ERROR("invalid IP in the monit_udp_ip parameter\n");
@@ -226,7 +226,7 @@ void StatsUDPServer::run()
 
     send_reply(reply,addr);
   }
-    
+
 }
 
 static int msg_get_line(char*& msg_c, char* str, size_t len)
@@ -236,7 +236,7 @@ static int msg_get_line(char*& msg_c, char* str, size_t len)
 
   if(!len)
     return 0;
-    
+
   for(l=len; l && (*msg_c) && (*msg_c !='\n'); msg_c++ ){
     *(s++) = *msg_c;
     l--;
@@ -276,7 +276,7 @@ static int msg_get_param(char*& msg_c, string& p, char* line_buf, unsigned int s
   return 0;
 }
 
-int StatsUDPServer::execute(char* msg_buf, string& reply, 
+int StatsUDPServer::execute(char* msg_buf, string& reply,
 			    struct sockaddr_in& addr)
 {
   char buffer[CTRL_MSGBUF_SIZE];
@@ -288,7 +288,7 @@ int StatsUDPServer::execute(char* msg_buf, string& reply,
   if(cmd_str == "calls")
       reply = "Active calls: " + int2str(AmSession::getSessionNum()) + "\n";
   else if (cmd_str == "which") {
-    reply = 
+    reply =
       "calls                              -  number of active calls (Session Container size)\n"
       "which                              -  print available commands\n"
       "version                            -  return SEMS version\n"
@@ -325,11 +325,11 @@ int StatsUDPServer::execute(char* msg_buf, string& reply,
     reply = "200 OK";
   }
   else if (cmd_str.length() > 4 && cmd_str.substr(0, 4) == "set_") {
-    // setters 
+    // setters
     if (cmd_str.substr(4, 8) == "loglevel") {
-      if (!AmConfig::setLogLevel(&cmd_str.c_str()[13])) 
+      if (!AmConfig::setLogLevel(&cmd_str.c_str()[13]))
 	reply= "invalid loglevel value.\n";
-      else 
+      else
 	reply= "loglevel set to "+int2str(log_level)+".\n";
     }
 
@@ -443,8 +443,8 @@ int StatsUDPServer::execute(char* msg_buf, string& reply,
     }
     try {
 
-      // args need to be stored in string vector, 
-      // because stl copyconstructor does not copy 
+      // args need to be stored in string vector,
+      // because stl copyconstructor does not copy
       // underlying c_str
       vector<string> s_args;
       while (p<cmd_str.length()) {
@@ -456,10 +456,10 @@ int StatsUDPServer::execute(char* msg_buf, string& reply,
 	p=p2+1;
       }
       AmArg args;
-      for (vector<string>::iterator it = s_args.begin(); 
+      for (vector<string>::iterator it = s_args.begin();
 	   it != s_args.end(); it++) {
 	args.push(it->c_str());
-// 	DBG("mod '%s' added arg a '%s'\n", 
+// 	DBG("mod '%s' added arg a '%s'\n",
 // 	    fact_name.c_str(),
 // 	    it->c_str());
       }
@@ -491,7 +491,7 @@ int StatsUDPServer::execute(char* msg_buf, string& reply,
       reply = "Exception occured.\n";
       return 0;
     }
-			
+
   }
   else
     reply = "Unknown command: '" + cmd_str + "'\n";

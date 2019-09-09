@@ -20,13 +20,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 #include "amci.h"
-#include "codecs.h" 
+#include "codecs.h"
 #include "../../log.h"
 
 #include <math.h>
@@ -35,10 +35,10 @@
 #include <string.h>
 /**
  * @file plug-in/opus/opus.c
- * OPUS support 
- * This plug-in imports the OPUS Codec. 
+ * OPUS support
+ * This plug-in imports the OPUS Codec.
  *
- * See http://www.opus-codec.org/ . 
+ * See http://www.opus-codec.org/ .
  * Features: <ul>
  *           <li>OPUS codec/payload/subtype
  *           <li>OPUS file format
@@ -112,12 +112,12 @@ BEGIN_EXPORTS( "opus" , opus_load, AMCI_NO_MODULEDESTROY )
 
   BEGIN_CODECS
     CODEC_WITH_FMT( CODEC_OPUS, pcm16_2_opus, opus_2_pcm16, opus_plc,
-           opus_create, 
+           opus_create,
            opus_destroy,
            NULL, NULL ,
 	   opus_negotiate_fmt)
   END_CODECS
-    
+
   BEGIN_PAYLOADS
     PAYLOAD( -1, "opus", _OPUS_RATE, 48000, 2, CODEC_OPUS, AMCI_PT_AUDIO_FRAME )
   END_PAYLOADS
@@ -139,7 +139,7 @@ int opus_load(const char* ModConfigPath) {
   default_format_parameters[0]='\0';
   char conf_file[256];
   if (NULL != ModConfigPath) {
-    sprintf(conf_file, "%sopus.conf",ModConfigPath); 
+    sprintf(conf_file, "%sopus.conf",ModConfigPath);
     FILE* fp = fopen(conf_file, "rt");
     if (fp) {
       char line[80];
@@ -200,7 +200,7 @@ static char* read_param(char* input, const char *param, char** param_value)
     }
   if (*input)
     *input++ = 0;
-    
+
   return input;
 }
 
@@ -208,7 +208,7 @@ static char* read_param(char* input, const char *param, char** param_value)
 
 void decode_format_parameters(const char* format_parameters, unsigned int* maxbandwidth, int* useinbandfec, int* stereo) {
   if (format_parameters && strlen(format_parameters)<=BLEN){
-	
+
     char buffer2[BLEN+1];
     char *buffer = buffer2;
 
@@ -255,7 +255,7 @@ void decode_format_parameters(const char* format_parameters, unsigned int* maxba
 	param_value = buffer;
 	while (*buffer && *buffer!=';')
 	  buffer++;
-		
+
 	if (*buffer)
 	  *buffer++ = 0;
 
@@ -278,11 +278,11 @@ long opus_create(const char* format_parameters, const char** format_parameters_o
   if (format_parameters) {
     DBG("OPUS params: >>%s<<.\n", format_parameters);
     decode_format_parameters(format_parameters, &maxbandwidth, &useinbandfec, &stereo);
-  } 
-    
+  }
+
   codec_inst = (opus_state_t*)malloc(sizeof(opus_state_t));
 
-  if (!codec_inst) 
+  if (!codec_inst)
     return -1;
 
   DBG("OPUS: creating encoder with maxbandwidth=%u, stereo=%s, useinbandfec=%s\n",

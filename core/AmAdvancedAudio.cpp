@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -33,13 +33,13 @@ using std::set;
 #include "math.h"
 
 /* AudioQueue */
-AmAudioQueue::AmAudioQueue() 
+AmAudioQueue::AmAudioQueue()
   : AmAudio(new AmAudioFormat(CODEC_PCM16)), // we get and put in this (internal) fmt
     owning(true)
 {
 }
 
-AmAudioQueue::~AmAudioQueue() { 
+AmAudioQueue::~AmAudioQueue() {
   if (owning) {
     set<AmAudio*> deleted_audios; // don't delete them twice
     for (std::list<AudioQueueEntry>::iterator it = inputQueue.begin();it != inputQueue.end(); it++) {
@@ -48,7 +48,7 @@ AmAudioQueue::~AmAudioQueue() {
 	delete it->audio;
       }
     }
-    
+
     for (std::list<AudioQueueEntry>::iterator it = outputQueue.begin();it != outputQueue.end(); it++) {
       if (deleted_audios.find(it->audio) == deleted_audios.end()) {
 	deleted_audios.insert(it->audio);
@@ -62,17 +62,17 @@ void AmAudioQueue::setOwning(bool _owning) {
   owning = _owning;
 }
 
-int AmAudioQueue::put(unsigned long long system_ts, unsigned char* buffer, 
+int AmAudioQueue::put(unsigned long long system_ts, unsigned char* buffer,
 		      int input_sample_rate, unsigned int size)
 {
    inputQueue_mut.lock();
    int size_trav = (int)size;
-   for (std::list<AudioQueueEntry>::iterator it = inputQueue.begin(); 
+   for (std::list<AudioQueueEntry>::iterator it = inputQueue.begin();
 	it != inputQueue.end(); it++) {
      if (it->audio == NULL)
        continue;
      if (it->put) {
-       size_trav = it->audio->put(system_ts, buffer, 
+       size_trav = it->audio->put(system_ts, buffer,
 				  input_sample_rate, size_trav);
        if (size_trav < 0)
 	 break;
@@ -89,7 +89,7 @@ int AmAudioQueue::put(unsigned long long system_ts, unsigned char* buffer,
    return size_trav;
 }
 
-int AmAudioQueue::get(unsigned long long system_ts, unsigned char* buffer, 
+int AmAudioQueue::get(unsigned long long system_ts, unsigned char* buffer,
 		      int output_sample_rate, unsigned int nb_samples)
 {
   outputQueue_mut.lock();
@@ -99,7 +99,7 @@ int AmAudioQueue::get(unsigned long long system_ts, unsigned char* buffer,
     if (it->audio == NULL)
       continue;
     if (it->put) {
-      size_trav = it->audio->put(system_ts, samples, 
+      size_trav = it->audio->put(system_ts, samples,
 				 output_sample_rate, size_trav);
       if (size_trav < 0)
 	break;
@@ -117,14 +117,14 @@ int AmAudioQueue::get(unsigned long long system_ts, unsigned char* buffer,
 }
 
 void AmAudioQueue::pushAudio(AmAudio* audio, QueueType type, Pos pos, bool write, bool read) {
-  AmMutex* q_mut; 
-  std::list<AudioQueueEntry>* q; 
+  AmMutex* q_mut;
+  std::list<AudioQueueEntry>* q;
   switch (type) {
-  case OutputQueue: 
+  case OutputQueue:
     q_mut = &outputQueue_mut;
     q = &outputQueue;
     break;
-  case InputQueue: 
+  case InputQueue:
   default:  q_mut = &inputQueue_mut;
     q = &inputQueue;
     break;
@@ -147,14 +147,14 @@ int AmAudioQueue::popAudio(QueueType type, Pos pos) {
 }
 
 AmAudio* AmAudioQueue::popAndGetAudio(QueueType type, Pos pos) {
-  AmMutex* q_mut; 
-  std::list<AudioQueueEntry>* q; 
+  AmMutex* q_mut;
+  std::list<AudioQueueEntry>* q;
   switch (type) {
-  case OutputQueue: 
+  case OutputQueue:
     q_mut = &outputQueue_mut;
     q = &outputQueue;
     break;
-  case InputQueue: 
+  case InputQueue:
   default:  q_mut = &inputQueue_mut;
     q = &inputQueue;
     break;
@@ -180,27 +180,27 @@ AmAudio* AmAudioQueue::popAndGetAudio(QueueType type, Pos pos) {
 int AmAudioQueue::removeAudio(AmAudio* audio) {
   bool found = false;
   outputQueue_mut.lock();
-  for (std::list<AudioQueueEntry>::iterator it = outputQueue.begin(); 
+  for (std::list<AudioQueueEntry>::iterator it = outputQueue.begin();
        it != outputQueue.end(); it++) {
     if (it->audio == audio) {
       found = true;
       outputQueue.erase(it);
       break;
     }
-	    
+
   }
   outputQueue_mut.unlock();
   if (found)
     return 0;
   inputQueue_mut.lock();
-  for (std::list<AudioQueueEntry>::iterator it = inputQueue.begin(); 
+  for (std::list<AudioQueueEntry>::iterator it = inputQueue.begin();
        it != inputQueue.end(); it++) {
     if (it->audio == audio) {
       found = true;
       inputQueue.erase(it);
       break;
     }
-	    
+
   }
   inputQueue_mut.unlock();
   if (found)
@@ -219,16 +219,16 @@ AmAudioBridge::AmAudioBridge(unsigned int sample_rate)
   sarr.clear_all();
 }
 
-AmAudioBridge::~AmAudioBridge() { 
+AmAudioBridge::~AmAudioBridge() {
 }
 
-int AmAudioBridge::write(unsigned int user_ts, unsigned int size) {  
-  sarr.write(user_ts, (short*) ((unsigned char*) samples), size >> 1); 
-  return size; 
+int AmAudioBridge::write(unsigned int user_ts, unsigned int size) {
+  sarr.write(user_ts, (short*) ((unsigned char*) samples), size >> 1);
+  return size;
 }
 
-int AmAudioBridge::read(unsigned int user_ts, unsigned int size) { 
-  sarr.read(user_ts, (short*) ((unsigned char*) samples), size >> 1); 
+int AmAudioBridge::read(unsigned int user_ts, unsigned int size) {
+  sarr.read(user_ts, (short*) ((unsigned char*) samples), size >> 1);
   return size;
 }
 
@@ -240,26 +240,26 @@ AmAudioDelay::AmAudioDelay(float delay_sec, unsigned int sample_rate)
   delay = delay_sec;
 }
 
-AmAudioDelay::~AmAudioDelay() { 
+AmAudioDelay::~AmAudioDelay() {
 }
 
 int AmAudioDelay::write(unsigned int user_ts, unsigned int size) {
-  sarr.write(user_ts,(short*) ((unsigned char*) samples), size >> 1); 
-  return size; 
+  sarr.write(user_ts,(short*) ((unsigned char*) samples), size >> 1);
+  return size;
 }
 
 int AmAudioDelay::read(unsigned int user_ts, unsigned int size) {
   sarr.read((unsigned int) (user_ts  - delay*(float)getSampleRate()),
-	    (short*) ((unsigned char*) samples), size >> 1); 
+	    (short*) ((unsigned char*) samples), size >> 1);
   return size;
 }
 
-AmAudioFrontlist::AmAudioFrontlist(AmEventQueue* q) 
+AmAudioFrontlist::AmAudioFrontlist(AmEventQueue* q)
   : AmPlaylist(q), back_audio(NULL)
 {
 }
 
-AmAudioFrontlist::AmAudioFrontlist(AmEventQueue* q, AmAudio* back_audio) 
+AmAudioFrontlist::AmAudioFrontlist(AmEventQueue* q, AmAudio* back_audio)
   : AmPlaylist(q), back_audio(back_audio)
 {
 }
@@ -277,15 +277,15 @@ void AmAudioFrontlist::setBackAudio(AmAudio* new_ba) {
   ba_mut.unlock();
 }
 
-int AmAudioFrontlist::put(unsigned long long system_ts, unsigned char* buffer, 
+int AmAudioFrontlist::put(unsigned long long system_ts, unsigned char* buffer,
 			  int input_sample_rate, unsigned int size) {
 
   // stay consistent with Playlist - if empty return size
-  int res = size; 
+  int res = size;
   ba_mut.lock();
 
   if (isEmpty()) {
-    if (back_audio) 
+    if (back_audio)
       res = back_audio->put(system_ts, buffer, input_sample_rate, size);
   } else {
     res = AmPlaylist::put(system_ts, buffer, input_sample_rate, size);
@@ -295,11 +295,11 @@ int AmAudioFrontlist::put(unsigned long long system_ts, unsigned char* buffer,
   return res;
 }
 
-int AmAudioFrontlist::get(unsigned long long system_ts, unsigned char* buffer, 
+int AmAudioFrontlist::get(unsigned long long system_ts, unsigned char* buffer,
 			  int output_sample_rate, unsigned int nb_samples) {
 
   // stay consistent with Playlist - if empty return size
-  int res = nb_samples; 
+  int res = nb_samples;
 
   ba_mut.lock();
   if (isEmpty() && back_audio) {
@@ -332,7 +332,7 @@ int AmNullAudio::put(unsigned long long system_ts, unsigned char* buffer,
   return size;
 }
 
-int AmNullAudio::get(unsigned long long system_ts, unsigned char* buffer, 
+int AmNullAudio::get(unsigned long long system_ts, unsigned char* buffer,
 		     int output_sample_rate, unsigned int nb_samples)
 {
   int size = (int)(nb_samples << 1);

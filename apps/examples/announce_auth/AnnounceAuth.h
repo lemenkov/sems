@@ -19,8 +19,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -44,7 +44,7 @@ protected:
   void run();
   void on_stop();
 public:
-  void set_dial(const string& r, const string& f, 
+  void set_dial(const string& r, const string& f,
 		const string& fu, const string& t);
 
 
@@ -52,7 +52,7 @@ public:
 
 class AnnounceAuthFactory: public AmSessionFactory
 {
-  DialerThread dialer;    
+  DialerThread dialer;
 
   string auth_realm;
   string auth_user;
@@ -78,7 +78,7 @@ class AnnounceAuthDialog : public AmSession,
 
 public:
   AnnounceAuthDialog(const string& filename,
-		     const string& auth_realm, 
+		     const string& auth_realm,
 		     const string& auth_user,
 		     const string& auth_pwd);
   ~AnnounceAuthDialog();

@@ -16,7 +16,7 @@ using namespace XmlRpc;
 using namespace std;
 
 // Static data
-const char XmlRpcClient::REQUEST_BEGIN[] = 
+const char XmlRpcClient::REQUEST_BEGIN[] =
   "<?xml version=\"1.0\"?>\r\n"
   "<methodCall><methodName>";
 const char XmlRpcClient::REQUEST_END_METHODNAME[] = "</methodName>\r\n";
@@ -67,7 +67,7 @@ XmlRpcClient::XmlRpcClient(const char* host, int port, const char* uri, bool ssl
 }
 
 
-XmlRpcClient::XmlRpcClient(const char* host, int port, 
+XmlRpcClient::XmlRpcClient(const char* host, int port,
                            const char* login, const char* password, const char* uri/*=0*/)
 {
   XmlRpcUtil::log(1, "XmlRpcClient new client: host %s, port %d, login %s.", host, port, login);
@@ -90,7 +90,7 @@ XmlRpcClient::XmlRpcClient(const char* host, int port,
   setKeepOpen();
 }
 
-XmlRpcClient::XmlRpcClient(const char* host, int port, 
+XmlRpcClient::XmlRpcClient(const char* host, int port,
                            const char* login, const char* password,
                            const char* uri/*=0*/, bool ssl)
 {
@@ -125,7 +125,7 @@ XmlRpcClient::~XmlRpcClient()
 
 
 // Close the owned fd
-void 
+void
 XmlRpcClient::close()
 {
   XmlRpcUtil::log(4, "XmlRpcClient::close: fd %d.", getfd());
@@ -161,7 +161,7 @@ struct ClearFlagOnExit {
 // Params should be an array of the arguments for the method.
 // Returns true if the request was sent and a result received (although the result
 // might be a fault).
-bool 
+bool
 XmlRpcClient::execute(const char* method, XmlRpcValue const& params, XmlRpcValue& result)
 {
   XmlRpcUtil::log(1, "XmlRpcClient::execute: method %s (_connectionState %d).", method, _connectionState);
@@ -204,14 +204,14 @@ XmlRpcClient::handleEvent(unsigned eventType)
   if (eventType == XmlRpcDispatch::Exception)
   {
     //if (XmlRpcSocket::nonFatalError())
-    //  return (_connectionState == WRITE_REQUEST) 
+    //  return (_connectionState == WRITE_REQUEST)
     //        ? XmlRpcDispatch::WritableEvent : XmlRpcDispatch::ReadableEvent;
 
     if (_connectionState == WRITE_REQUEST && _bytesWritten == 0)
-      XmlRpcUtil::error("Error in XmlRpcClient::handleEvent: could not connect to server (%s).", 
+      XmlRpcUtil::error("Error in XmlRpcClient::handleEvent: could not connect to server (%s).",
                        XmlRpcSocket::getErrorMsg().c_str());
     else
-      XmlRpcUtil::error("Error in XmlRpcClient::handleEvent (state %d): %s.", 
+      XmlRpcUtil::error("Error in XmlRpcClient::handleEvent (state %d): %s.",
                         _connectionState, XmlRpcSocket::getErrorMsg().c_str());
     return 0;
   }
@@ -226,13 +226,13 @@ XmlRpcClient::handleEvent(unsigned eventType)
     if ( ! readResponse()) return 0;
 
   // This should probably always ask for Exception events too
-  return (_connectionState == WRITE_REQUEST) 
+  return (_connectionState == WRITE_REQUEST)
         ? XmlRpcDispatch::WritableEvent : XmlRpcDispatch::ReadableEvent;
 }
 
 
 // Create the socket connection to the server if necessary
-bool 
+bool
 XmlRpcClient::setupConnection()
 {
   // If an error occurred last time through, or if the server closed the connection, close our end
@@ -241,7 +241,7 @@ XmlRpcClient::setupConnection()
 
   _eof = false;
   if (_connectionState == NO_CONNECTION)
-    if (! doConnect()) 
+    if (! doConnect())
       return false;
 
   // Prepare to write the request
@@ -257,7 +257,7 @@ XmlRpcClient::setupConnection()
 
 
 // Connect to the xmlrpc server
-bool 
+bool
 XmlRpcClient::doConnect()
 {
   int fd = XmlRpcSocket::socket();
@@ -300,7 +300,7 @@ XmlRpcClient::doConnect()
 }
 
 // Encode the request to call the specified method with the specified parameters into xml
-bool 
+bool
 XmlRpcClient::generateRequest(const char* methodName, XmlRpcValue const& params)
 {
   std::string body = REQUEST_BEGIN;
@@ -324,13 +324,13 @@ XmlRpcClient::generateRequest(const char* methodName, XmlRpcValue const& params)
       body += params.toXml();
       body += PARAM_ETAG;
     }
-      
+
     body += PARAMS_ETAG;
   }
   body += REQUEST_END;
 
   std::string header = generateHeader(body);
-  XmlRpcUtil::log(4, "XmlRpcClient::generateRequest: header is %d bytes, content-length is %d.", 
+  XmlRpcUtil::log(4, "XmlRpcClient::generateRequest: header is %d bytes, content-length is %d.",
                   header.length(), body.length());
 
   _request = header + body;
@@ -341,7 +341,7 @@ XmlRpcClient::generateRequest(const char* methodName, XmlRpcValue const& params)
 std::string
 XmlRpcClient::generateHeader(std::string const& body)
 {
-  std::string header = 
+  std::string header =
     "POST " + _uri + " HTTP/1.1\r\n"
     "User-Agent: ";
   header += XMLRPC_VERSION;
@@ -388,7 +388,7 @@ XmlRpcClient::generateHeader(std::string const& body)
   return header + buff;
 }
 
-bool 
+bool
 XmlRpcClient::writeRequest()
 {
   if (_bytesWritten == 0)
@@ -399,7 +399,7 @@ XmlRpcClient::writeRequest()
     XmlRpcUtil::error("Error in XmlRpcClient::writeRequest: write error (%s).",XmlRpcSocket::getErrorMsg().c_str());
     return false;
   }
-    
+
   XmlRpcUtil::log(3, "XmlRpcClient::writeRequest: wrote %d of %d bytes.", _bytesWritten, _request.length());
 
   // Wait for the result
@@ -413,7 +413,7 @@ XmlRpcClient::writeRequest()
 
 
 // Read the header from the response
-bool 
+bool
 XmlRpcClient::readHeader()
 {
   // Read available data
@@ -458,7 +458,7 @@ XmlRpcClient::readHeader()
       XmlRpcUtil::error("Error in XmlRpcClient::readHeader: EOF while reading header");
       return false;   // Close the connection
     }
-    
+
     return true;  // Keep reading
   }
 
@@ -473,7 +473,7 @@ XmlRpcClient::readHeader()
     XmlRpcUtil::error("Error in XmlRpcClient::readHeader: Invalid Content-length specified (%d).", _contentLength);
     return false;
   }
-  	
+
   XmlRpcUtil::log(4, "client read content length: %d", _contentLength);
 
   // Otherwise copy non-header data to response buffer and set state to read response.
@@ -483,8 +483,8 @@ XmlRpcClient::readHeader()
   return true;    // Continue monitoring this source
 }
 
-    
-bool 
+
+bool
 XmlRpcClient::readResponse()
 {
   // If we dont have the entire response yet, read available data
@@ -515,7 +515,7 @@ XmlRpcClient::readResponse()
 
 
 // Convert the response xml into a result value
-bool 
+bool
 XmlRpcClient::parseResponse(XmlRpcValue& result)
 {
   // Parse response xml into result
@@ -540,7 +540,7 @@ XmlRpcClient::parseResponse(XmlRpcValue& result)
     _response = "";
     return false;
   }
-      
+
   _response = "";
   return result.valid();
 }

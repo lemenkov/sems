@@ -15,7 +15,7 @@
 int parse_extension(const char *begin, int len)
 {
   // simple, for now: only one extension to parse here
-  if (len == SIP_HDR_LEN(SIP_EXT_100REL) && 
+  if (len == SIP_HDR_LEN(SIP_EXT_100REL) &&
       memcmp(begin, SIP_EXT_100REL, len) == 0)
     return SIP_EXTENSION_100REL;
   return 0;
@@ -27,7 +27,7 @@ bool parse_extensions(unsigned *extensions, const char *start, int len)
   const char *pos;
   int ext;
   unsigned mask = 0;
-  
+
   enum {
     EAT_WS,
     OVER_TAG,
@@ -54,7 +54,7 @@ bool parse_extensions(unsigned *extensions, const char *start, int len)
 
       default:
         if (! IS_TOKEN(*pos)) {
-          INFO("invalid extensions header content <%.*s>: illegal char `%c'", 
+          INFO("invalid extensions header content <%.*s>: illegal char `%c'",
               len, start, *pos);
           return false;
         }

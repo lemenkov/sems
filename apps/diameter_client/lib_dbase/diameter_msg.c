@@ -16,8 +16,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -73,7 +73,7 @@ int AAAAVPBuildBuffer(AAA_AVP *avp, unsigned char *dest)  {
   }
   /* data */
   memcpy( p, avp->data.s, avp->data.len);
-  p += to_32x_len( avp->data.len );  
+  p += to_32x_len( avp->data.len );
 
   return p-dest;
 }
@@ -145,7 +145,7 @@ AAAReturnCode AAABuildMsgBuffer( AAAMessage *msg )
     if (!avp->groupedHead) {
       memcpy( p, avp->data.s, avp->data.len);
       p += to_32x_len( avp->data.len );
-    } else {  
+    } else {
       // group members
       for(mem=avp->groupedHead;mem;mem=mem->next)
 	p+=AAAAVPBuildBuffer(mem, p);
@@ -356,7 +356,7 @@ AAAMessage* AAAInMessage(AAACommandCode commandCode, AAAApplicationId appId)
 
   /* we allocate a new AAAMessage structure and set it to 0 */
   msg = (AAAMessage*)ad_malloc(sizeof(AAAMessage));
-  if (!msg) 
+  if (!msg)
     {
       ERROR("diameter_authorize(): no more free memory!\n");
       return NULL;

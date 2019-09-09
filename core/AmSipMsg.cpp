@@ -7,9 +7,9 @@
 #include "sip/sip_parser.h"
 #include "sip/msg_logger.h"
 
-AmSipRequest::AmSipRequest() 
-  : _AmSipMsgInDlg(), 
-    max_forwards(-1) 
+AmSipRequest::AmSipRequest()
+  : _AmSipMsgInDlg(),
+    max_forwards(-1)
 {
 }
 
@@ -18,12 +18,12 @@ string getHeader(const string& hdrs,const string& hdr_name, bool single)
   if (hdr_name.empty())
     return "";
 
-  size_t pos1; 
+  size_t pos1;
   size_t pos2;
   size_t pos_s;
   size_t skip = 0;
   string ret = "";
-  while(findHeader(hdrs, hdr_name, skip, pos1, pos2, pos_s)) 
+  while(findHeader(hdrs, hdr_name, skip, pos1, pos2, pos_s))
   {
     if(skip)
       ret.append(", ");
@@ -35,7 +35,7 @@ string getHeader(const string& hdrs,const string& hdr_name, bool single)
   return ret;
 }
 
-string getHeader(const string& hdrs,const string& hdr_name, 
+string getHeader(const string& hdrs,const string& hdr_name,
 		 const string& compact_hdr_name, bool single)
 {
   string res = getHeader(hdrs, hdr_name, single);
@@ -50,7 +50,7 @@ bool hasHeader(const string& hdrs,const string& hdr_name) {
 }
 
 #include "log.h"
-bool findHeader(const string& hdrs,const string& hdr_name, const size_t skip, 
+bool findHeader(const string& hdrs,const string& hdr_name, const size_t skip,
 		size_t& pos1, size_t& pos2, size_t& hdr_start)
 {
   unsigned int p;
@@ -59,7 +59,7 @@ bool findHeader(const string& hdrs,const string& hdr_name, const size_t skip,
   const char* hdrs_c = hdrs.c_str() + skip;
   char* hdr_c = hdr;
   const char* hdrs_end = hdrs.c_str() + hdrs.length();
-  const char* hdr_end = hdr_c + hdr_name.length(); 
+  const char* hdr_end = hdr_c + hdr_name.length();
 
   while(hdr_c != hdr_end){
     if('A' <= *hdr_c && *hdr_c <= 'Z')
@@ -101,7 +101,7 @@ bool findHeader(const string& hdrs,const string& hdr_name, const size_t skip,
     if(hdrs_c != hdrs_end)
       hdrs_c++;
   }
-    
+
   if(hdr_c == hdr_end){
     hdr_start = hdrs_c - hdrs.c_str();;
 
@@ -113,9 +113,9 @@ bool findHeader(const string& hdrs,const string& hdr_name, const size_t skip,
       hdrs_c++;
       while((hdrs_c != hdrs_end) && (*hdrs_c == ' '))
 	hdrs_c++;
-	    
+
       p = hdrs_c - hdrs.c_str();
-	    
+
       string::size_type p_end = p;
       while (p_end < hdrs.size() &&
 	     hdrs[p_end] != '\r' &&
@@ -139,11 +139,11 @@ bool removeHeader(string& hdrs, const string& hdr_name) {
   bool found = false;
 
   while (findHeader(hdrs, hdr_name, 0, pos1, pos2, hdr_start)) {
-    while (pos2 < hdrs.length() && 
+    while (pos2 < hdrs.length() &&
 	   (hdrs[pos2]=='\r' || hdrs[pos2]=='\n'))
       pos2++;
 
-    hdr_start -= hdr_name.length(); 
+    hdr_start -= hdr_name.length();
     hdrs.erase(hdr_start, pos2 - hdr_start);
     found = true;
   }

@@ -13,7 +13,7 @@ struct parser_state
   int st; // parser state (within stage)
   int saved_st; // saved parser state (within stage)
   sip_header hdr; // temporary header struct
-  
+
   int content_len; // detected body content-length
 
   parser_state()

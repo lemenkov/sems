@@ -23,7 +23,7 @@ class GatewayFactory: public AmSessionFactory
     std::string auth_realm;
     std::string auth_user;
     std::string auth_pwd;
-                                 
+
 };
 
 extern AmConfigReader gwconf;

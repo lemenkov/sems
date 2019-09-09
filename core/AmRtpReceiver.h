@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmRtpReceiver.h */
@@ -44,14 +44,14 @@ class _AmRtpReceiver;
 /**
  * \brief receiver for RTP for all streams.
  *
- * The RtpReceiver receives RTP packets for all streams 
- * that are registered to it. It places the received packets in 
- * the stream's buffer. 
+ * The RtpReceiver receives RTP packets for all streams
+ * that are registered to it. It places the received packets in
+ * the stream's buffer.
  */
 class AmRtpReceiverThread
   : public AmThread
 {
-  struct StreamInfo 
+  struct StreamInfo
   {
     AmRtpStream* stream;
     struct event* ev_read;
@@ -71,7 +71,7 @@ class AmRtpReceiverThread
     AmRtpReceiverThread* thread;
     unsigned char* pkt;
     size_t len;
-    
+
     RtpPacket()
       : stream(NULL),
 	ev_read(NULL),
@@ -103,7 +103,7 @@ class AmRtpReceiverThread
 public:
   AmRtpReceiverThread();
   ~AmRtpReceiverThread();
-    
+
   void run();
   void on_stop();
 

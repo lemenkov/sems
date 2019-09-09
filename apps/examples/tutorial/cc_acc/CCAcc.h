@@ -22,7 +22,7 @@ class CCAcc : public AmDynInvoke
   int addCredit(string pin, int amount);
   /** sets the value to some amount */
   int setCredit(string pin, int amount);
-  
+
   std::map<string, unsigned int> credits;
   // as this is used from various sessions,
   // it must be protected by a mutex
@@ -36,4 +36,4 @@ class CCAcc : public AmDynInvoke
   void invoke(const string& method, const AmArg& args, AmArg& ret);
 };
 
-#endif 
+#endif

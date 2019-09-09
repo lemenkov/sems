@@ -24,7 +24,7 @@
 
 /** \brief IVR wrapper of AmSipReply */
 typedef struct {
-    
+
   PyObject_HEAD
   AmSipReply* p_req;
 } IvrSipReply;
@@ -38,20 +38,20 @@ static PyObject* IvrSipReply_new(PyTypeObject *type, PyObject *args, PyObject *k
 
   self = (IvrSipReply *)type->tp_alloc(type, 0);
   if (self != NULL) {
-	
+
     PyObject* o_req = NULL;
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "O", kwlist, &o_req)){
-	    
+
       Py_DECREF(self);
       return NULL;
     }
-    
+
     if ((NULL == o_req) || !PyCObject_Check(o_req)){
-	    
+
       Py_DECREF(self);
       return NULL;
     }
-	
+
     self->p_req = (AmSipReply*)PyCObject_AsVoidPtr(o_req);
   }
 
@@ -60,7 +60,7 @@ static PyObject* IvrSipReply_new(PyTypeObject *type, PyObject *args, PyObject *k
 }
 
 static void
-IvrSipReply_dealloc(IvrSipReply* self) 
+IvrSipReply_dealloc(IvrSipReply* self)
 {
   delete self->p_req;
   self->ob_type->tp_free((PyObject*)self);
@@ -71,9 +71,9 @@ IvrSipReply_dealloc(IvrSipReply* self)
   getter_name(IvrSipReply *self, void *closure)			\
   {								\
     return PyString_FromString(self->p_req->attr.c_str());	\
-  }								
-								
-								
+  }
+
+
 def_IvrSipReply_GETTER(IvrSipReply_getreason,     reason)
 def_IvrSipReply_GETTER(IvrSipReply_getcontact,    contact)
 def_IvrSipReply_GETTER(IvrSipReply_gethdrs,       hdrs)
@@ -108,7 +108,7 @@ static PyGetSetDef IvrSipReply_getset[] = {
 };
 
 PyTypeObject IvrSipReplyType = {
-    
+
   PyObject_HEAD_INIT(NULL)
   0,                         /*ob_size*/
   "ivr.IvrSipReply",        /*tp_name*/
@@ -155,9 +155,9 @@ PyObject* IvrSipReply_FromPtr(AmSipReply* req)
 {
   PyObject* c_req = PyCObject_FromVoidPtr(req,NULL);
   PyObject* args = Py_BuildValue("(O)",c_req);
-    
+
   PyObject* py_req = IvrSipReply_new(&IvrSipReplyType,args,NULL);
-    
+
   Py_DECREF(args);
   Py_DECREF(c_req);
 

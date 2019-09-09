@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _SIMPLECONFERENCE_H_
@@ -39,7 +39,7 @@ using std::string;
 class ConferenceStatus;
 class ConferenceStatusContainer;
 
-// of course this should be taken from config 
+// of course this should be taken from config
 // - just wanted to make things simple
 #define BEEP_FILE_NAME "../apps/examples/simple_conference/wav/beep.wav"
 
@@ -60,10 +60,10 @@ class SimpleConferenceDialog : public AmSession
   // our connection to the conference
   unique_ptr<AmConferenceChannel> channel;
 
-  // we use a playlist so we can put e.g. 
-  // announcement files to be played to the 
-  // user in front and after its finished we will 
-  // be connected back to conference automatically 
+  // we use a playlist so we can put e.g.
+  // announcement files to be played to the
+  // user in front and after its finished we will
+  // be connected back to conference automatically
   AmPlaylist  play_list;
   unique_ptr<AmAudioFile> BeepSound;
 

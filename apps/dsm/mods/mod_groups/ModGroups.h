@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 Stefan Sayer
- * 
+ *
  * Development of this module was sponsored by TelTech Systems Inc
  *
  * This file is part of SEMS, a free SIP media server.
@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _MOD_MYSQL_H
@@ -32,7 +32,7 @@
 #include "DSMSession.h"
 #include "AmThread.h"
 
-#define MOD_CLS_NAME GroupsModule 
+#define MOD_CLS_NAME GroupsModule
 
 #include <set>
 using std::set;

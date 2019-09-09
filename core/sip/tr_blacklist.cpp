@@ -89,7 +89,7 @@ _tr_blacklist::_tr_blacklist()
 }
 
 _tr_blacklist::~_tr_blacklist()
-{ 
+{
 }
 
 bool _tr_blacklist::exist(const sockaddr_storage* addr)

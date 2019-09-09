@@ -38,7 +38,7 @@ class b2b_connectFactory: public AmSessionFactory
 
  public:
   b2b_connectFactory(const string& _app_name);
-  
+
   int onLoad();
   AmSession* onInvite(const AmSipRequest& req, const string& app_name,
 		      const map<string,string>& app_params);
@@ -57,12 +57,12 @@ class b2b_connectDialog : public AmB2ABCallerSession
   string to;
 
   AmSipRequest invite_req;
-  
+
  public:
 
   b2b_connectDialog();
   ~b2b_connectDialog();
-  
+
   void onSessionStart();
   void onB2ABEvent(B2ABEvent* ev);
   void process(AmEvent* ev);
@@ -70,14 +70,14 @@ class b2b_connectDialog : public AmB2ABCallerSession
   void onBye(const AmSipRequest& req);
   void onInvite(const AmSipRequest& req);
   void onCancel(const AmSipRequest& req);
-  
+
 
  protected:
-  
+
   AmB2ABCalleeSession* createCalleeSession();
 };
 
-class b2b_connectCalleeSession 
+class b2b_connectCalleeSession
 : public AmB2ABCalleeSession, public CredentialHolder
 {
   UACAuthCred credentials;
@@ -85,13 +85,13 @@ class b2b_connectCalleeSession
 
  protected:
   void onSipReply(const AmSipRequest& req, const AmSipReply& reply, AmSipDialog::Status old_dlg_status);
- 
+
 public:
-  b2b_connectCalleeSession(const string& other_tag, 
+  b2b_connectCalleeSession(const string& other_tag,
 			   AmSessionAudioConnector* connector,
-			   const string& user, const string& pwd); 
+			   const string& user, const string& pwd);
   ~b2b_connectCalleeSession();
 
   inline UACAuthCred* getCredentials();
 };
-#endif                           
+#endif

@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmThread.h */
@@ -69,7 +69,7 @@ public:
  *
  * Include a variable and its mutex.
  * @warning Don't use safe functions (set,get)
- * within a {lock(); ... unlock();} block. Use 
+ * within a {lock(); ... unlock();} block. Use
  * unsafe function instead.
  */
 template<class T>
@@ -125,13 +125,13 @@ class AmCondition
 public:
   AmCondition() : t() { init_cond(); }
   AmCondition(const T& _t) : t(_t) { init_cond(); }
-    
+
   ~AmCondition()
   {
     pthread_cond_destroy(&cond);
     pthread_mutex_destroy(&m);
   }
-    
+
   /** Change the condition's value. */
   void set(const T& newval)
   {
@@ -141,7 +141,7 @@ public:
       pthread_cond_broadcast(&cond);
     pthread_mutex_unlock(&m);
   }
-    
+
   T get()
   {
     T val;
@@ -150,7 +150,7 @@ public:
     pthread_mutex_unlock(&m);
     return val;
   }
-    
+
   /** Waits for the condition to be true. */
   void wait_for()
   {
@@ -160,7 +160,7 @@ public:
     }
     pthread_mutex_unlock(&m);
   }
-  
+
   /** Waits for the condition to be true or a timeout. */
   bool wait_for_to(unsigned long msec)
   {
@@ -220,15 +220,15 @@ public:
   bool is_stopped() { return _stopped.get(); }
   /** Wait for this thread to finish */
   void join();
-  /** kill the thread (if pthread_setcancelstate(PTHREAD_CANCEL_ENABLED) has been set) **/ 
+  /** kill the thread (if pthread_setcancelstate(PTHREAD_CANCEL_ENABLED) has been set) **/
   void cancel();
 
   int setRealtime();
 };
 
 /**
- * \brief Container/garbage collector for threads. 
- * 
+ * \brief Container/garbage collector for threads.
+ *
  * AmThreadWatcher waits for threads to stop
  * and delete them.
  * It gets started automatically when needed.
@@ -245,7 +245,7 @@ class AmThreadWatcher: public AmThread
 
   /** the daemon only runs if this is true */
   AmCondition<bool> _run_cond;
-    
+
   AmThreadWatcher();
   void run();
   void on_stop();
@@ -259,7 +259,7 @@ template<class T>
 class AmThreadLocalStorage
 {
   pthread_key_t key;
-  
+
   static void __del_tls_obj(void* obj) {
     delete static_cast<T*>(obj);
   }

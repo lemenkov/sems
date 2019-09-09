@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -40,7 +40,7 @@ AmMutex                         AmConferenceStatus::cid2s_mut;
 //
 // static methods
 //
-AmConferenceChannel* AmConferenceStatus::getChannel(const string& cid, 
+AmConferenceChannel* AmConferenceStatus::getChannel(const string& cid,
 						    const string& local_tag, int input_sample_rate)
 {
   AmConferenceStatus*  st = 0;
@@ -54,7 +54,7 @@ AmConferenceChannel* AmConferenceStatus::getChannel(const string& cid,
     st = it->second;
   }
   else {
-	
+
     st = new AmConferenceStatus(cid);
     cid2status[cid] = st;
   }
@@ -79,7 +79,7 @@ size_t AmConferenceStatus::getConferenceSize(const string& cid) {
   return res;
 }
 
-void AmConferenceStatus::postConferenceEvent(const string& cid, 
+void AmConferenceStatus::postConferenceEvent(const string& cid,
 					     int event_id, const string& sess_id) {
   AmConferenceStatus*  st = 0;
 
@@ -91,7 +91,7 @@ void AmConferenceStatus::postConferenceEvent(const string& cid,
     st = it->second;
   }
   else {
-	
+
     st = new AmConferenceStatus(cid);
     cid2status[cid] = st;
   }
@@ -137,7 +137,7 @@ void AmConferenceStatus::postConferenceEvent(int event_id, const string& sess_id
 {
   sessions_mut.lock();
   int participants = sessions.size();
-  for(std::map<std::string, unsigned int>::iterator it = sessions.begin(); 
+  for(std::map<std::string, unsigned int>::iterator it = sessions.begin();
       it != sessions.end(); it++){
     AmSessionContainer::instance()->postEvent(
 					      it->first,
@@ -194,7 +194,7 @@ int AmConferenceStatus::releaseChannel(unsigned int ch_id)
   sessions_mut.lock();
   std::map<unsigned int, SessInfo*>::iterator it = channels.find(ch_id);
   if(it != channels.end()){
-	
+
     SessInfo* si = it->second;
     channels.erase(it);
     sessions.erase(si->sess_id);
@@ -204,7 +204,7 @@ int AmConferenceStatus::releaseChannel(unsigned int ch_id)
     participants = channels.size();
     std::map<std::string, unsigned int>::iterator s_it;
     for(s_it = sessions.begin(); s_it != sessions.end(); s_it++){
-	    
+
       AmSessionContainer::instance()->postEvent(
 						s_it->first,
 						new ConferenceEvent(ConfParticipantLeft,
@@ -212,7 +212,7 @@ int AmConferenceStatus::releaseChannel(unsigned int ch_id)
 								    conf_id, si->sess_id));
     }
     delete si;
-	
+
   }
   else {
     participants = channels.size();

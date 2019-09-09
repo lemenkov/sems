@@ -21,8 +21,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmApi.h */
@@ -74,7 +74,7 @@ class AmPluginFactory
 
   virtual ~AmPluginFactory() {}
 
-  const string& getName() { return plugin_name; } 
+  const string& getName() { return plugin_name; }
 
   /**
    * Enables the plug-in to initialize whatever it needs.
@@ -87,7 +87,7 @@ class AmPluginFactory
 
 /**
  * \brief Interface of factory for plugins that provide a DI API
- * 
+ *
  * Factory for multi-purpose plugin classes,
  * classes that provide a DynInvoke (DI) API
  */
@@ -124,7 +124,7 @@ class AmSessionFactory: public AmPluginFactory
 
  protected:
   /**
-   * This reads the module configuration from 
+   * This reads the module configuration from
    * cfg into the modules mod_conf.
    */
   int configureModule(AmConfigReader& cfg);
@@ -134,7 +134,7 @@ class AmSessionFactory: public AmPluginFactory
   static void replyOptions(const AmSipRequest& req);
 
   /**
-   * This function applys the module configuration 
+   * This function applys the module configuration
    */
   void configureSession(AmSession* sess);
 
@@ -152,9 +152,9 @@ class AmSessionFactory: public AmPluginFactory
 			      const map<string,string>& app_params)=0;
 
   /**
-   * Creates a dialog state on new UAC request. 
+   * Creates a dialog state on new UAC request.
    * @param session_params parameters passed to the new session by the caller.
-   * 
+   *
    * @return 0 if the request is not acceptable.
    *
    * Warning:
@@ -188,12 +188,12 @@ class AmSessionFactory: public AmPluginFactory
 			     AmArg& session_params);
 
   /**
-   * Method to receive any out-of-dialog request 
+   * Method to receive any out-of-dialog request
    * other than INVITE and REFER
    *
    * Warning:
    *   This method should not make any expensive
-   *   processing as it would block the thread 
+   *   processing as it would block the thread
    *   posting the event!
    */
   virtual void onOoDRequest(const AmSipRequest& req);

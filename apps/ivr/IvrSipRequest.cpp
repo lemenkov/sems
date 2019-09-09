@@ -25,7 +25,7 @@
 // Data definition
 /** \brief IVR wrapper of AmSipRequest */
 typedef struct {
-    
+
   PyObject_HEAD
   AmSipRequest* p_req;
   bool own_p_req;
@@ -40,20 +40,20 @@ static PyObject* IvrSipRequest_new(PyTypeObject *type, PyObject *args, PyObject 
 
   self = (IvrSipRequest *)type->tp_alloc(type, 0);
   if (self != NULL) {
-	
+
     PyObject* o_req = NULL;
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "O", kwlist, &o_req)){
-	    
+
       Py_DECREF(self);
       return NULL;
     }
-    
+
     if ((NULL == o_req) || !PyCObject_Check(o_req)){
-	    
+
       Py_DECREF(self);
       return NULL;
     }
-	
+
     self->p_req = (AmSipRequest*)PyCObject_AsVoidPtr(o_req);
     self->own_p_req = true;
   }
@@ -69,20 +69,20 @@ static PyObject* IvrSipRequest_newRef(PyTypeObject *type, PyObject *args, PyObje
 
   self = (IvrSipRequest *)type->tp_alloc(type, 0);
   if (self != NULL) {
-	
+
     PyObject* o_req = NULL;
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "O", kwlist, &o_req)){
-	    
+
       Py_DECREF(self);
       return NULL;
     }
-    
+
     if ((NULL == o_req) || !PyCObject_Check(o_req)){
-	    
+
       Py_DECREF(self);
       return NULL;
     }
-	
+
     self->p_req = (AmSipRequest*)PyCObject_AsVoidPtr(o_req);
     self->own_p_req = false;
   }
@@ -92,7 +92,7 @@ static PyObject* IvrSipRequest_newRef(PyTypeObject *type, PyObject *args, PyObje
 }
 
 static void
-IvrSipRequest_dealloc(IvrSipRequest* self) 
+IvrSipRequest_dealloc(IvrSipRequest* self)
 {
   DBG("IvrSipRequest_dealloc\n");
 
@@ -107,8 +107,8 @@ IvrSipRequest_dealloc(IvrSipRequest* self)
   getter_name(IvrSipRequest *self, void *closure)		\
   {								\
     return PyString_FromString(self->p_req->attr.c_str());	\
-  }					  
-								
+  }
+
 def_IvrSipRequest_GETTER(IvrSipRequest_getmethod,       method)
 def_IvrSipRequest_GETTER(IvrSipRequest_getuser,         user)
 def_IvrSipRequest_GETTER(IvrSipRequest_getdomain,       domain)
@@ -157,7 +157,7 @@ IvrSipRequest_getbody(IvrSipRequest *self, void *closure)
 									\
     self->p_req->attr = text;						\
     return 0;								\
-  } 
+  }
 
 def_IvrSipRequest_SETTER(IvrSipRequest_sethdrs,   hdrs)
 
@@ -182,7 +182,7 @@ static PyGetSetDef IvrSipRequest_getset[] = {
 };
 
 PyTypeObject IvrSipRequestType = {
-    
+
   PyObject_HEAD_INIT(NULL)
   0,                         /*ob_size*/
   "ivr.IvrSipRequest",        /*tp_name*/
@@ -229,9 +229,9 @@ PyObject* IvrSipRequest_FromPtr(AmSipRequest* req)
 {
   PyObject* c_req = PyCObject_FromVoidPtr(req,NULL);
   PyObject* args = Py_BuildValue("(O)",c_req);
-    
+
   PyObject* py_req = IvrSipRequest_new(&IvrSipRequestType,args,NULL);
-    
+
   Py_DECREF(args);
   Py_DECREF(c_req);
 
@@ -242,9 +242,9 @@ PyObject* IvrSipRequest_BorrowedFromPtr(AmSipRequest* req)
 {
   PyObject* c_req = PyCObject_FromVoidPtr(req,NULL);
   PyObject* args = Py_BuildValue("(O)",c_req);
-    
+
   PyObject* py_req = IvrSipRequest_newRef(&IvrSipRequestType,args,NULL);
-    
+
   Py_DECREF(args);
   Py_DECREF(c_req);
 

@@ -7,7 +7,7 @@
  * need to be conditionalized here.
  */
 
-#ifndef timeradd 
+#ifndef timeradd
 #define timeradd(a, b, result)                                                \
   do {                                                                        \
     (result)->tv_sec = (a)->tv_sec + (b)->tv_sec;                             \
@@ -17,9 +17,9 @@
         ++(result)->tv_sec;                                                   \
         (result)->tv_usec -= 1000000;                                         \
       }                                                                       \
-  } while (0) 
-#endif 
-#ifndef timersub 
+  } while (0)
+#endif
+#ifndef timersub
 #define timersub(a, b, result)                                                \
   do {                                                                        \
     (result)->tv_sec = (a)->tv_sec - (b)->tv_sec;                             \
@@ -28,8 +28,8 @@
       --(result)->tv_sec;                                                     \
       (result)->tv_usec += 1000000;                                           \
     }                                                                         \
-  } while (0) 
-#endif 
+  } while (0)
+#endif
 
 // Work around use of deprecated definitions in Solaris system headers.
 #include <sys/sockio.h>

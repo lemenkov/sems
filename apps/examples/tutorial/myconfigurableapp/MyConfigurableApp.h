@@ -20,7 +20,7 @@ public:
 
 class MyConfigurableAppDialog : public AmSession
 {
-    
+
  public:
     MyConfigurableAppDialog();
     ~MyConfigurableAppDialog();

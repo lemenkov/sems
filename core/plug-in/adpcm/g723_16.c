@@ -49,12 +49,12 @@
  * Maps G.723_16 code word to reconstructed scale factor normalized log
  * magnitude values.  Comes from Table 11/G.726
  */
-static short	_dqlntab[4] = { 116, 365, 365, 116}; 
+static short	_dqlntab[4] = { 116, 365, 365, 116};
 
 /* Maps G.723_16 code word to log of scale factor multiplier.
  *
  * _witab[4] is actually {-22 , 439, 439, -22}, but FILTD wants it
- * as WI << 5  (multiplied by 32), so we'll do that here 
+ * as WI << 5  (multiplied by 32), so we'll do that here
  */
 static short	_witab[4] = {-704, 14048, 14048, -704};
 
@@ -122,7 +122,7 @@ g723_16_encoder(
 	if (i == 3)                          /* i code for the zero region */
 	  if ((d & 0x8000) == 0)             /* If d > 0, i=3 isn't right... */
 	    i = 0;
-	    
+
 	dq = reconstruct(i & 2, _dqlntab[i], y); /* quantized diff. */
 
 	sr = (dq < 0) ? se - (dq & 0x3FFF) : se + dq; /* reconstructed signal */

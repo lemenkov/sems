@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _CALLBACK_H_
@@ -44,7 +44,7 @@ using std::string;
 #define DIGITS_DIR     "digits_dir"
 #define ACCEPT_CALLER_RE "accept_caller_re"
 
-class CallBackFactory 
+class CallBackFactory
   : public AmSessionFactory,
     public AmThread
 {
@@ -67,7 +67,7 @@ public:
   static string gw_domain;
   static string auth_user;
   static string auth_pwd;
-  
+
   static string DigitsDir;
   static PlayoutType m_PlayoutType;
 
@@ -90,7 +90,7 @@ enum CBState {
   CBConnected
 };
 
-class CallBackDialog 
+class CallBackDialog
   : public AmB2ABCallerSession,
     public CredentialHolder
 {
@@ -105,12 +105,12 @@ private:
 
   CBState state;
 public:
-  CallBackDialog(AmPromptCollection& prompts,		 
+  CallBackDialog(AmPromptCollection& prompts,
 		 UACAuthCred* cred);
   ~CallBackDialog();
 
   void process(AmEvent* ev);
-  void onInvite(const AmSipRequest& req); 
+  void onInvite(const AmSipRequest& req);
   void onSessionStart();
   void onDtmf(int event, int duration);
 
@@ -119,7 +119,7 @@ public:
 
 };
 
-class CallBackCalleeDialog 
+class CallBackCalleeDialog
   : public AmB2ABCalleeSession,
     public CredentialHolder
 {

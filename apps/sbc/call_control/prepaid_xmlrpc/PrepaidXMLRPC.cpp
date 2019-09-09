@@ -303,8 +303,8 @@ int PrepaidXMLRPC::subtractCredit(string pin, int amount, bool& found) {
   XmlRpcValue xmlArg;
   xmlArg[0][0]["methodName"] = "subtractCredit";
   xmlArg[0][0]["pin"] = pin;
-  xmlArg[0][0]["amount"] = amount;	
-  DBG("subtractCredit pin# '%s', Seconds '%u'.\n", pin.c_str(),  
+  xmlArg[0][0]["amount"] = amount;
+  DBG("subtractCredit pin# '%s', Seconds '%u'.\n", pin.c_str(),
 amount );
   found = xmlrpccall.execute("subtractCredit", xmlArg, result);
   int res = 0;

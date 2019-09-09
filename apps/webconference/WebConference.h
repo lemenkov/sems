@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _WEBCONFERENCE_H_
@@ -59,19 +59,19 @@ class ConferenceStatusContainer;
 // default path for files
 #define WEBCONF_ANNOUNCE_PATH "/usr/local/lib/sems/audio/webconference/"
 
-class WebConferenceEvent : public AmEvent 
+class WebConferenceEvent : public AmEvent
 {
 public:
   WebConferenceEvent(int id) : AmEvent(id) { }
   enum { Kick,
 	 Mute,
-	 Unmute 
+	 Unmute
   };
 };
 
 class WebConferenceCleaner;
 
-class WebConferenceFactory 
+class WebConferenceFactory
   : public AmSessionFactory,
     public AmDynInvokeFactory,
     public AmDynInvoke
@@ -86,8 +86,8 @@ class WebConferenceFactory
   AmSessionEventHandlerFactory* session_timer_f;
 
   WebConferenceCleaner* cleaner;
- 
-  // for DI 
+
+  // for DI
   static WebConferenceFactory* _instance;
   bool configured;
   AmConfigReader cfg;
@@ -95,7 +95,7 @@ class WebConferenceFactory
   string getServerInfoString();
   string getRandomPin();
   /** @return NULL if adminpin wrong */
-  ConferenceRoom* getRoom(const string& room, 
+  ConferenceRoom* getRoom(const string& room,
 			  const string& adminpin,
 			  bool ignore_adminpin);
   void postConfEvent(const AmArg& args, AmArg& ret,
@@ -120,7 +120,7 @@ class WebConferenceFactory
   void sweepRooms();
 
   int load();
-  
+
   void setupSessionTimer(AmSession* s);
 
 public:
@@ -128,11 +128,11 @@ public:
   static PlayoutType m_PlayoutType;
   static string urlbase;
   static string MasterPassword;
-  
+
   static int ParticipantExpiredDelay;
   static int RoomExpiredDelay;
   static int RoomSweepInterval;
-  
+
   static bool ignore_pin;
 
   static bool PrivateRoomsMode;
@@ -143,7 +143,7 @@ public:
   static bool room_pin_split;
   static unsigned int room_pin_split_pos;
 
-  // P-App-Param parameter to get participant ID from 
+  // P-App-Param parameter to get participant ID from
   static string participant_id_paramname;
   // if participant_id_paramname not configured:
   // header to get participant ID from
@@ -158,18 +158,18 @@ public:
   int onLoad();
 
   bool isValidConference(const string& conf_id, const string& participant_id);
-  bool newParticipant(const string& conf_id, 
-		      const string& localtag, 
+  bool newParticipant(const string& conf_id,
+		      const string& localtag,
 		      const string& number,
 		      const string& participant_id,
 		      bool check_exisiting=true);
-  void updateStatus(const string& conf_id, 
-		    const string& localtag, 
+  void updateStatus(const string& conf_id,
+		    const string& localtag,
 		    ConferenceRoomParticipant::ParticipantStatus status,
 		    const string& reason);
-  
+
   void callStats(bool success, unsigned int connect_t);
-  
+
   void closeExpiredRooms();
 
   // DI API
@@ -209,7 +209,7 @@ public:
 
 
 class WebConferenceCleaner
-  : public AmThread 
+  : public AmThread
 {
   WebConferenceFactory* factory;
   AmCondition<bool> is_stopped;

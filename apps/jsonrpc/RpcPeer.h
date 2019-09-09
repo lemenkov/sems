@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 TelTech Systems Inc.
- * 
+ *
  * This file is part of SEMS, a free SIP media server.
  *
  * SEMS is free software; you can redistribute it and/or modify
@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -34,7 +34,7 @@
 #include "AmArg.h"
 
 #define MAX_RPC_MSG_SIZE 20*1024*1024 // 20k
-#define MAX_NS_LEN_SIZE 10 
+#define MAX_NS_LEN_SIZE 10
 #define SEND_SLEEP 10000 // 10 ms send retry
 
 #include <map>
@@ -48,11 +48,11 @@ struct JsonrpcPeerConnection {
   //        req_id              queue       udata
   std::map<std::string, std::pair<std::string, AmArg > > replyReceivers;
 
-  // if present, notifications will be sent 
+  // if present, notifications will be sent
   // to that event queue directly
   std::string notificationReceiver;
 
-  // if present, requests will be sent 
+  // if present, requests will be sent
   // to that event queue directly
   std::string requestReceiver;
 
@@ -64,30 +64,30 @@ struct JsonrpcPeerConnection {
     FL_CLOSE_NO_REPLYLINK    = 4,   // close connection if reply queue for a request missing
     FL_CLOSE_NO_REQUEST_RECV = 8,   // close connection if reques queue missing
     FL_CLOSE_NO_NOTIF_RECV   = 16   // close connection if notification queue missing
-  }; 
+  };
 
-  JsonrpcPeerConnection() { 
+  JsonrpcPeerConnection() {
     req_id = rand()%1024;
   }
 
   int req_id;
 
   JsonrpcPeerConnection(const std::string& id)
-  : id(id) { 
+  : id(id) {
     DBG("created connection '%s'\n", id.c_str());
   }
 
-  virtual ~JsonrpcPeerConnection() { 
+  virtual ~JsonrpcPeerConnection() {
     DBG("destroying connection '%s'\n", id.c_str());
   }
 
   void notifyDisconnect();
 };
 
-struct JsonrpcNetstringsConnection 
+struct JsonrpcNetstringsConnection
   : public JsonrpcPeerConnection
 {
-  int fd;  
+  int fd;
   ev_io ev_write;
   ev_io ev_read;
 
@@ -98,8 +98,8 @@ struct JsonrpcNetstringsConnection
   bool in_msg;
   bool msg_recv;
 
-  JsonrpcNetstringsConnection(const std::string& id); 
-  ~JsonrpcNetstringsConnection(); 
+  JsonrpcNetstringsConnection(const std::string& id);
+  ~JsonrpcNetstringsConnection();
 
   int connect(const std::string& host, int port, std::string& res_str);
 
@@ -113,8 +113,8 @@ struct JsonrpcNetstringsConnection
   /** @returns ReadResult */
   int netstringsRead();
 
-  /** 
-      blocking write: blocks until message in msgbuf 
+  /**
+      blocking write: blocks until message in msgbuf
       with size msg_size is written
   */
   int netstringsBlockingWrite();

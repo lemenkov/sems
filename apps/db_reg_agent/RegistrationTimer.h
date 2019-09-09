@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -66,15 +66,15 @@ class RegTimerBucket {
 
 /**
   Additionally to normal timer operation (setting and removing timer,
-  fire the timer when it is expired), this RegistrationTimer timers 
-  class needs to support insert_timer_leastloaded() which should insert 
+  fire the timer when it is expired), this RegistrationTimer timers
+  class needs to support insert_timer_leastloaded() which should insert
   the timer in some least loaded interval between from_time and to_time
   in order to flatten out re-register spikes (due to restart etc).
 
   Timer granularity is seconds.
 
   Timers are saved in buckets of TIMER_BUCKET_LENGTH seconds. the buckets
-  array is a circular one, the current bucket starts from the time 
+  array is a circular one, the current bucket starts from the time
   current_bucket_start (in seconds as in time(2)).
 
   The timer object is owned by the caller, and MUST be valid until it is
@@ -107,7 +107,7 @@ class RegistrationTimer
 				time_t from_time,
 				time_t to_time);
 
-  RegistrationTimer(); 
+  RegistrationTimer();
   bool _timer_thread_running;
   bool _shutdown_finished;
 };

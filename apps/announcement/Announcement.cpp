@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -55,7 +55,7 @@ int AnnouncementFactory::onLoad()
   configureModule(cfg);
 
   AnnouncePath = cfg.getParameter("announce_path",ANNOUNCE_PATH);
-  if( !AnnouncePath.empty() 
+  if( !AnnouncePath.empty()
       && AnnouncePath[AnnouncePath.length()-1] != '/' )
     AnnouncePath += "/";
 
@@ -75,7 +75,7 @@ int AnnouncementFactory::onLoad()
 
 string AnnouncementFactory::getAnnounceFile(const AmSipRequest& req) {
   string announce_path = AnnouncePath;
-  string announce_file = announce_path + req.domain 
+  string announce_file = announce_path + req.domain
     + "/" + req.user + ".wav";
 
   DBG("trying '%s'\n",announce_file.c_str());
@@ -88,7 +88,7 @@ string AnnouncementFactory::getAnnounceFile(const AmSipRequest& req) {
     goto end;
 
   announce_file = AnnouncePath + AnnounceFile;
-    
+
  end:
   return announce_file;
 }
@@ -104,7 +104,7 @@ AmSession* AnnouncementFactory::onInvite(const AmSipRequest& req, const string& 
 {
   UACAuthCred* cred = AmUACAuth::unpackCredentials(session_params);
   AmSession* s = new AnnouncementDialog(getAnnounceFile(req), cred);
-  
+
   if (NULL == cred) {
     WARN("discarding unknown session parameters.\n");
   } else {
@@ -114,7 +114,7 @@ AmSession* AnnouncementFactory::onInvite(const AmSipRequest& req, const string& 
   return s;
 }
 
-AnnouncementDialog::AnnouncementDialog(const string& filename, 
+AnnouncementDialog::AnnouncementDialog(const string& filename,
 				       UACAuthCred* credentials)
   : filename(filename), cred(credentials)
 {
@@ -135,7 +135,7 @@ void AnnouncementDialog::onSessionStart() {
     throw string("AnnouncementDialog::onSessionStart: Cannot open file\n");
   }
 
-  if (AnnouncementFactory::Loop) 
+  if (AnnouncementFactory::Loop)
     wav_file.loop.set(true);
 
   setOutput(&wav_file);

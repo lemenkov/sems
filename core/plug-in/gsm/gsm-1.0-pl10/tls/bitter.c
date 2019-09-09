@@ -28,9 +28,9 @@ void write_code P2((s_spex, n_spex), struct spex * s_spex, int n_spex)
 		else printf("\t       | ");
 
 		if (vars == bits) {
-	
+
 			printf( (bits==8? "%s & 0x%lX;\n" : "(%s & 0x%lX);\n"),
-				sp->var, 
+				sp->var,
 				~(0xfffffffe << (bits - 1)));
 			if (!-- n_spex) break;
 			sp++;
@@ -55,10 +55,10 @@ void write_code P2((s_spex, n_spex), struct spex * s_spex, int n_spex)
 
 		} else {
 			printf("((%s >> %d) & 0x%X);\n",
-				sp->var, 
+				sp->var,
 				vars - bits,
 				~(0xfffffffe << (bits - 1)));
-			
+
 			vars -= bits;
 			bits = 8;
 		}

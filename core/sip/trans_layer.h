@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _trans_layer_h_
@@ -112,7 +112,7 @@ class trans_stats
     unsigned get_sent_reply_retrans() const { return sent_reply_retrans.get(); }
 };
 
-/** 
+/**
  * The transaction layer object.
  * Uses the singleton pattern.
  */
@@ -130,7 +130,7 @@ private:
 public:
 
     /**
-     * Config option: if true, final replies without 
+     * Config option: if true, final replies without
      * a to-tag will be accepted for requests which do not
      * create a dialog.
      */
@@ -179,13 +179,13 @@ public:
 		     unsigned int flags=0, msg_logger* logger=NULL);
 
     /**
-     * Cancels a request. 
+     * Cancels a request.
      * A CANCEL request is sent if necessary.
      * @param tt transaction ticket from the original INVITE.
      */
     int cancel(trans_ticket* tt, const cstring& dialog_id,
 	       unsigned int inv_cseq, const cstring& hdrs);
-    
+
     /**
      * Called by the transport layer
      * when a new message has been recived.
@@ -216,10 +216,10 @@ public:
      * include a well-formed 'Content-Type', but no
      * 'Content-Length' header.
      */
-    int send_sl_reply(sip_msg* req, int reply_code, 
-		      const cstring& reason, 
+    int send_sl_reply(sip_msg* req, int reply_code,
+		      const cstring& reason,
 		      const cstring& hdrs, const cstring& body);
-    
+
     /**
      * Sends a stateful error reply.
      * If a body is included, the hdrs parameter should
@@ -227,12 +227,12 @@ public:
      * 'Content-Length' header.
      */
     int send_sf_error_reply(const trans_ticket* tt, const sip_msg* req,
-			    int reply_code, const cstring& reason, 
+			    int reply_code, const cstring& reason,
 			    const cstring& hdrs = cstring(),
 			    const cstring& body = cstring());
 
     /**
-     * Allows the transport layer to signal 
+     * Allows the transport layer to signal
      * an asynchronous error while sending out
      * a SIP message.
      */
@@ -248,7 +248,7 @@ public:
 protected:
 
     /**
-     * Fills the address structure passed and modifies 
+     * Fills the address structure passed and modifies
      * R-URI and Route headers as needed.
      */
     int set_next_hop(sip_msg* msg, cstring* next_hop,
@@ -302,7 +302,7 @@ class trans_ticket
 {
     sip_trans*    _t;
     trans_bucket* _bucket;
-    
+
     friend class _trans_layer;
 
 public:

@@ -21,8 +21,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -70,7 +70,7 @@ static unsigned int tevent_samples2bytes(long h_codec, unsigned int num_samples)
   return num_samples;
 }
 
-amci_codec_t _codec_pcm16 = { 
+amci_codec_t _codec_pcm16 = {
   CODEC_PCM16,
   NULL,
   NULL,
@@ -82,7 +82,7 @@ amci_codec_t _codec_pcm16 = {
   NULL
 };
 
-amci_codec_t _codec_tevent = { 
+amci_codec_t _codec_tevent = {
   CODEC_TELEPHONE_EVENT,
   NULL,
   NULL,
@@ -94,14 +94,14 @@ amci_codec_t _codec_tevent = {
   NULL
 };
 
-amci_payload_t _payload_tevent = { 
+amci_payload_t _payload_tevent = {
   -1,
   "telephone-event",
-  8000, // telephone-event has always SR 8000 
+  8000, // telephone-event has always SR 8000
   8000,
   -1,
   CODEC_TELEPHONE_EVENT,
-  -1 
+  -1
 };
 
 AmPlugIn* AmPlugIn::_instance=0;
@@ -151,10 +151,10 @@ AmPlugIn* AmPlugIn::instance()
 }
 
 void AmPlugIn::init() {
-  vector<string> excluded_payloads_v = 
+  vector<string> excluded_payloads_v =
     explode(AmConfig::ExcludePayloads, ";");
-  for (vector<string>::iterator it = 
-	 excluded_payloads_v.begin(); 
+  for (vector<string>::iterator it =
+	 excluded_payloads_v.begin();
        it != excluded_payloads_v.end();it++)
     excluded_payloads.insert(*it);
 
@@ -167,7 +167,7 @@ void AmPlugIn::init() {
 int AmPlugIn::load(const string& directory, const string& plugins)
 {
   int err=0;
-  
+
   vector<AmPluginFactory*> loaded_plugins;
 
   if (!plugins.length()) {
@@ -179,10 +179,10 @@ int AmPlugIn::load(const string& directory, const string& plugins)
 	    directory.c_str(), strerror(errno));
       return -1;
     }
-    
+
     vector<string> excluded_plugins = explode(AmConfig::ExcludePlugins, ";");
-    set<string> excluded_plugins_s; 
-    for (vector<string>::iterator it = excluded_plugins.begin(); 
+    set<string> excluded_plugins_s;
+    for (vector<string>::iterator it = excluded_plugins.begin();
 	 it != excluded_plugins.end();it++)
       excluded_plugins_s.insert(*it);
 
@@ -194,13 +194,13 @@ int AmPlugIn::load(const string& directory, const string& plugins)
       if(plugin_name.find(".so",plugin_name.length()-3) == string::npos ){
         continue;
       }
-      
-      if (excluded_plugins_s.find(plugin_name.substr(0, plugin_name.length()-3)) 
+
+      if (excluded_plugins_s.find(plugin_name.substr(0, plugin_name.length()-3))
 	  != excluded_plugins_s.end()) {
 	DBG("skipping excluded plugin %s\n", plugin_name.c_str());
 	continue;
       }
-      
+
       string plugin_file = directory + "/" + plugin_name;
 
       DBG("loading %s ...\n",plugin_file.c_str());
@@ -209,14 +209,14 @@ int AmPlugIn::load(const string& directory, const string& plugins)
         return -1;
       }
     }
-    
+
     closedir(dir);
-  } 
+  }
   else {
     INFO("AmPlugIn: loading modules: '%s'\n", plugins.c_str());
 
     vector<string> plugins_list = explode(plugins, ";");
-    for (vector<string>::iterator it = plugins_list.begin(); 
+    for (vector<string>::iterator it = plugins_list.begin();
        it != plugins_list.end(); it++) {
       string plugin_file = *it;
       if (plugin_file == "sipctrl") {
@@ -234,7 +234,7 @@ int AmPlugIn::load(const string& directory, const string& plugins)
       if( (err = loadPlugIn(plugin_file, plugin_file, loaded_plugins)) < 0 ) {
         ERROR("while loading plug-in '%s'\n",plugin_file.c_str());
         // be strict here: if plugin not loaded, stop!
-        return err; 
+        return err;
       }
     }
   }
@@ -257,7 +257,7 @@ void AmPlugIn::registerLoggingPlugins() {
       it != name2logfac.end(); it++){
     // register for receiving logging messages
     register_log_hook(it->second);
-  }  
+  }
 }
 
 void AmPlugIn::set_load_rtld_global(const string& plugin_name) {
@@ -311,7 +311,7 @@ int AmPlugIn::loadPlugIn(const string& file, const string& plugin_name,
     goto end;
   }
 
-  if((fc = (FactoryCreate)dlsym(h_dl,FACTORY_SESSION_EXPORT_STR)) != NULL){  
+  if((fc = (FactoryCreate)dlsym(h_dl,FACTORY_SESSION_EXPORT_STR)) != NULL){
     plugin = (AmPluginFactory*)fc();
     if(loadAppPlugIn(plugin))
       goto error;
@@ -373,7 +373,7 @@ amci_inoutfmt_t* AmPlugIn::fileFormat(const string& fmt_name, const string& ext)
       return it->second;
   }
   else if(!ext.empty()){
-	
+
     std::map<std::string,amci_inoutfmt_t*>::iterator it = file_formats.begin();
     for(;it != file_formats.end();++it){
       if(ext == it->second->ext)
@@ -423,10 +423,10 @@ int AmPlugIn::getDynPayload(const string& name, int rate, int encoding_param) co
       pl_it != payloads.end(); ++pl_it)
     if( (!strcasecmp(name.c_str(),pl_it->second->name)
 	 && (rate == pl_it->second->advertised_sample_rate)) ) {
-      if ((encoding_param > 0) && (pl_it->second->channels > 0) && 
+      if ((encoding_param > 0) && (pl_it->second->channels > 0) &&
 	  (encoding_param != pl_it->second->channels))
 	continue;
-	  
+
       return pl_it->first;
     }
   // not found
@@ -451,7 +451,7 @@ amci_subtype_t* AmPlugIn::subtype(amci_inoutfmt_t* iofmt, int subtype)
 {
   if(!iofmt)
     return 0;
-    
+
   amci_subtype_t* st = iofmt->subtypes;
   if(subtype<0) // default subtype wanted
     return st;
@@ -489,7 +489,7 @@ AmSessionFactory* AmPlugIn::getFactory4App(const string& app_name)
 
   name2app_mut.lock();
   std::map<std::string,AmSessionFactory*>::iterator it = name2app.find(app_name);
-  if(it != name2app.end()) 
+  if(it != name2app.end())
     res = it->second;
   name2app_mut.unlock();
 
@@ -534,27 +534,27 @@ int AmPlugIn::loadAudioPlugIn(amci_exports_t* exports)
     }
   }
 
-  for( amci_codec_t* c=exports->codecs; 
+  for( amci_codec_t* c=exports->codecs;
        c->id>=0; c++ ){
 
     if(addCodec(c))
       goto error;
   }
 
-  for( amci_payload_t* p=exports->payloads; 
+  for( amci_payload_t* p=exports->payloads;
        p->name; p++ ){
 
     if(addPayload(p))
       goto error;
   }
 
-  for(amci_inoutfmt_t* f = exports->file_formats; 
+  for(amci_inoutfmt_t* f = exports->file_formats;
       f->name; f++ ){
 
     if(addFileFormat(f))
       goto error;
   }
-    
+
   return 0;
 
  error:
@@ -576,7 +576,7 @@ int AmPlugIn::loadAppPlugIn(AmPluginFactory* f)
     ERROR("application '%s' already loaded !\n",sf->getName().c_str());
     name2app_mut.unlock();
     return -1;
-  }      
+  }
 
   name2app.insert(std::make_pair(sf->getName(),sf));
   DBG("application '%s' loaded.\n",sf->getName().c_str());
@@ -637,7 +637,7 @@ int AmPlugIn::loadDiPlugIn(AmPluginFactory* f)
     ERROR("component '%s' already loaded !\n",sf->getName().c_str());
     goto error;
   }
-      
+
   name2di.insert(std::make_pair(sf->getName(),sf));
   DBG("component '%s' loaded.\n",sf->getName().c_str());
 
@@ -660,7 +660,7 @@ int AmPlugIn::loadLogFacPlugIn(AmPluginFactory* f)
 	  sf->getName().c_str());
     goto error;
   }
-      
+
   name2logfac.insert(std::make_pair(sf->getName(),sf));
   DBG("logging facility component '%s' loaded.\n",sf->getName().c_str());
 
@@ -683,9 +683,9 @@ int AmPlugIn::addCodec(amci_codec_t* c)
 
 int AmPlugIn::addPayload(amci_payload_t* p)
 {
-  if (excluded_payloads.find(p->name) != 
+  if (excluded_payloads.find(p->name) !=
       excluded_payloads.end()) {
-    DBG("Not enabling excluded payload '%s'\n", 
+    DBG("Not enabling excluded payload '%s'\n",
 	p->name);
     return 0;
   }
@@ -795,35 +795,35 @@ AmSessionFactory* AmPlugIn::findSessionFactory(const AmSipRequest& req, string& 
     string m_app_name;
 
     switch (AmConfig::AppSelect) {
-	
+
     case AmConfig::App_RURIUSER:
-      m_app_name = req.user; 
+      m_app_name = req.user;
       break;
-    case AmConfig::App_APPHDR: 
-      m_app_name = getHeader(req.hdrs, APPNAME_HDR, true); 
-      break;      
-    case AmConfig::App_RURIPARAM: 
+    case AmConfig::App_APPHDR:
+      m_app_name = getHeader(req.hdrs, APPNAME_HDR, true);
+      break;
+    case AmConfig::App_RURIPARAM:
       m_app_name = get_header_param(req.r_uri, "app");
       break;
     case AmConfig::App_MAPPING:
       m_app_name = ""; // no match if not found
       run_regex_mapping(AmConfig::AppMapping, req.r_uri.c_str(), m_app_name);
       break;
-    case AmConfig::App_SPECIFIED: 
-      m_app_name = AmConfig::Application; 
+    case AmConfig::App_SPECIFIED:
+      m_app_name = AmConfig::Application;
       break;
     }
-    
+
     if (m_app_name.empty()) {
       INFO("could not find any application matching configured criteria\n");
       return NULL;
     }
-    
+
     AmSessionFactory* session_factory = getFactory4App(m_app_name);
     if(!session_factory) {
       ERROR("AmPlugIn::findSessionFactory: application '%s' not found !\n", m_app_name.c_str());
     }
-    
+
     app_name = m_app_name;
     return session_factory;
 }

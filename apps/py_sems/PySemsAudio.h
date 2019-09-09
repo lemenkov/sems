@@ -16,7 +16,7 @@
 
 /** \brief pySems wrapper for AmAudioFile  */
 typedef struct {
-    
+
   PyObject_HEAD
   AmAudioFile* af;
 
@@ -25,7 +25,7 @@ typedef struct {
   string*    filename;
   bool       del_file;
 #endif
-    
+
 } PySemsAudioFile;
 
 extern PyTypeObject PySemsAudioFileType;

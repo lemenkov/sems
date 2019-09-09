@@ -10,7 +10,7 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version
- * 
+ *
  * For a license to use the SEMS software under conditions
  * other than those described here, or to purchase support for this
  * software, please contact iptel.org by e-mail at the following addresses:
@@ -21,14 +21,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * History:
  * -------
- *  
- *  
+ *
+ *
  */
 
 #include <stdio.h>
@@ -38,7 +38,7 @@
 #include <sys/time.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <netdb.h> 
+#include <netdb.h>
 #include <errno.h>
 #include <string.h>
 
@@ -101,16 +101,16 @@ static int password_cb(char *buf,int num,
 int check_cert(SSL * ssl, char* host) {
   X509 *peer;
   char peer_CN[256];
-  
+
   if(SSL_get_verify_result(ssl)!=X509_V_OK)  {
     ERROR("Certificate doesn't verify");
     return -1;
   }
-  
+
   /*Check the cert chain. The chain length
     is automatically checked by OpenSSL when
     we set the verify depth in the ctx */
-  
+
   /*Check the common name*/
   peer=SSL_get_peer_certificate(ssl);
   X509_NAME_get_text_by_NID
@@ -136,7 +136,7 @@ int tcp_init_tcp() {
   return 0;
 }
 
-/* it initializes the TCP connection */ 
+/* it initializes the TCP connection */
 dia_tcp_conn* tcp_create_connection(const char* host, int port,
 				    const char* CA_file, const char* client_cert_file)
 {
@@ -146,19 +146,19 @@ dia_tcp_conn* tcp_create_connection(const char* host, int port,
 #ifdef WITH_OPENSSL
   SSL_METHOD* meth;
 #endif
-    
-  sockfd = socket(PF_INET, SOCK_STREAM, 0);
-	
-  DBG("got DIAMETER socket #%d\n", sockfd); 
 
-  if (sockfd < 0) 
+  sockfd = socket(PF_INET, SOCK_STREAM, 0);
+
+  DBG("got DIAMETER socket #%d\n", sockfd);
+
+  if (sockfd < 0)
     {
       ERROR(M_NAME":init_diatcp(): error creating the socket\n");
       return 0;
-    }	
-	
+    }
+
   server = gethostbyname(host);
-  if (server == NULL) 
+  if (server == NULL)
     {
       close(sockfd);
       ERROR( M_NAME":init_diatcp(): error finding the host '%s'\n",
@@ -171,15 +171,15 @@ dia_tcp_conn* tcp_create_connection(const char* host, int port,
   memcpy((char *)&serv_addr.sin_addr.s_addr, (char *)server->h_addr,
 	 server->h_length);
   serv_addr.sin_port = htons(port);
-	
-  if (connect(sockfd, (const struct sockaddr *)&serv_addr, 
-	      sizeof(serv_addr)) < 0) 
+
+  if (connect(sockfd, (const struct sockaddr *)&serv_addr,
+	      sizeof(serv_addr)) < 0)
     {
       close(sockfd);
       ERROR( M_NAME":init_diatcp(): error connecting to the "
 	     "DIAMETER peer '%s'\n", host);
       return 0;
-    }	
+    }
 
   dia_tcp_conn* conn_st = pkg_malloc(sizeof(dia_tcp_conn));
   memset(conn_st, 0, sizeof(dia_tcp_conn));
@@ -220,7 +220,7 @@ dia_tcp_conn* tcp_create_connection(const char* host, int port,
       pkg_free(conn_st);
       return 0;
     }
-  
+
     SSL_CTX_set_default_passwd_cb(conn_st->ctx, password_cb);
 
     if(!(SSL_CTX_use_PrivateKey_file(conn_st->ctx,
@@ -233,7 +233,7 @@ dia_tcp_conn* tcp_create_connection(const char* host, int port,
       return 0;
     }
   }
-  
+
   /* Load the CAs we trust*/
   if(!(SSL_CTX_load_verify_locations(conn_st->ctx,
 				     CA_file,0))) {
@@ -244,7 +244,7 @@ dia_tcp_conn* tcp_create_connection(const char* host, int port,
     pkg_free(conn_st);
     return 0;
   }
-  
+
 #if (OPENSSL_VERSION_NUMBER < 0x00905100L)
   SSL_CTX_set_verify_depth(ctx,1);
 #endif
@@ -299,7 +299,7 @@ int tryreceive(dia_tcp_conn* conn_st, unsigned char* ptr, int nwanted) {
 
   tv.tv_sec = 0;
   tv.tv_usec = WANT_RW_TIMEOUT_USEC;
-      
+
   if (conn_st->ssl) {
     while (1) {
       res = SSL_read(conn_st->ssl, ptr, nwanted);
@@ -307,11 +307,11 @@ int tryreceive(dia_tcp_conn* conn_st, unsigned char* ptr, int nwanted) {
       case SSL_ERROR_NONE: {
 	return res;
       }
-	
+
       case SSL_ERROR_ZERO_RETURN: /* shutdown */
 	DBG("SSL shutdown connection (in SSL_read)\n");
 	return 0;
-	
+
       case SSL_ERROR_WANT_READ: {
 	FD_ZERO(&rw_fd_set);
 	FD_SET(conn_st->sockfd, &rw_fd_set);
@@ -321,7 +321,7 @@ int tryreceive(dia_tcp_conn* conn_st, unsigned char* ptr, int nwanted) {
 	  return -1;
 	}
       } break;
-	
+
       case SSL_ERROR_WANT_WRITE:  {
 	FD_ZERO(&rw_fd_set);
 	FD_SET(conn_st->sockfd, &rw_fd_set);
@@ -333,7 +333,7 @@ int tryreceive(dia_tcp_conn* conn_st, unsigned char* ptr, int nwanted) {
       } break;
       default: return 0;
       }
-    }    
+    }
   } else {
 #endif
     return recv(conn_st->sockfd, ptr, nwanted, MSG_DONTWAIT);
@@ -360,7 +360,7 @@ int do_read(dia_tcp_conn* conn_st, rd_buf_t *p)
       ptr = p->buf + p->buf_len;
     }
 
-  while( (n=tryreceive(conn_st, ptr, wanted_len))>0 ) 
+  while( (n=tryreceive(conn_st, ptr, wanted_len))>0 )
     {
       //		DBG("DEBUG:do_read (sock=%d)  -> n=%d (expected=%d)\n",
       //			p->sock,n,wanted_len);
@@ -371,7 +371,7 @@ int do_read(dia_tcp_conn* conn_st, rd_buf_t *p)
 	  wanted_len -= n;
 	  ptr += n;
 	}
-      else 
+      else
 	{
 	  if (p->buf==0)
 	    {
@@ -399,7 +399,7 @@ int do_read(dia_tcp_conn* conn_st, rd_buf_t *p)
 	  else
 	    {
 	      /* I finished reading the whole message */
-#ifdef EXTRA_DEBUG 
+#ifdef EXTRA_DEBUG
 	      DBG("DEBUG:do_read (sock=%d): whole message read (len=%d)!\n",
 		  socket, p->first_4bytes);
 #endif
@@ -438,11 +438,11 @@ int tcp_send(dia_tcp_conn* conn_st, char* buf, int len) {
     ERROR("called without conn_st\n");
     return CONN_ERROR;
   }
-  
+
   sockfd = conn_st->sockfd;
 
 #ifdef WITH_OPENSSL
-  if (!conn_st->ssl) { 
+  if (!conn_st->ssl) {
 #endif
   /* try to write the message to the Diameter client */
   while( (n=write(sockfd, buf, len))==-1 ) {
@@ -451,7 +451,7 @@ int tcp_send(dia_tcp_conn* conn_st, char* buf, int len) {
     ERROR( M_NAME": write returned error: %s\n", strerror(errno));
     return AAA_ERROR;
   }
-  
+
   if (n!=len) {
     ERROR( M_NAME": write gave no error but wrote less than asked\n");
     return AAA_ERROR;
@@ -471,7 +471,7 @@ int tcp_send(dia_tcp_conn* conn_st, char* buf, int len) {
       case SSL_ERROR_ZERO_RETURN: /* shutdown */
 	DBG("SSL shutdown connection (in SSL_write)\n");
 	return 0;
-	
+
       case SSL_ERROR_WANT_READ: {
 	FD_ZERO(&rw_fd_set);
 	FD_SET(conn_st->sockfd, &rw_fd_set);
@@ -481,7 +481,7 @@ int tcp_send(dia_tcp_conn* conn_st, char* buf, int len) {
 	  return -1;
 	}
       } break; /* try again */
-	
+
       case SSL_ERROR_WANT_WRITE:  {
 	FD_ZERO(&rw_fd_set);
 	FD_SET(conn_st->sockfd, &rw_fd_set);
@@ -504,7 +504,7 @@ int tcp_send(dia_tcp_conn* conn_st, char* buf, int len) {
   return 0;
 }
 
-int tcp_recv_msg(dia_tcp_conn* conn_st, rd_buf_t* rb, 
+int tcp_recv_msg(dia_tcp_conn* conn_st, rd_buf_t* rb,
 		 time_t wait_sec, suseconds_t wait_usec) {
   int res;
   fd_set rd_fd_set;
@@ -515,7 +515,7 @@ int tcp_recv_msg(dia_tcp_conn* conn_st, rd_buf_t* rb,
     ERROR("called without conn_st\n");
     return CONN_ERROR;
   }
-  
+
   sockfd = conn_st->sockfd;
 
   /* wait for the answer a limited amount of time */
@@ -555,7 +555,7 @@ void tcp_close_connection(dia_tcp_conn* conn_st)
     ERROR("called without conn_st\n");
     return;
   }
-  
+
   shutdown(conn_st->sockfd, SHUT_RDWR);
   DBG("closing DIAMETER socket %d\n", conn_st->sockfd);
   close(conn_st->sockfd);
@@ -565,7 +565,7 @@ void tcp_destroy_connection(dia_tcp_conn* conn_st) {
   if (!conn_st) {
     ERROR("called without conn_st\n");
     return;
-  }    
+  }
 
   if (conn_st->ssl)
     SSL_free(conn_st->ssl);

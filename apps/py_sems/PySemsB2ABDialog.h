@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2006 iptego GmbH
  *
  * This file is part of SEMS, a free SIP media server.
@@ -28,7 +28,7 @@
 class PySemsB2ABCalleeDialog;
 
 /** \brief pySems wrapper for base of pySems dialog classes */
-class PySemsB2ABDialog : public AmB2ABCallerSession, 
+class PySemsB2ABDialog : public AmB2ABCallerSession,
   public PySemsDialogBase
 {
  public:
@@ -52,7 +52,7 @@ class PySemsB2ABDialog : public AmB2ABCallerSession,
 struct PySemsB2ABEvent: public B2ABEvent
 {
  public:
- PySemsB2ABEvent(int ev_id) 
+ PySemsB2ABEvent(int ev_id)
    : B2ABEvent(ev_id)
   {}
 };
@@ -61,7 +61,7 @@ struct PySemsB2ABEvent: public B2ABEvent
 class PySemsB2ABCalleeDialog : public AmB2ABCalleeSession
 {
  public:
- PySemsB2ABCalleeDialog(const string& other_local_tag, 
+ PySemsB2ABCalleeDialog(const string& other_local_tag,
 			AmSessionAudioConnector* connector)
    : AmB2ABCalleeSession(other_local_tag, connector) { }
   virtual ~PySemsB2ABCalleeDialog() { }

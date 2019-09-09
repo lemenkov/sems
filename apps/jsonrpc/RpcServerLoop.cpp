@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 TelTech Systems Inc.
- * 
+ *
  * This file is part of SEMS, a free SIP media server.
  *
  * SEMS is free software; you can redistribute it and/or modify
@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -44,7 +44,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <string.h> 
+#include <string.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <err.h>
@@ -79,16 +79,16 @@ int setnonblock(int fd)
   if (flags < 0)
     return flags;
   flags |= O_NONBLOCK;
-  if (fcntl(fd, F_SETFL, flags) < 0) 
+  if (fcntl(fd, F_SETFL, flags) < 0)
     return -1;
 
   return 0;
 }
 
-// todo: use write_cb 
+// todo: use write_cb
 // static void write_cb(struct ev_loop *loop, struct ev_io *w, int revents)
-// { 
-//   struct JsonrpcClientConnection *cli= 
+// {
+//   struct JsonrpcClientConnection *cli=
 // ((struct JsonrpcClientConnection*) (((char*)w) - offsetof(struct JsonrpcClientConnection,ev_write)));
 //   if (revents & EV_WRITE){
 //     ssize_t written = write(cli->fd,superjared,strlen(superjared));
@@ -101,10 +101,10 @@ int setnonblock(int fd)
 //   delete cli;
 // }
 
-static void read_cb(struct ev_loop *loop, struct ev_io *w, int revents) { 	
+static void read_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
 
-  struct JsonrpcNetstringsConnection *peer= 
-    ((struct JsonrpcNetstringsConnection*) 
+  struct JsonrpcNetstringsConnection *peer=
+    ((struct JsonrpcNetstringsConnection*)
      (((char*)w) - offsetof(JsonrpcNetstringsConnection,ev_read)));
 
   DBG("read_cb in connection %p\n", peer);
@@ -115,11 +115,11 @@ static void read_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
     // read message - here in main server thread (more efficient for small messages)
     int res = peer->netstringsRead();
     switch (res) {
-    case JsonrpcNetstringsConnection::CONTINUE: 
+    case JsonrpcNetstringsConnection::CONTINUE:
       ev_io_start(loop,&peer->ev_read); return;
 
     case JsonrpcNetstringsConnection::REMOVE: {
-      ev_io_stop(EV_A_ w); 
+      ev_io_stop(EV_A_ w);
 
       peer->notifyDisconnect();
 
@@ -128,7 +128,7 @@ static void read_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
 
     } return;
     case JsonrpcNetstringsConnection::DISPATCH: {
-      ev_io_stop(EV_A_ w); 
+      ev_io_stop(EV_A_ w);
       JsonRPCServerLoop::
 	dispatchServerEvent(new JsonServerEvent(peer, JsonServerEvent::StartReadLoop));
     } return;
@@ -140,7 +140,7 @@ static void read_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
 
   // ev_io_stop(EV_A_ w);
   // ev_io_init(&cli->ev_write,write_cb,cli->fd,EV_WRITE);
-  // ev_io_start(loop,&cli->ev_write);	
+  // ev_io_start(loop,&cli->ev_write);
 }
 
 void JsonRPCServerLoop::dispatchServerEvent(AmEvent* ev) {
@@ -156,7 +156,7 @@ static void accept_cb(struct ev_loop *loop, struct ev_io *w, int revents)
   if (client_fd == -1) {
     return;
   }
-   	 
+
   string connection_id = JsonRPCServerLoop::newConnectionId();
   JsonrpcNetstringsConnection* peer = new JsonrpcNetstringsConnection(connection_id);
   peer->fd=client_fd;
@@ -207,9 +207,9 @@ void JsonRPCServerLoop::process(AmEvent* ev) {
 	JsonServerEvent* server_event = *it;
 	pending_events.erase(it);
 	pending_events_mut.unlock();
-	
+
 	DBG("got pending event for connection '%s'\n", a_client->id.c_str());
-	
+
 	server_event->conn = a_client;
 	dispatchServerEvent(server_event);
 
@@ -226,7 +226,7 @@ void JsonRPCServerLoop::process(AmEvent* ev) {
   }; break;
 
   case JsonServerEvent::SendMessage: {
-    JsonServerSendMessageEvent* snd_msg_ev = 
+    JsonServerSendMessageEvent* snd_msg_ev =
       dynamic_cast<JsonServerSendMessageEvent*>(server_event);
     if (snd_msg_ev == NULL) {
       ERROR("invalid SendMessage type event received\n");
@@ -237,8 +237,8 @@ void JsonRPCServerLoop::process(AmEvent* ev) {
     if (p_peer == NULL) {
       WARN("dropping message to inexistent/broken connection '%s' "
 	   "(is_reply=%s, method=%s, id=%s, params='%s')",
-	   snd_msg_ev->connection_id.c_str(), snd_msg_ev->is_reply?"true":"false", 
-	   snd_msg_ev->method.c_str(), snd_msg_ev->id.c_str(), 
+	   snd_msg_ev->connection_id.c_str(), snd_msg_ev->is_reply?"true":"false",
+	   snd_msg_ev->method.c_str(), snd_msg_ev->id.c_str(),
 	   AmArg::print(snd_msg_ev->params).c_str());
       return;
     }
@@ -260,14 +260,14 @@ void JsonRPCServerLoop::process(AmEvent* ev) {
       pending_events.push_back(new JsonServerSendMessageEvent(*snd_msg_ev));
       size_t q_size = pending_events.size();
       pending_events_mut.unlock();
-      DBG("queued event for connection %s (total %zd events pending)\n", 
-	  snd_msg_ev->connection_id.c_str(), q_size);     
+      DBG("queued event for connection %s (total %zd events pending)\n",
+	  snd_msg_ev->connection_id.c_str(), q_size);
     }
-      
-  }; break;
-    // todo: process remove connection event 
 
-  default: 
+  }; break;
+    // todo: process remove connection event
+
+  default:
     ERROR("unknown server event type received\n");
     return;
   }
@@ -285,16 +285,16 @@ JsonRPCServerLoop::~JsonRPCServerLoop() {
 }
 
 void JsonRPCServerLoop::run() {
-  DBG("adding %d more server threads \n", 
+  DBG("adding %d more server threads \n",
       JsonRPCServerModule::threads - 1);
   threadpool.addThreads(JsonRPCServerModule::threads - 1);
 
-  INFO("running server loop; listening on port %d\n", 
+  INFO("running server loop; listening on port %d\n",
        JsonRPCServerModule::port);
   int listen_fd;
-  struct sockaddr_in listen_addr; 
+  struct sockaddr_in listen_addr;
   int reuseaddr_on = 1;
-  listen_fd = socket(AF_INET, SOCK_STREAM, 0); 
+  listen_fd = socket(AF_INET, SOCK_STREAM, 0);
   if (listen_fd < 0)
     err(1, "listen failed");
   if (setsockopt(listen_fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr_on,
@@ -317,7 +317,7 @@ void JsonRPCServerLoop::run() {
     ERROR("failed to set server socket to non-blocking\n");
     return;
   }
-	 
+
   ev_io_init(&ev_accept,accept_cb,listen_fd,EV_READ);
   ev_io_start(loop,&ev_accept);
 
@@ -361,12 +361,12 @@ void JsonRPCServerLoop::returnConnection(JsonrpcNetstringsConnection* conn) {
   ev_async_send(loop, &async_w);
 }
 
-void JsonRPCServerLoop::execRpc(const string& evq_link, 
+void JsonRPCServerLoop::execRpc(const string& evq_link,
 				const string& notificationReceiver,
 				const string& requestReceiver,
 				int flags,
 				const string& host,
-				int port, const string& method, 
+				int port, const string& method,
 				const AmArg& params,
 				const AmArg& udata,
 				AmArg& ret) {
@@ -396,8 +396,8 @@ void JsonRPCServerLoop::execRpc(const string& evq_link,
   registerConnection(peer, connection_id);
 
   DBG("dispatching JsonServerSendMessageEvent\n");
-  JsonServerSendMessageEvent* send_message_event = 
-    new JsonServerSendMessageEvent(connection_id, false, method, "1" /* id - not empty */, 
+  JsonServerSendMessageEvent* send_message_event =
+    new JsonServerSendMessageEvent(connection_id, false, method, "1" /* id - not empty */,
 				   params, udata, evq_link);
 
   JsonRPCServerLoop::dispatchServerEvent(send_message_event);
@@ -410,17 +410,17 @@ void JsonRPCServerLoop::execRpc(const string& evq_link,
   ret.push(connection_id);
 }
 
-void JsonRPCServerLoop::sendMessage(const string& connection_id, 
-				    int msg_type, 
-				    const string& method, 
+void JsonRPCServerLoop::sendMessage(const string& connection_id,
+				    int msg_type,
+				    const string& method,
 				    const string& id,
 				    const string& reply_sink,
 				    const AmArg& params,
 				    const AmArg& udata,
 				    AmArg& ret) {
   // check for presence of connection
-  // (connection might still be removed until we really 
-  // process the request to send message, but here we already 
+  // (connection might still be removed until we really
+  // process the request to send message, but here we already
   // catch most failures)
   if (getConnection(connection_id)==NULL) {
     ret.push(400);
@@ -428,8 +428,8 @@ void JsonRPCServerLoop::sendMessage(const string& connection_id,
     return;
   }
 
-  JsonServerSendMessageEvent* ev = 
-    new JsonServerSendMessageEvent(connection_id, msg_type != JSONRPC_MSG_REQUEST, 
+  JsonServerSendMessageEvent* ev =
+    new JsonServerSendMessageEvent(connection_id, msg_type != JSONRPC_MSG_REQUEST,
 				   method, id, params, udata, reply_sink);
   ev->is_error = msg_type == JSONRPC_MSG_ERROR;
   instance()->postEvent(ev);
@@ -460,7 +460,7 @@ bool JsonRPCServerLoop::registerConnection(JsonrpcPeerConnection* peer, const st
 bool JsonRPCServerLoop::removeConnection(const string& id) {
   bool res = false;
   connections_mut.lock();
-  std::map<string, JsonrpcPeerConnection*>::iterator it = 
+  std::map<string, JsonrpcPeerConnection*>::iterator it =
     connections.find(id);
   if (it != connections.end()) {
     res = true;
@@ -476,8 +476,8 @@ JsonrpcPeerConnection* JsonRPCServerLoop::getConnection(const string& id) {
   connections_mut.lock();
   std::map<string, JsonrpcPeerConnection*>::iterator it =
     connections.find(id);
-  if (it != connections.end()) 
-    res = it->second;  
+  if (it != connections.end())
+    res = it->second;
   connections_mut.unlock();
   return res;
 }

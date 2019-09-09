@@ -21,7 +21,7 @@ struct DRedisConfig
   DRedisConfig(const string& host = DEFAULT_REDIS_HOST,
 	      unsigned int port = DEFAULT_REDIS_PORT,
 	      bool unix_socket = false,
-	      bool full_logging = false, 
+	      bool full_logging = false,
 	      bool use_transactions = false,
 	      int connect_timeout = DEFAULT_REDIS_CONNECT_TIMEOUT);
 };
@@ -35,7 +35,7 @@ class DRedisConnection
 
 public:
   DRedisConnection(const DRedisConfig& cfg);
-  ~DRedisConnection(); 
+  ~DRedisConnection();
 
   bool connect();
   void disconnect();

@@ -21,8 +21,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmPlugIn.h */
@@ -56,24 +56,24 @@ struct amci_subtype_t;
 
 /** Interface that a payload provider needs to implement */
 class AmPayloadProvider {
- public: 
+ public:
   AmPayloadProvider() { }
   virtual ~AmPayloadProvider() { }
-  
-  /** 
+
+  /**
    * Payload lookup function.
    * @param payload_id Payload ID.
    * @return NULL if failed .
    */
   virtual amci_payload_t*  payload(int payload_id) const = 0;
 
-  /** 
+  /**
    * Payload lookup function by name & rate
    * @param name Payload ID.
    * @return -1 if failed, else the internal payload id.
    */
   virtual int getDynPayload(const string& name, int rate, int encoding_param) const = 0;
-  
+
   /**
    * List all the payloads available for a media type
    */
@@ -110,7 +110,7 @@ class AmPlugIn : public AmPayloadProvider
 
   int dynamic_pl; // range: 96->127, see RFC 1890
   std::set<string> excluded_payloads;  // don't load these payloads (named)
-    
+
   AmPlugIn();
   virtual ~AmPlugIn();
 
@@ -138,8 +138,8 @@ class AmPlugIn : public AmPayloadProvider
 
   void init();
 
-  /** 
-   * Loads all plug-ins from the directory given as parameter. 
+  /**
+   * Loads all plug-ins from the directory given as parameter.
    * @return -1 if failed, else 0.
    */
   int load(const string& directory, const string& plugins);
@@ -147,14 +147,14 @@ class AmPlugIn : public AmPayloadProvider
   /** register logging plugins to receive logging messages */
   void registerLoggingPlugins();
 
-  /** 
+  /**
    * Payload lookup function.
    * @param payload_id Payload ID.
    * @return NULL if failed .
    */
   amci_payload_t*  payload(int payload_id) const;
 
-  /** 
+  /**
    * Payload lookup function by name & rate
    * @param name Payload ID.
    * @return -1 if failed, else the internal payload id.
@@ -168,8 +168,8 @@ class AmPlugIn : public AmPayloadProvider
 
   /** @return the order of payloads. */
 
-  /** 
-   * File format lookup according to the 
+  /**
+   * File format lookup according to the
    * format name and/or file extension.
    * @param fmt_name Format name.
    * @param ext File extension.
@@ -177,7 +177,7 @@ class AmPlugIn : public AmPayloadProvider
    */
   amci_inoutfmt_t* fileFormat(const string& fmt_name, const string& ext = "");
 
-  /** 
+  /**
    * File format's subtype lookup function.
    * @param iofmt The file format.
    * @param subtype Subtype ID (see plug-in declaration for values).
@@ -185,21 +185,21 @@ class AmPlugIn : public AmPayloadProvider
    */
   amci_subtype_t*  subtype(amci_inoutfmt_t* iofmt, int subtype);
 
-  /** 
+  /**
    * File subtype lookup function.
    * @param subtype_name The subtype's name (e.g. Pcm16).
    * @return NULL if failed.
    */
   amci_subtype_t* subtype(amci_inoutfmt_t* iofmt, const string& subtype_name);
 
-  /** 
+  /**
    * Codec lookup function.
    * @param id Codec ID (see amci/codecs.h).
    * @return NULL if failed.
    */
   amci_codec_t*    codec(int id);
 
-  /** 
+  /**
    * get codec format parameters
    * @param id Codec ID (see amci/codecs.h).
    * @param is_offer for an offer?

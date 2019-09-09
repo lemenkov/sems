@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2014 Stefan Sayer
- * 
+ *
  * This file is part of SEMS, a free SIP media server.
  *
  * SEMS is free software; you can redistribute it and/or modify
@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -141,28 +141,28 @@ DSMRedisResult* getRedisDSMResult(DSMSession* sc_sess) {
   return res;
 }
 
-string replaceQueryParams(const string& q, DSMSession* sc_sess, 
+string replaceQueryParams(const string& q, DSMSession* sc_sess,
 			  map<string,string>* event_params) {
   string res = q;
   size_t repl_pos = 0;
   while (repl_pos<res.length()) {
     size_t rstart = res.find_first_of("$#", repl_pos);
     repl_pos = rstart+1;
-    if (rstart == string::npos) 
+    if (rstart == string::npos)
       break;
     if (rstart && res[rstart-1] == '\\') // escaped
       continue;
-    
+
     size_t rend = res.find_first_of(" ,()$#\t;'\"", rstart+1);
     if (rend==string::npos)
       rend = res.length();
     switch(res[rstart]) {
-    case '$': 
-      res.replace(rstart, rend-rstart, 
+    case '$':
+      res.replace(rstart, rend-rstart,
 		  sc_sess->var[res.substr(rstart+1, rend-rstart-1)]); break;
     case '#':
       if (NULL!=event_params) {
-	res.replace(rstart, rend-rstart, 
+	res.replace(rstart, rend-rstart,
 		    (*event_params)[res.substr(rstart+1, rend-rstart-1)]); break;
       }
     default: break;
@@ -219,7 +219,7 @@ EXEC_ACTION_START(DSMRedisConnectAction) {
   }
 
   unsigned int redis_port = DEFAULT_REDIS_PORT;
-  bool full_logging = false; 
+  bool full_logging = false;
   bool use_transactions = false;
   int connect_timeout = DEFAULT_REDIS_CONNECT_TIMEOUT;
 
@@ -251,7 +251,7 @@ EXEC_ACTION_START(DSMRedisConnectAction) {
   }
 
   DSMRedisConnection* conn =
-    new DSMRedisConnection(db_host, redis_port, unix_socket, full_logging, 
+    new DSMRedisConnection(db_host, redis_port, unix_socket, full_logging,
 			   use_transactions, connect_timeout);
 
   if (!conn->connect()) {
@@ -267,7 +267,7 @@ EXEC_ACTION_START(DSMRedisConnectAction) {
   sc_sess->avar[REDIS_AKEY_CONNECTION] = c_arg;
   // for garbage collection
   sc_sess->transferOwnership(conn);
-  CLR_ERROR(sc_sess);    
+  CLR_ERROR(sc_sess);
 
 } EXEC_ACTION_END;
 
@@ -296,7 +296,7 @@ void decodeRedisResult(VarMapT& dst, const string& varname, redisReply* reply) {
   case REDIS_REPLY_ERROR: ERROR("decoding REDIS reply - ERROR type"); break;
   case REDIS_REPLY_ARRAY: {
     for (size_t i=0;i<reply->elements;i++) {
-      decodeRedisResult(dst, varname+"["+int2str((unsigned int)i)+"]", reply->element[i]); 
+      decodeRedisResult(dst, varname+"["+int2str((unsigned int)i)+"]", reply->element[i]);
     }
   } break;
   }

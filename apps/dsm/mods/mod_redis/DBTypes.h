@@ -13,7 +13,7 @@ struct DBIdxType
 {
   string key;
   string value;
-  
+
   DBIdxType()  {}
   DBIdxType(const string& key, const string& value)
     : key(key), value(value)

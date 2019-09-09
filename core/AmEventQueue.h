@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmEventQueue.h */
@@ -42,7 +42,7 @@ class AmEventQueueInterface
 };
 
 class AmEventQueue;
-/** a receiver for notifications about 
+/** a receiver for notifications about
     the fact that events are pending */
 class AmEventNotificationSink
 {
@@ -51,11 +51,11 @@ class AmEventNotificationSink
   virtual void notify(AmEventQueue* sender) = 0;
 };
 
-/** 
- * \brief Asynchronous event queue implementation 
- * 
+/**
+ * \brief Asynchronous event queue implementation
+ *
  * This class implements an event queue; a queue into which
- * \ref AmEvent can safely be posted at any time from any 
+ * \ref AmEvent can safely be posted at any time from any
  * thread, which are then processed by the registered event
  *  handler.
  */

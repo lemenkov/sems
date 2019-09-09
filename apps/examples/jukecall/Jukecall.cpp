@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -63,12 +63,12 @@ AmSession* JukecallFactory::onInvite(const AmSipRequest& req, const string& app_
   return dlg;
 }
 
-JukecallSession::JukecallSession() 
+JukecallSession::JukecallSession()
   : AmB2ABCallerSession(), state(JC_none)
 {
 }
 
-JukecallSession::~JukecallSession() 
+JukecallSession::~JukecallSession()
 {
 }
 
@@ -104,7 +104,7 @@ void JukecallSession::onDtmf(int event, int duration_msec) {
     return;
 
   // no jukebox in the beginning and while playing
-  if (state != JC_connect) 
+  if (state != JC_connect)
     return;
 
   DBG("playing back file...\n");
@@ -130,7 +130,7 @@ void JukecallSession::process(AmEvent* event)
       state = JC_connect;
       string callee = "sip:" + dlg->getUser().substr(3) + "@" + dlg->getDomain();
       DBG("-------------------------- connecting %s ------------------------\n", callee.c_str());
-      connectCallee(callee, callee, 
+      connectCallee(callee, callee,
 		    dlg->getRemoteParty(), dlg->getRemoteUri());
 
       return;
@@ -149,7 +149,7 @@ void JukecallSession::process(AmEvent* event)
       return;
     };
     }
-		
+
   }
 
   AmB2ABCallerSession::process(event);
@@ -160,8 +160,8 @@ AmB2ABCalleeSession* JukecallSession::createCalleeSession() {
   return sess;
 }
 
-JukecalleeSession::JukecalleeSession(const string& other_tag, 
-				     AmSessionAudioConnector* connector) 
+JukecalleeSession::JukecalleeSession(const string& other_tag,
+				     AmSessionAudioConnector* connector)
   : AmB2ABCalleeSession(other_tag, connector)
 {
   setDtmfDetectionEnabled(false);
@@ -186,6 +186,6 @@ void JukecalleeSession::process(AmEvent* event) {
     connectSession();
     return;
   }
-	
+
   AmB2ABCalleeSession::process(event);
 }

@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmRtpStream.h */
@@ -91,9 +91,9 @@ private:
 class AmRtpTimeoutEvent
   : public AmEvent
 {
-	
+
 public:
-  AmRtpTimeoutEvent() 
+  AmRtpTimeoutEvent()
     : AmEvent(0) { }
   ~AmRtpTimeoutEvent() { }
 };
@@ -120,7 +120,7 @@ class PayloadMask
 
     // get given flag
     bool get(unsigned char payload_id) { if (payload_id > 127) { ERROR("BUG: payload_id out of range\n"); return false; } return (bits[payload_id / 8] & (1 << (payload_id % 8))); }
-    
+
     PayloadMask() { clear(); }
     PayloadMask(bool _set_all) { if (_set_all) set_all(); else clear(); }
     PayloadMask(const PayloadMask &src);
@@ -152,7 +152,7 @@ protected:
 
   // payload collection
   typedef std::vector<Payload> PayloadCollection;
-  
+
   // list of locally supported payloads
   PayloadCollection payloads;
 
@@ -170,7 +170,7 @@ protected:
   typedef std::map<unsigned int, AmRtpPacket*, ts_less> ReceiveBuffer;
   typedef std::queue<AmRtpPacket*>                      RtpEventQueue;
   typedef std::map<unsigned char, PayloadMapping>       PayloadMappingTable;
-  
+
   // mapping from local payload type to PayloadMapping
   PayloadMappingTable pl_map;
 
@@ -182,7 +182,7 @@ protected:
 
   /**
      Payload of last received packet.
-     Usefull to detect talk spurt, looking 
+     Usefull to detect talk spurt, looking
      for comfort noise packets.
   */
   int         last_payload;
@@ -192,7 +192,7 @@ protected:
   unsigned short     r_port;
   unsigned short     r_rtcp_port;
 
-  /** 
+  /**
    * Local interface used for this stream
    * (index into @AmConfig::Ifs)
    */
@@ -275,7 +275,7 @@ protected:
   string          rtp_mux_remote_ip;
   /** remote port for RTP MUX - 0 if disabled*/
   unsigned int    rtp_mux_remote_port;
- 
+
   /** Session owning this stream */
   AmSession*         session;
 
@@ -291,7 +291,7 @@ protected:
   void bufferPacket(AmRtpPacket* p);
   /* Get next packet from the buffer queue */
   int nextPacket(AmRtpPacket*& p);
-  
+
   /** Try to reuse oldest buffered packet for newly coming packet */
   AmRtpPacket *reuseBufferedPacket();
 
@@ -312,8 +312,8 @@ protected:
   /** set to true if any data received */
   bool active;
 
-  /** 
-   * Select a compatible default payload 
+  /**
+   * Select a compatible default payload
    * @return -1 if none available.
    */
   int getDefaultPT();
@@ -350,11 +350,11 @@ public:
   int send( unsigned int ts,
 	    unsigned char* buffer,
 	    unsigned int   size );
-  
+
   int send_raw( char* packet, unsigned int length );
 
-  int compile_and_send( const int payload, bool marker, 
-		        unsigned int ts, unsigned char* buffer, 
+  int compile_and_send( const int payload, bool marker,
+		        unsigned int ts, unsigned char* buffer,
 		        unsigned int size );
 
   int receive( unsigned char* buffer, unsigned int size,
@@ -379,31 +379,31 @@ public:
    * possible to change the IP later
    */
   void setLocalIP(const string& ip);
-	    
-  /** 
+
+  /**
    * Initializes with a new random local port if 'p' is 0,
-   * else binds the given port, and sets own attributes properly. 
+   * else binds the given port, and sets own attributes properly.
    */
   void setLocalPort(unsigned short p = 0);
 
-  /** 
+  /**
    * Gets RTP port number. If no RTP port in assigned, assigns a new one.
-   * @return local RTP port. 
+   * @return local RTP port.
    */
   int getLocalPort();
 
-  /** 
+  /**
    * Gets RTCP port number. If no RTP/RTCP port in assigned, assigns a new one.
-   * @return local RTCP port. 
+   * @return local RTCP port.
    */
   int getLocalRtcpPort();
 
-  /** 
+  /**
    * Gets remote RTP port.
    * @return remote RTP port.
    */
   int getRPort();
-    
+
   /**
    * Gets remote host IP.
    * @return remote host IP.
@@ -466,7 +466,7 @@ public:
 
   /** set the RTP stream on hold */
   void setOnHold(bool on_hold);
-  
+
   /** get whether RTP stream is on hold  */
   bool getOnHold();
 

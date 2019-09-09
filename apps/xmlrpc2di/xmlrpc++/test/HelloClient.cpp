@@ -1,5 +1,5 @@
 // HelloClient.cpp : A simple xmlrpc client. Usage: HelloClient serverHost serverPort
-// Link against xmlrpc lib and whatever socket libs your system needs (ws2_32.lib 
+// Link against xmlrpc lib and whatever socket libs your system needs (ws2_32.lib
 // on windows)
 #include "XmlRpc.h"
 #include <iostream>

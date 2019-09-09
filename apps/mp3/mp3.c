@@ -20,13 +20,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 #include "amci.h"
-#include "codecs.h" 
+#include "codecs.h"
 #include "log.h"
 
 #include <math.h>
@@ -42,19 +42,19 @@
 
 /**
  * @file apps/mp3/mp3.c
- * lame-MP3 support 
- * This plug-in writes MP3 files using lame encoder. 
+ * lame-MP3 support
+ * This plug-in writes MP3 files using lame encoder.
  *
  * See http://lame.sourceforge.net/ .
- * 
+ *
  * If WITH_MPG123DECODER=yes (default), mpg123 mp3 decoding is supported as well.
- * 
+ *
  */
 
-#define MP3_phone  1 
+#define MP3_phone  1
 
-static int MP3_2_Pcm16( unsigned char* out_buf, unsigned char* in_buf, 
-			unsigned int size, unsigned int channels, unsigned int rate, 
+static int MP3_2_Pcm16( unsigned char* out_buf, unsigned char* in_buf,
+			unsigned int size, unsigned int channels, unsigned int rate,
 			long h_codec );
 
 static int MP3_ModuleLoad(void);
@@ -74,7 +74,7 @@ BEGIN_EXPORTS( "mp3", (amci_codec_module_load_t)MP3_ModuleLoad, MP3_ModuleDestro
     BEGIN_CODECS
 CODEC( CODEC_MP3, Pcm16_2_MP3, MP3_2_Pcm16, (amci_plc_t)0, (amci_codec_init_t)MP3_create, (amci_codec_destroy_t)MP3_destroy, mp3_bytes2samples, mp3_samples2bytes)
     END_CODECS
-    
+
     BEGIN_PAYLOADS
     END_PAYLOADS
 
@@ -110,7 +110,7 @@ void MP3_ModuleDestroy(void) {
 
 #define MP3_FRAMESAMPLES   1152
 /* for 128kbit 44.1 khz  FrameSize = 144 * BitRate / (SampleRate + Padding) */
-#define MP3_MAXFRAMEBYTES   417 
+#define MP3_MAXFRAMEBYTES   417
 #define DECODED_BUF_SIZE MP3_FRAMESAMPLES * 2 * 2 // space for two decoded frames
 #define CODED_BUF_SIZE  MP3_MAXFRAMEBYTES * 2     // space for two encoded frames
 
@@ -126,7 +126,7 @@ typedef struct {
 /*   size_t decoded_end; */
 /*   unsigned char coded_buf[CODED_BUF_SIZE]; */
 /*   size_t coded_pos; */
-#endif  
+#endif
 } mp3_coder_state;
 
 void no_output(const char *format, va_list ap)
@@ -138,17 +138,17 @@ void no_output(const char *format, va_list ap)
 long MP3_create(const char* format_parameters, amci_codec_fmt_info_t* format_description) {
   mp3_coder_state* coder_state;
   int ret_code;
-  
+
   coder_state = malloc(sizeof(mp3_coder_state));
   if (!coder_state) {
     ERROR("no memory for allocating mp3 coder state\n");
     return -1;
   }
-  
+
   DBG("MP3: creating lame %s\n", get_lame_version());
-  format_description[0].id = 0; 
-  coder_state->gfp = lame_init(); 
-    
+  format_description[0].id = 0;
+  coder_state->gfp = lame_init();
+
   if (!coder_state->gfp) {
     ERROR("initialiting lame\n");
     free(coder_state);
@@ -158,23 +158,23 @@ long MP3_create(const char* format_parameters, amci_codec_fmt_info_t* format_des
   lame_set_errorf(coder_state->gfp, &no_output);
   lame_set_debugf(coder_state->gfp, &no_output);
   lame_set_msgf(coder_state->gfp, &no_output);
-  
+
   lame_set_num_channels(coder_state->gfp,1);
   lame_set_in_samplerate(coder_state->gfp,8000);
   lame_set_brate(coder_state->gfp,16);
   lame_set_mode(coder_state->gfp,3); // mono
-  lame_set_quality(coder_state->gfp,2);   /* 2=high  5 = medium  7=low */ 
-  
+  lame_set_quality(coder_state->gfp,2);   /* 2=high  5 = medium  7=low */
+
   id3tag_init(coder_state->gfp);
   id3tag_set_title(coder_state->gfp, "mp3 voicemail by iptel.org");
   ret_code = lame_init_params(coder_state->gfp);
-  
+
   if (ret_code < 0) {
     ERROR("lame encoder init failed: return code is %d\n", ret_code);
     free(coder_state);
     return -1;
   }
-  
+
 
 #ifdef WITH_MPG123DECODER
   coder_state->mpg123_h = mpg123_new(NULL, NULL);
@@ -207,7 +207,7 @@ void MP3_destroy(long h_inst) {
 
 static int Pcm16_2_MP3( unsigned char* out_buf, unsigned char* in_buf, unsigned int size,
 		  unsigned int channels, unsigned int rate, long h_codec )
-{ 
+{
 
   if (!h_codec){
     ERROR("MP3 codec not initialized.\n");
@@ -222,17 +222,17 @@ static int Pcm16_2_MP3( unsigned char* out_buf, unsigned char* in_buf, unsigned 
 /*   DBG("h_codec=0x%lx; in_buf=0x%lx; size=%i\n", */
 /*       (unsigned long)h_codec,(unsigned long)in_buf,size);  */
 
-  int ret =  lame_encode_buffer(((mp3_coder_state*)h_codec)->gfp, 
+  int ret =  lame_encode_buffer(((mp3_coder_state*)h_codec)->gfp,
 				(short*) in_buf,        // left channel
 				/* (short*) in_buf */0, // right channel
 				size / 2 ,              // no of samples (size is in bytes!)
 				out_buf,
-  				AUDIO_BUFFER_SIZE); 
+  				AUDIO_BUFFER_SIZE);
 
   switch(ret){
-    // 0 is valid: if not enough samples for an mp3 
+    // 0 is valid: if not enough samples for an mp3
     //frame lame will not return anything
-  case 0:  /*DBG("lame_encode_buffer returned 0\n");*/ break; 
+  case 0:  /*DBG("lame_encode_buffer returned 0\n");*/ break;
   case -1: ERROR("mp3buf was too small\n"); break;
   case -2: ERROR("malloc() problem\n"); break;
   case -3: ERROR("lame_init_params() not called\n"); break;
@@ -249,16 +249,16 @@ static unsigned int mp3_samples2bytes(long h_codec, unsigned int num_samples)
   return num_samples;
 #else
 
-  /* 
+  /*
    * 150 bytes is about one frame as produced by the mp3 writer.
-   * for higher bitrate files this will only introduce the small performance 
+   * for higher bitrate files this will only introduce the small performance
    * penalty of multiple read() calls per frame-decode.
    */
   return 150;
 
 /*   or a full frame? */
 /*    we don't know bitrate - so use 128000 as max bitrate */
-/*     144 * BitRate / (SampleRate + Padding) */  
+/*     144 * BitRate / (SampleRate + Padding) */
 /*   unsigned int res =  144 * 128000 / (((mp3_coder_state*)h_codec)->rate + 1); */
 /*   if (res > AUDIO_BUFFER_SIZE) */
 /*     res = AUDIO_BUFFER_SIZE; */
@@ -268,7 +268,7 @@ static unsigned int mp3_samples2bytes(long h_codec, unsigned int num_samples)
 }
 
 static int MP3_2_Pcm16( unsigned char* out_buf, unsigned char* in_buf, unsigned int size,
-			unsigned int channels, unsigned int rate, 
+			unsigned int channels, unsigned int rate,
 			long h_codec )
 {
 
@@ -284,16 +284,16 @@ static int MP3_2_Pcm16( unsigned char* out_buf, unsigned char* in_buf, unsigned 
       ERROR("mp3 decoder not initialized!\n");
       return -1;
     }
-        
+
     coder_state = (mp3_coder_state*)h_codec;
-    res = mpg123_decode(coder_state->mpg123_h, in_buf, size, 
+    res = mpg123_decode(coder_state->mpg123_h, in_buf, size,
 			out_buf, AUDIO_BUFFER_SIZE, &decoded_size);
-    
+
     if (res == MPG123_NEW_FORMAT) {
       WARN("intermediate mp3 file format change!\n");
     }
     if (res == MPG123_ERR) {
-      ERROR("decoding mp3: '%s'\n", 
+      ERROR("decoding mp3: '%s'\n",
 	    mpg123_strerror(coder_state->mpg123_h));
       return -1;
     }
@@ -314,7 +314,7 @@ static int MP3_open(FILE* fp, struct amci_file_desc_t* fmt_desc, int options, lo
 {
 
 #ifdef WITH_MPG123DECODER
-  unsigned char mp_rd_buf[20]; 
+  unsigned char mp_rd_buf[20];
   size_t sr, decoded_size;
   mp3_coder_state* coder_state;
   int res;
@@ -331,11 +331,11 @@ static int MP3_open(FILE* fp, struct amci_file_desc_t* fmt_desc, int options, lo
        return -1;
      }
      coder_state = (mp3_coder_state*)h_codec;
-     
+
      DBG("Initializing mpg123 codec state.\n");
      res = mpg123_open_feed(coder_state->mpg123_h);
      if (MPG123_ERR == res) {
-       ERROR("mpg123_open_feed returned mpg123 error '%s'\n", 
+       ERROR("mpg123_open_feed returned mpg123 error '%s'\n",
 	     mpg123_strerror(coder_state->mpg123_h));
        return -1;
      }
@@ -344,19 +344,19 @@ static int MP3_open(FILE* fp, struct amci_file_desc_t* fmt_desc, int options, lo
      while (res!= MPG123_NEW_FORMAT) {
        SAFE_READ(mp_rd_buf, 20, fp, sr);
 
-       res = mpg123_decode(coder_state->mpg123_h, mp_rd_buf, 20, 
+       res = mpg123_decode(coder_state->mpg123_h, mp_rd_buf, 20,
 			   mp_rd_buf, 0, &decoded_size);
        if (res == MPG123_ERR) {
-	 ERROR("trying to determine MP3 file format: '%s'\n", 
+	 ERROR("trying to determine MP3 file format: '%s'\n",
 	       mpg123_strerror(coder_state->mpg123_h));
 	 return -1;
        }
      }
-          
-     mpg123_getformat(coder_state->mpg123_h, 
+
+     mpg123_getformat(coder_state->mpg123_h,
 		      &coder_state->rate, &coder_state->channels, &coder_state->enc);
 
-     DBG("mpg123: New format: %li Hz, %i channels, encoding value %i\n", 
+     DBG("mpg123: New format: %li Hz, %i channels, encoding value %i\n",
 	 coder_state->rate, coder_state->channels, coder_state->enc);
 
      fmt_desc->subtype   = 1; // ?
@@ -367,11 +367,11 @@ static int MP3_open(FILE* fp, struct amci_file_desc_t* fmt_desc, int options, lo
      /* set buffering parameters */
      fmt_desc->buffer_size   = MP3_FRAMESAMPLES * 8;
      fmt_desc->buffer_thresh = MP3_FRAMESAMPLES;
-     fmt_desc->buffer_full_thresh = MP3_FRAMESAMPLES * 3; 
+     fmt_desc->buffer_full_thresh = MP3_FRAMESAMPLES * 3;
 
      return 0;
 #endif
-   }  
+   }
    return 0;
 }
 
@@ -380,7 +380,7 @@ static int MP3_close(FILE* fp, struct amci_file_desc_t* fmt_desc, int options, l
 {
     int final_samples;
 
-    unsigned char  mp3buffer[7200];    
+    unsigned char  mp3buffer[7200];
     DBG("MP3: close. \n");
     if(options == AMCI_WRONLY) {
       if (!h_codec || !((mp3_coder_state*)h_codec)->gfp) {
@@ -400,9 +400,9 @@ static int MP3_close(FILE* fp, struct amci_file_desc_t* fmt_desc, int options, l
 
 static unsigned int mp3_bytes2samples(long h_codec, unsigned int num_bytes)
 {
-    // even though we are using CBR (16kbps) and encoding 
+    // even though we are using CBR (16kbps) and encoding
     // 128kbps to 16kbps would give num_samples/8 (or num_bytes*8)
-    // as MP3 is not used as payload calculating this would make no 
+    // as MP3 is not used as payload calculating this would make no
     // sense. The whole frame is encoded anyway.
 
 	//	WARN("size calculation not possible with MP3 codec.\n");

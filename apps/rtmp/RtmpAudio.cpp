@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -81,7 +81,7 @@ RtmpAudio::~RtmpAudio()
 }
 
 // returns bytes read, else -1 if error (0 is OK)
-int RtmpAudio::get(unsigned long long system_ts, unsigned char* buffer, 
+int RtmpAudio::get(unsigned long long system_ts, unsigned char* buffer,
 		   int output_sample_rate, unsigned int nb_samples)
 {
   // - buffer RTMP audio
@@ -104,14 +104,14 @@ int RtmpAudio::get(unsigned long long system_ts, unsigned char* buffer,
     size = resampleOutput((unsigned char*)samples, size,
 			  getSampleRate(), output_sample_rate);
   }
-  
+
   memcpy(buffer,(unsigned char*)samples,size);
 
   return size;
 }
 
 // returns bytes written, else -1 if error (0 is OK)
-int RtmpAudio::put(unsigned long long system_ts, unsigned char* buffer, 
+int RtmpAudio::put(unsigned long long system_ts, unsigned char* buffer,
 		   int input_sample_rate, unsigned int size)
 {
   if(!size){
@@ -122,12 +122,12 @@ int RtmpAudio::put(unsigned long long system_ts, unsigned char* buffer,
 
   // copy into internal buffer
   memcpy((unsigned char*)samples,buffer,size);
-  size = resampleInput((unsigned char*)samples, size, 
+  size = resampleInput((unsigned char*)samples, size,
 		       input_sample_rate, getSampleRate());
 
   int s = encode(size);
   //DBG("s = %i\n",s);
-  
+
   if(s<=0){
     return s;
   }
@@ -151,8 +151,8 @@ int RtmpAudio::send(unsigned int user_ts, unsigned int size)
   RTMPPacket packet;
   RTMPPacket_Reset(&packet);
 
-  packet.m_headerType  = send_offset_i ? 
-    RTMP_PACKET_SIZE_MEDIUM 
+  packet.m_headerType  = send_offset_i ?
+    RTMP_PACKET_SIZE_MEDIUM
     : RTMP_PACKET_SIZE_LARGE;
 
   packet.m_packetType  = RTMP_PACKET_TYPE_AUDIO;
@@ -163,22 +163,22 @@ int RtmpAudio::send(unsigned int user_ts, unsigned int size)
     send_rtmp_offset = user_ts;
     send_offset_i = true;
   }
-  
-  unsigned int rtmp_ts = (user_ts - send_rtmp_offset) 
+
+  unsigned int rtmp_ts = (user_ts - send_rtmp_offset)
     / (SPEEX_WB_SAMPLE_RATE/1000);
   packet.m_nTimeStamp  = rtmp_ts;
 
   RTMPPacket_Alloc(&packet,size+1);
   packet.m_nBodySize = size+1;
 
-// soundType 	(byte & 0x01) » 0 	
+// soundType 	(byte & 0x01) » 0
 //   0: mono, 1: stereo
-// soundSize 	(byte & 0x02) » 1 	
+// soundSize 	(byte & 0x02) » 1
 //   0: 8-bit, 1: 16-bit
-// soundRate 	(byte & 0x0C) » 2 	
+// soundRate 	(byte & 0x0C) » 2
 //   0: 5.5 kHz, 1: 11 kHz, 2: 22 kHz, 3: 44 kHz
-// soundFormat 	(byte & 0xf0) » 4 	
-//   0: Uncompressed, 1: ADPCM, 2: MP3, 5: Nellymoser 8kHz mono, 6: Nellymoser, 11: Speex 
+// soundFormat 	(byte & 0xf0) » 4
+//   0: Uncompressed, 1: ADPCM, 2: MP3, 5: Nellymoser 8kHz mono, 6: Nellymoser, 11: Speex
 
 
   // 0xB2: speex, 16kHz
@@ -229,7 +229,7 @@ void RtmpAudio::process_recv_queue(unsigned int ref_ts)
     // - put packet in playout buffer
 
     if(p.m_nBodySize <= (unsigned int)AUDIO_BUFFER_SIZE){
-      
+
 
       size = p.m_nBodySize-1;
       memcpy((unsigned char*)samples, p.m_body+1, size);
@@ -239,7 +239,7 @@ void RtmpAudio::process_recv_queue(unsigned int ref_ts)
 	ERROR("decode() returned %i\n",size);
 	return;
       }
-      
+
       // TODO: generate some reasonable RTP timestamp
       //
       bool begin_talk = false;
@@ -254,8 +254,8 @@ void RtmpAudio::process_recv_queue(unsigned int ref_ts)
 
       playout_buffer.write(ref_ts, rtp_ts, (ShortSample*)((unsigned char *)samples),
 			   PCM16_B2S(size), begin_talk);
-      
-      RTMPPacket_Free(&p);    
+
+      RTMPPacket_Free(&p);
     }
 
     m_q_recv.lock();

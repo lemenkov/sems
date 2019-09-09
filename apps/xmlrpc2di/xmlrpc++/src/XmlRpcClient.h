@@ -60,7 +60,7 @@ namespace XmlRpc {
     //!  @param method The name of the remote procedure to execute
     //!  @param params An array of the arguments for the method
     //!  @param result The result value to be returned to the client
-    //!  @return true if the request was sent and a result received 
+    //!  @return true if the request was sent and a result received
     //!   (although the result might be a fault).
     //!
     //! Currently this is a synchronous (blocking) implementation (execute
@@ -85,7 +85,7 @@ namespace XmlRpc {
     virtual void close();
 
     //! Handle server responses. Called by the event dispatcher during execute.
-    //!  @param eventType The type of event that occurred. 
+    //!  @param eventType The type of event that occurred.
     //!  @see XmlRpcDispatch::EventType
     virtual unsigned handleEvent(unsigned eventType);
 

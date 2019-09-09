@@ -206,7 +206,7 @@ class CallLeg: public AmB2BSession
      * Redefine to implement serial fork or handle redirect. */
     virtual void onBLegRefused(const AmSipReply& reply) { }
 
-    /** handler called when all B-legs failed or the call has been canceled. 
+    /** handler called when all B-legs failed or the call has been canceled.
 	The reply passed is the last final reply. */
     virtual void onCallFailed(CallFailureReason reason, const AmSipReply *reply) { }
 

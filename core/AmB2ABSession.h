@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _AM_B2ABSession_H
@@ -36,8 +36,8 @@ using std::string;
 
 class AmSessionAudioConnector;
 
-enum { B2ABTerminateLeg, 
-       B2ABConnectLeg, 
+enum { B2ABTerminateLeg,
+       B2ABConnectLeg,
        B2ABConnectEarlyAudio,
        B2ABConnectAudio,
        B2ABConnectOtherLegFailed,
@@ -48,7 +48,7 @@ enum { B2ABTerminateLeg,
 /** \brief base class for event in B2AB session */
 struct B2ABEvent: public AmEvent
 {
-  B2ABEvent(int ev_id) 
+  B2ABEvent(int ev_id)
     : AmEvent(ev_id)
   {}
 };
@@ -85,7 +85,7 @@ struct B2ABConnectLegEvent: public B2ABEvent
   string local_uri;
   string callgroup;
   string headers;
-  
+
   B2ABConnectLegEvent(const string& remote_party,
 		      const string& remote_uri,
 		      const string& local_party,
@@ -104,7 +104,7 @@ struct B2ABConnectLegEvent: public B2ABEvent
 
 /** \brief event fired if an exception occured while creating B leg */
 struct B2ABConnectOtherLegExceptionEvent: public B2ABEvent {
-	
+
   unsigned int code;
   string reason;
 
@@ -117,7 +117,7 @@ struct B2ABConnectOtherLegExceptionEvent: public B2ABEvent {
 
 /** \brief event fired if the B leg could not be connected (e.g. busy) */
 struct B2ABConnectOtherLegFailedEvent: public B2ABEvent {
-	
+
   unsigned int code;
   string reason;
 
@@ -127,23 +127,23 @@ struct B2ABConnectOtherLegFailedEvent: public B2ABEvent {
        code(code), reason(reason)
   {}
 };
- 
+
 /**
  * \brief Base class for Sessions in B2ABUA mode.
- * 
+ *
  * It has two legs: Callee- and caller-leg.
  */
 class AmB2ABSession: public AmSession
-{	
+{
 
  protected:
 
   /** local tag of the other leg */
   string other_id;
 
-  /** reference to the audio connector - caution: not owned by callee dialog! */ 
-  AmSessionAudioConnector* connector; 
- 
+  /** reference to the audio connector - caution: not owned by callee dialog! */
+  AmSessionAudioConnector* connector;
+
   /** Requests received for relaying */
   std::map<int,AmSipRequest> recvd_req;
 
@@ -207,8 +207,8 @@ class AmB2ABCallerSession: public AmB2ABSession
 
   virtual void setupCalleeSession(AmB2ABCalleeSession* callee_session,
 				  B2ABConnectLegEvent* ev);
-	
- protected:    
+
+ protected:
 
   virtual AmB2ABCalleeSession* createCalleeSession();
   void relayEvent(AmEvent* ev);
@@ -236,16 +236,16 @@ class AmB2ABCallerSession: public AmB2ABSession
 /** \brief Callee leg of a B2AB session */
 class AmB2ABCalleeSession: public AmB2ABSession
 {
-  bool is_connected; 
+  bool is_connected;
 
  public:
-  AmB2ABCalleeSession(const string& other_local_tag, 
+  AmB2ABCalleeSession(const string& other_local_tag,
 		      AmSessionAudioConnector* callers_connector);
   ~AmB2ABCalleeSession();
 
   void onEarlySessionStart();
   void onSessionStart();
-  void onSipReply(const AmSipRequest& req, const AmSipReply& rep, 
+  void onSipReply(const AmSipRequest& req, const AmSipReply& rep,
 		  AmSipDialog::Status old_dlg_status);
 
  protected:
@@ -254,7 +254,7 @@ class AmB2ABCalleeSession: public AmB2ABSession
   AmCondition<bool>* released;
 };
 
-/** BRIDGE_DELAY is needed because of possible different packet sizes */ 
+/** BRIDGE_DELAY is needed because of possible different packet sizes */
 #define BRIDGE_DELAY (30.0/1000.0) // 30ms
 
 /**
@@ -269,11 +269,11 @@ class AmSessionAudioConnector {
   AmMutex tag_mut;
 
   AmCondition<bool> released;
-  
+
  public:
   /** create a connector, connect audio to sess */
-  AmSessionAudioConnector() 
-    : released(true) 
+  AmSessionAudioConnector()
+    : released(true)
   {
     connected[0] = false;
     connected[1] = false;
@@ -286,16 +286,16 @@ class AmSessionAudioConnector {
   /** connect audio to sess */
   void connectSession(AmSession* sess);
 
-  /** disconnect session 
-   * @return whether connector is still connected after disconnect 
+  /** disconnect session
+   * @return whether connector is still connected after disconnect
    */
   bool disconnectSession(AmSession* sess);
 
   /** mark as in use by entity not owning it */
-  void block(); 
-  
+  void block();
+
   /** mark as released by entity not owning it */
-  void release(); 
+  void release();
 
   /** wait until released by everyone */
   void waitReleased();

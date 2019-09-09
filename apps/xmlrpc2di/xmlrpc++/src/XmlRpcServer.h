@@ -136,7 +136,7 @@ namespace XmlRpc {
     std::string generateHeader(std::string const& body);
 
 
-    
+
     //! Whether the introspection API is supported by this server
     bool _introspectionEnabled;
 

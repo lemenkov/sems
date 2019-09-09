@@ -79,7 +79,7 @@ private:
   string         hdrs;
   unsigned int   content_len;
   unsigned char* payload;
-  
+
   Parts parts;
 
   void clearParts();
@@ -107,8 +107,8 @@ public:
   const AmMimeBody& operator = (const AmMimeBody& r_body);
 
   /** Parse a body (single & multi-part) */
-  int  parse(const string& content_type, 
-	     const unsigned char* buf, 
+  int  parse(const string& content_type,
+	     const unsigned char* buf,
 	     unsigned int len);
 
   /** Set the payload of this body */
@@ -117,14 +117,14 @@ public:
   /** Set part headers (intended for sub-parts)*/
   void setHeaders(const string& hdrs);
 
-  /** 
+  /**
    * Add a new part to this body, possibly
    * converting to multi-part if necessary.
    * @return a pointer to the new empty part.
    */
   AmMimeBody* addPart(const string& content_type);
 
-  /** 
+  /**
    * Delete a body part, converting resulting body to single-part if necessary.
    */
   int deletePart(const string& content_type);
@@ -134,7 +134,7 @@ public:
 
   /** Get content-type with parameters */
   string getCTHdr() const { return ct.getHdr(); }
-  
+
   /** @return the list of sub-parts */
   const Parts& getParts() const { return parts; }
 
@@ -159,15 +159,15 @@ public:
   /** @return true if this part has the provided content-type */
   bool isContentType(const string& content_type) const;
 
-  /** 
-   * @return a pointer to a part of the coresponding 
+  /**
+   * @return a pointer to a part of the coresponding
    *         content-type (if available).
    *         This could be a pointer to this body.
    */
   AmMimeBody* hasContentType(const string& content_type);
 
-  /** 
-   * @return a const pointer to a part of the coresponding 
+  /**
+   * @return a const pointer to a part of the coresponding
    *         content-type (if available).
    *         This could be a pointer to this body.
    */

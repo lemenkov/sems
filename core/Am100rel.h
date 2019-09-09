@@ -19,7 +19,7 @@ public:
     REL100_IGNORED,
     REL100_MAX
   };
-  
+
 private:
   State reliable_1xx;
 
@@ -29,7 +29,7 @@ private:
 
   AmSipDialog* dlg;
   AmSipDialogEventHandler* hdl;
-  
+
 public:
   Am100rel(AmSipDialog* dlg, AmSipDialogEventHandler* hdl);
 

@@ -9,7 +9,7 @@
 
 #include <unistd.h>
 #include <sys/types.h>
-#include <sys/socket.h>       
+#include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -96,7 +96,7 @@ void AmRtpMuxStream::recvPacket(int fd, unsigned char* pkt, size_t len) {
       decompress((rtp_mux_hdr_compressed_t*)frame_ptr, state.ts_increment, (const rtp_hdr_t*)state.rtp_hdr, rtp_pkt);
       state.rtp_hdr_len = get_rtp_hdr_len((rtp_hdr_t*)rtp_pkt);
       // save header
-      memcpy(state.rtp_hdr, rtp_pkt, state.rtp_hdr_len); 
+      memcpy(state.rtp_hdr, rtp_pkt, state.rtp_hdr_len);
       // copy payload
       memcpy(rtp_pkt + state.rtp_hdr_len, frame_ptr+sizeof(rtp_mux_hdr_compressed_t), mux_hdr->len);
 
@@ -163,7 +163,7 @@ int MuxStreamQueue::init(const string& _remote_ip, unsigned short _remote_port) 
     if((sd = socket(l_saddr.ss_family, SOCK_DGRAM, 0)) == -1) {
       ERROR("%s\n",strerror(errno));
       return -2;
-    } 
+    }
 
     int true_opt = 1;
     if(ioctl(sd, FIONBIO , &true_opt) == -1){
@@ -180,7 +180,7 @@ int MuxStreamQueue::init(const string& _remote_ip, unsigned short _remote_port) 
     if(bind(l_sd,(const struct sockaddr*)&l_saddr,SA_len(&l_saddr))) {
       ::close(l_sd);
       l_sd = 0;
-      DBG("bind: %s\n",strerror(errno));		
+      DBG("bind: %s\n",strerror(errno));
       continue;
     }
 
@@ -281,7 +281,7 @@ int MuxStreamQueue::send(unsigned char* buffer, unsigned int b_size,
 
   // periodic update?
   if (!send_setup_frame &&
-      (stream_state.last_mux_packet_id != mux_packet_id) && 
+      (stream_state.last_mux_packet_id != mux_packet_id) &&
       wheeltimer::instance()->interval_elapsed(stream_state.last_setup_frame_ts, MUX_PERIODIC_SETUP_FRAME_MS)) {
     send_setup_frame = true;
   }
@@ -491,21 +491,21 @@ void decompress(const rtp_mux_hdr_compressed_t* rtp_mux_hdr_compressed, unsigned
 	 old_rtp_hdr_seq, old_rtp_hdr->ts, ts_increment, rtp_mux_hdr_compressed->sn_lsb, rtp_mux_hdr_compressed->ts_crc4);
     // using most likely one - or drop?
     u_int16 sn_diff = rtp_hdr_seq - old_rtp_hdr_seq;
-    rtp_hdr->ts += htonl(sn_diff * ts_increment);    
+    rtp_hdr->ts += htonl(sn_diff * ts_increment);
   } else {
     // DBG("found\n");
   }
 }
 
-// return true if RTP header has changed significantly so will need to be sent a setup frame 
+// return true if RTP header has changed significantly so will need to be sent a setup frame
 bool rtp_hdr_changed(const rtp_hdr_t* hdr1, const rtp_hdr_t* hdr2) {
   //           PT change           SSRC change                  CSRC count change
   if ((hdr1->pt != hdr2->pt) || (hdr1->ssrc != hdr2->ssrc) ||  (hdr1->cc != hdr2->cc) ||  (hdr1->x != hdr2->x))
     return true;
-  // fixme: check CSRCs and extension headers' contents 
+  // fixme: check CSRCs and extension headers' contents
 
   //      TS resync?
-  if( ts_less()(ntohl(hdr1->ts), ntohl(hdr2->ts) - RESYNC_MAX_DELAY/2) || 
+  if( ts_less()(ntohl(hdr1->ts), ntohl(hdr2->ts) - RESYNC_MAX_DELAY/2) ||
       !ts_less()(ntohl(hdr1->ts), ntohl(hdr2->ts) + RESYNC_MAX_DELAY) ) {
     DBG("TS resync: hdr1->ts %u, hdr2->ts %u\n", ntohl(hdr1->ts), ntohl (hdr2->ts));
     return true;

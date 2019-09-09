@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -31,7 +31,7 @@ RegistrationTimer::RegistrationTimer()
 {
   struct timeval now;
   gettimeofday(&now, 0);
-  current_bucket_start = now.tv_sec; 
+  current_bucket_start = now.tv_sec;
 }
 
 // unsafe!
@@ -44,7 +44,7 @@ int RegistrationTimer::get_bucket_index(time_t tv) {
   // offset
   int bucket_index =  (tv - buckets_start_time);
   bucket_index /= TIMER_BUCKET_LENGTH;
-  
+
   if (bucket_index > TIMER_BUCKETS) { // too far in the future
     ERROR("requested timer too far in the future (index %d vs %d TIMER_BUCKETS)\n",
 	  bucket_index, TIMER_BUCKETS);
@@ -73,10 +73,10 @@ void RegistrationTimer::place_timer(RegTimer* timer, int bucket_index) {
   while (it != buckets[bucket_index].timers.end() &&
 	 (timer->expires > (*it)->expires))
     it++;
-  
+
   buckets[bucket_index].timers.insert(it, timer);
   size_t b_size = buckets[bucket_index].timers.size();
- 
+
  DBG("inserted timer [%p] in bucket %i (now sized %zd)\n",
       timer, bucket_index, b_size);
 }
@@ -141,7 +141,7 @@ bool RegistrationTimer::remove_timer(RegTimer* timer) {
     }
   }
 
-  buckets_mut.unlock();  
+  buckets_mut.unlock();
 
   if (res) {
     DBG("successfully removed timer [%p]\n", timer);
@@ -200,7 +200,7 @@ void RegistrationTimer::run()
 
   tick.tv_sec = 0;
   tick.tv_usec = TIMER_RESOLUTION;
-  
+
   gettimeofday(&now, NULL);
   timeradd(&tick,&now,&next_tick);
 
@@ -214,11 +214,11 @@ void RegistrationTimer::run()
 
       struct timespec sdiff,rem;
       timersub(&next_tick, &now,&diff);
-      
+
       sdiff.tv_sec = diff.tv_sec;
       sdiff.tv_nsec = diff.tv_usec * 1000;
 
-      if(sdiff.tv_nsec > 2000000) // 2 ms 
+      if(sdiff.tv_nsec > 2000000) // 2 ms
 	nanosleep(&sdiff,&rem);
     }
     //else {
@@ -282,15 +282,15 @@ bool RegistrationTimer::insert_timer_leastloaded(RegTimer* timer,
   if ((unsigned)res_index < current_bucket) {
     diff+=TIMER_BUCKETS;
   }
-  
-  timer->expires = current_bucket_start + 
+
+  timer->expires = current_bucket_start +
     diff * TIMER_BUCKET_LENGTH + // bucket start
     rand() % TIMER_BUCKET_LENGTH;
   DBG("setting expires to %ld (between %ld and %ld)\n",
       timer->expires, from_time, to_time);
 
   place_timer(timer, res_index);
-     
+
   buckets_mut.unlock();
 
   return false;

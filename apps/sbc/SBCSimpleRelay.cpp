@@ -36,8 +36,8 @@ void SimpleRelayDialog::initCCModules(SBCCallProfile &profile,
   }
 }
 
-SimpleRelayDialog::SimpleRelayDialog(SBCCallProfile &profile, 
-				     vector<AmDynInvoke*> &cc_modules, 
+SimpleRelayDialog::SimpleRelayDialog(SBCCallProfile &profile,
+				     vector<AmDynInvoke*> &cc_modules,
 				     atomic_ref_cnt* parent_obj)
   : AmBasicSipDialog(this),
     AmEventQueue(this),
@@ -104,7 +104,7 @@ int SimpleRelayDialog::relayRequest(const AmSipRequest& req)
     }
     return -1;
   }
-  
+
   return 0;
 }
 
@@ -276,7 +276,7 @@ void SimpleRelayDialog::onSipRequest(const AmSipRequest& req)
 }
 
 void SimpleRelayDialog::onSipReply(const AmSipRequest& req,
-				   const AmSipReply& reply, 
+				   const AmSipReply& reply,
 				   AmBasicSipDialog::Status old_dlg_status)
 {
   unsigned int cseq_before = cseq;
@@ -315,7 +315,7 @@ void SimpleRelayDialog::onSipReply(const AmSipRequest& req,
     DBG("reply to a local request ????\n");
     return;
   }
-  
+
   B2BSipReplyEvent* b2b_ev = new B2BSipReplyEvent(reply,true,req.method,getLocalTag());
   b2b_ev->reply.cseq = t_req_it->second;
   if(reply.code >= 200)
@@ -348,7 +348,7 @@ void SimpleRelayDialog::onLocalTerminate(const AmSipReply& reply)
   terminate();
 }
 
-int SimpleRelayDialog::initUAC(const AmSipRequest& req, 
+int SimpleRelayDialog::initUAC(const AmSipRequest& req,
 				const SBCCallProfile& cp)
 {
   for (list<CCModuleInfo>::iterator i = cc_ext.begin(); i != cc_ext.end(); ++i) {
@@ -457,7 +457,7 @@ int SimpleRelayDialog::initUAC(const AmSipRequest& req,
   return 0;
 }
 
-int SimpleRelayDialog::initUAS(const AmSipRequest& req, 
+int SimpleRelayDialog::initUAS(const AmSipRequest& req,
 			       const SBCCallProfile& cp)
 {
   for (list<CCModuleInfo>::iterator i = cc_ext.begin(); i != cc_ext.end(); ++i) {
@@ -537,6 +537,6 @@ int SBCSimpleRelay::start(const SimpleRelayCreator::Relay& relay,
 
   worker->startEventQueue(relay.first);
   worker->startEventQueue(relay.second);
-  
+
   return 0;
 }

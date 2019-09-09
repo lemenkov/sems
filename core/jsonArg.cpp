@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 TelTech Systems Inc.
- * 
+ *
  * This file is part of SEMS, a free SIP media server.
  *
  * SEMS is free software; you can redistribute it and/or modify
@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -91,9 +91,9 @@ string str2json(const char* str, size_t len)
 	// slash is also legal, so I see no reason to escape it.
 	// (I hope I am not misunderstanding something.)
       default:{
-	if (*c < ' ') 
+	if (*c < ' ')
 	  result += "\\u00" + string() + hex_chars[*c >> 4] + string() + hex_chars[*c & 0xf];
-	else 
+	else
 	  result += *c;
       } break;
       }
@@ -104,7 +104,7 @@ string str2json(const char* str, size_t len)
 
 string arg2json(const AmArg &a) {
   // TODO: optimize to avoid lots of mallocs
-  // TODO: how to get a bool? 
+  // TODO: how to get a bool?
   string s;
   switch (a.getType()) {
   case AmArg::Undef:
@@ -119,7 +119,7 @@ string arg2json(const AmArg &a) {
   case AmArg::Bool:
     return a.asBool()?"true":"false";
 
-  case AmArg::Double: 
+  case AmArg::Double:
     return double2str(a.asDouble());
 
   case AmArg::CStr:
@@ -129,7 +129,7 @@ string arg2json(const AmArg &a) {
     s = "[";
     for (size_t i = 0; i < a.size(); i ++)
       s += arg2json(a[i]) + ", ";
-    if (1 < s.size()) 
+    if (1 < s.size())
       s.resize(s.size() - 2); // strip last ", "
     s += "]";
     return s;
@@ -174,7 +174,7 @@ bool array_parse(std::istream& input, AmArg& res) {
       break; // TODO: return false????
     }
   } while (match(",", input));
-  
+
   if (!match("]", input)) {
     res.clear();
     return false;
@@ -196,7 +196,7 @@ bool object_parse(std::istream& input, AmArg& res) {
   do {
     std::string key;
     if (!parse_string(input, &key)) {
-      if (match("}",input,true)) {          
+      if (match("}",input,true)) {
 	return true;
       }
       res.clear();
@@ -212,7 +212,7 @@ bool object_parse(std::istream& input, AmArg& res) {
       return false;
     }
   } while (match(",", input));
-  
+
   if (!match("}", input)) {
     res.clear();
     return false;
@@ -250,7 +250,7 @@ bool json2arg(std::istream& input, AmArg& res) {
     res.type = AmArg::Int;
     return true;
   }
-  
+
   if (parse_bool(input, &res.v_bool)) {
     res.type = AmArg::Bool;
     return true;

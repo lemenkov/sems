@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2006 iptego GmbH
  *
  * This file is part of SEMS, a free SIP media server.
@@ -46,11 +46,11 @@ void PySemsB2ABDialog::onSessionStart()
 }
 
 AmB2ABCalleeSession* PySemsB2ABDialog::createCalleeSession() {
-  return new PySemsB2ABCalleeDialog(getLocalTag(), 
+  return new PySemsB2ABCalleeDialog(getLocalTag(),
 				    connector);
 }
 
-void PySemsB2ABDialog::process(AmEvent* event) 
+void PySemsB2ABDialog::process(AmEvent* event)
 {
   DBG("PySemsB2ABDialog::process\n");
 
@@ -60,7 +60,7 @@ void PySemsB2ABDialog::process(AmEvent* event)
     callPyEventHandler("onEmptyQueue", NULL);
     event->processed = true;
   }
-    
+
   AmPluginEvent* plugin_event = dynamic_cast<AmPluginEvent*>(event);
   if(plugin_event && plugin_event->name == "timer_timeout") {
 

@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -59,10 +59,10 @@ unsigned int VoiceboxFactory::startover_key = 4;
 bool   VoiceboxFactory::SimpleMode=false;
 string VoiceboxFactory::default_language = "";
 
-AmPromptCollection* VoiceboxFactory::getPrompts(const string& domain, 
+AmPromptCollection* VoiceboxFactory::getPrompts(const string& domain,
 						const string& language,
 						PromptOptions& po) {
-  map<string, map<string, AmPromptCollection*> >::iterator d_it = 
+  map<string, map<string, AmPromptCollection*> >::iterator d_it =
     prompts.find(domain);
   if (d_it != prompts.end()) {
     map<string, AmPromptCollection*>::iterator l_it = d_it->second.find(language);
@@ -70,21 +70,21 @@ AmPromptCollection* VoiceboxFactory::getPrompts(const string& domain,
 
       // get the options to the dom/lang combination
       po = PromptOptions(false, false);
-      map<string, map<string, PromptOptions> >::iterator d_oit = 
+      map<string, map<string, PromptOptions> >::iterator d_oit =
 	prompt_options.find(domain);
       if (d_oit != prompt_options.end()) {
 	map<string, PromptOptions>::iterator l_oit = d_oit->second.find(language);
 	if (l_oit != d_oit->second.end())
 	  po = l_oit->second;
       }
-      
+
       return l_it->second;
     }
   }
   return NULL;
 }
 
-AmPromptCollection* VoiceboxFactory::findPrompts(const string& domain, 
+AmPromptCollection* VoiceboxFactory::findPrompts(const string& domain,
 						 const string& language,
 						 PromptOptions& po) {
   AmPromptCollection* res = getPrompts(domain, language, po);
@@ -96,10 +96,10 @@ AmPromptCollection* VoiceboxFactory::findPrompts(const string& domain,
 
   if ((res = getPrompts("",     language,         po))!=NULL) return res;
   if ((res = getPrompts("",     default_language, po))!=NULL) return res;
-  return     getPrompts("",     "",               po);  
+  return     getPrompts("",     "",               po);
 }
 
-AmPromptCollection* VoiceboxFactory::loadPrompts(string prompt_base_path, 
+AmPromptCollection* VoiceboxFactory::loadPrompts(string prompt_base_path,
 						 string domain, string language,
 						 bool load_digits) {
 
@@ -111,7 +111,7 @@ AmPromptCollection* VoiceboxFactory::loadPrompts(string prompt_base_path,
   if (pc->setPrompt(str, prompt_path + str + ".wav", APP_NAME) < 0) { \
     delete pc; \
     return NULL; \
-  } 
+  }
 
   //		Parts for the welcome text
   ADD_DEF_PROMPT("pin_prompt");
@@ -136,7 +136,7 @@ AmPromptCollection* VoiceboxFactory::loadPrompts(string prompt_base_path,
   ADD_DEF_PROMPT("first_saved_msg");
   ADD_DEF_PROMPT("next_saved_msg");
 
-  ADD_DEF_PROMPT("no_more_msg"); 
+  ADD_DEF_PROMPT("no_more_msg");
   //	# End of conversation
   ADD_DEF_PROMPT("bye");
 
@@ -148,26 +148,26 @@ AmPromptCollection* VoiceboxFactory::loadPrompts(string prompt_base_path,
     // digits from 1 to 19
     for (unsigned int i=1;i<20;i++) {
       string str = int2str(i);
-      if (pc->setPrompt(str, prompt_path + str + ".wav", APP_NAME) < 0) { 
-	delete pc; 
-	return NULL; 
-      } 
+      if (pc->setPrompt(str, prompt_path + str + ".wav", APP_NAME) < 0) {
+	delete pc;
+	return NULL;
+      }
     }
-    // 20, 30, ...90 
+    // 20, 30, ...90
     for (unsigned int i=20;i<100;i+=10) {
       string str = int2str(i);
-      if (pc->setPrompt(str, prompt_path + str + ".wav", APP_NAME) < 0) { 
-	delete pc; 
-	return NULL; 
-      } 
+      if (pc->setPrompt(str, prompt_path + str + ".wav", APP_NAME) < 0) {
+	delete pc;
+	return NULL;
+      }
     }
     // x1 .. x9
     for (unsigned int i=1;i<10;i++) {
       string str = "x"+int2str(i);
-      if (pc->setPrompt(str, prompt_path + str + ".wav", APP_NAME) < 0) { 
-	delete pc; 
-	return NULL; 
-      } 
+      if (pc->setPrompt(str, prompt_path + str + ".wav", APP_NAME) < 0) {
+	delete pc;
+	return NULL;
+      }
     }
   }
 
@@ -204,32 +204,32 @@ int VoiceboxFactory::onLoad()
     return -1;
   }
 
-  for (vector<string>::iterator dom = domains.begin(); 
+  for (vector<string>::iterator dom = domains.begin();
        dom != domains.end(); dom++) {
     for (vector<string>::iterator lang = languages.begin();
 	 lang != languages.end(); lang++) {
 
       string language = *lang;
-      
+
       size_t lang_opt_pos = language.find('(');
       string lang_name = language.substr(0, lang_opt_pos);
-      
+
       string lang_opt;
       bool lang_digits = false;
       bool lang_digitpos_right = true;
-      if (lang_opt_pos != string::npos) 
-	lang_opt = language.substr(lang_opt_pos, 
+      if (lang_opt_pos != string::npos)
+	lang_opt = language.substr(lang_opt_pos,
 				   language.find(')',lang_opt_pos+1));
       if (lang_opt.find("digits=right") != string::npos) {
 	lang_digits = true;
 	lang_digitpos_right = true;
-      } 
+      }
       if (lang_opt.find("digits=left") != string::npos) {
 	lang_digits = true;
 	lang_digitpos_right = true;
-      } 
-      
-      AmPromptCollection* pc = loadPrompts(prompt_base_path, *dom, 
+      }
+
+      AmPromptCollection* pc = loadPrompts(prompt_base_path, *dom,
 					   lang_name, lang_digits);
       if (NULL != pc) {
 	prompts[*dom][lang_name]=pc;
@@ -237,7 +237,7 @@ int VoiceboxFactory::onLoad()
 	  PromptOptions(lang_digits, lang_digitpos_right);
 
 	DBG("Enabled language <%s> for domain <%s>\n",
-	    lang->empty()?"default":lang_name.c_str(), 
+	    lang->empty()?"default":lang_name.c_str(),
 	    dom->empty()?"default":dom->c_str()
 	    );
       }
@@ -252,32 +252,32 @@ int VoiceboxFactory::onLoad()
 
   string s_repeat_key = cfg.getParameter("repeat_key", "1");
   if (str2i(s_repeat_key, repeat_key)) {
-    ERROR("repeat_key value '%s' unparseable.\n", 
+    ERROR("repeat_key value '%s' unparseable.\n",
 	  s_repeat_key.c_str());
     return -1;
   }
 
   string s_save_key = cfg.getParameter("save_key", "2");
   if (str2i(s_save_key, save_key)) {
-    ERROR("save_key value '%s' unparseable.\n", 
+    ERROR("save_key value '%s' unparseable.\n",
 	  s_save_key.c_str());
     return -1;
   }
 
   string s_delete_key = cfg.getParameter("delete_key", "3");
   if (str2i(s_delete_key, delete_key)) {
-    ERROR("delete_key value '%s' unparseable.\n", 
+    ERROR("delete_key value '%s' unparseable.\n",
 	  s_delete_key.c_str());
     return -1;
   }
 
   string s_startover_key = cfg.getParameter("startover_key", "4");
   if (str2i(s_startover_key, startover_key)) {
-    ERROR("startover_key value '%s' unparseable.\n", 
+    ERROR("startover_key value '%s' unparseable.\n",
 	  s_startover_key.c_str());
     return -1;
   }
-  
+
   MessageStorage = NULL;
   MessageStorage = AmPlugIn::instance()->getFactory4Di("msg_storage");
   if(NULL == MessageStorage){
@@ -288,7 +288,7 @@ int VoiceboxFactory::onLoad()
   return 0;
 }
 
-// incoming calls 
+// incoming calls
 AmSession* VoiceboxFactory::onInvite(const AmSipRequest& req, const string& app_name,
 				     const map<string,string>& app_params)
 {
@@ -312,11 +312,11 @@ AmSession* VoiceboxFactory::onInvite(const AmSipRequest& req, const string& app_
   }
   else {
     string iptel_app_param = getHeader(req.hdrs, PARAM_HDR, true);
-  
+
     if (!iptel_app_param.length()) {
       throw AmSession::Exception(500, APP_NAME ": parameters not found");
     }
-  
+
 
     // consistently with voicemail application:
     //  uid overrides user
@@ -334,17 +334,17 @@ AmSession* VoiceboxFactory::onInvite(const AmSipRequest& req, const string& app_
     pin = get_header_keyvalue(iptel_app_param, "pin", "PIN");
     language = get_header_keyvalue(iptel_app_param,"lng", "Language");
   }
-  
+
   // checks
-  if (user.empty()) 
+  if (user.empty())
     throw AmSession::Exception(500, APP_NAME ": user missing");
 
   if (language.empty())
     language = default_language;
-  
+
   PromptOptions po(false, false);
   AmPromptCollection* pc = findPrompts(domain, language, po);
-  if (NULL == pc)  
+  if (NULL == pc)
     throw AmSession::Exception(500, APP_NAME ": no menu for domain/language");
 
   return new VoiceboxDialog(user, domain, pin, pc, po);

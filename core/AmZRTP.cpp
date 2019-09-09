@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -54,7 +54,7 @@ void zrtp_log(int level, char *data, int len, int offset) {
     sems_lvl = L_WARN; // ??
   else if (level==1)
     sems_lvl = L_INFO; // ??
-  
+
   if (sems_lvl==L_DBG && !AmConfig::enable_zrtp_debuglog)
     return;
 
@@ -75,7 +75,7 @@ int AmZRTP::init() {
   if (cfg.hasParameter("zid_hex")) {
     string zid_hex = cfg.getParameter("zid_hex");
     if (zid_hex.size() != 2*sizeof(zrtp_instance_zid)) {
-      ERROR("zid_hex config parameter in zrtp.conf must be %lu characters long.\n", 
+      ERROR("zid_hex config parameter in zrtp.conf must be %lu characters long.\n",
 	    sizeof(zrtp_zid_t)*2);
       return -1;
     }
@@ -94,7 +94,7 @@ int AmZRTP::init() {
     string zid = cfg.getParameter("zid");
     WARN("zid parameter in zrtp.conf is only supported for backwards compatibility. Please use zid_hex\n");
     if (zid.length() != sizeof(zrtp_zid_t)) {
-      ERROR("zid config parameter in zrtp.conf must be %lu characters long.\n", 
+      ERROR("zid config parameter in zrtp.conf must be %lu characters long.\n",
 	    sizeof(zrtp_zid_t));
       return -1;
     }
@@ -119,7 +119,7 @@ int AmZRTP::init() {
 
   strcpy(zrtp_config.client_id, SEMS_CLIENT_ID);
   zrtp_config.lic_mode = ZRTP_LICENSE_MODE_UNLIMITED;
-  
+
   strncpy(zrtp_config.def_cache_path.buffer, cache_path.c_str(),
 	  zrtp_config.def_cache_path.max_length);
   zrtp_config.def_cache_path.length = cache_path.length();
@@ -156,7 +156,7 @@ int AmZRTP::init() {
   } else {
     DBG("added %u bytes of ZRTP entropy\n", bytes_added);
   }
-  
+
   DBG("ZRTP initialized ok.\n");
 
   return 0;

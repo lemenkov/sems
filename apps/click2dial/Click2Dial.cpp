@@ -108,7 +108,7 @@ AmSession* Click2DialFactory::onInvite(const AmSipRequest& req, const string& ap
   string callee_uri, a_realm, a_user, a_pwd;
 
   if(session_params.size() != 4) {
-    ERROR("Need 4 parameters, got %lu\n", 
+    ERROR("Need 4 parameters, got %lu\n",
 	  (long unsigned int)session_params.size());
     return NULL;
   }
@@ -177,7 +177,7 @@ const string& filename, const string& c_uri, UACAuthCred* credentials)
 : AmB2BCallerSession(), filename(filename), callee_uri(c_uri),
 cred(credentials)
 {
-  set_sip_relay_only(false);  
+  set_sip_relay_only(false);
   set_sip_relay_early_media_sdp(Click2DialFactory::relay_early_media_sdp);
 }
 

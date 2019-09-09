@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -40,7 +40,7 @@ const unsigned int __dlg_status2rtmp_call[AmSipDialog::__max_Status]  = {
 };
 
 RtmpSession::RtmpSession(RtmpConnection* c)
-  : AmSession(), 
+  : AmSession(),
     rtmp_audio(new RtmpAudio(c->getSenderPtr())),
     rtmp_connection(c)
 {
@@ -99,7 +99,7 @@ void RtmpSession::onSessionStart()
   RTPStream()->setPlayoutType(ADAPTIVE_PLAYOUT);
   DBG("plugging rtmp_audio into in&out\n");
   setInOut(rtmp_audio,rtmp_audio);
-  
+
   AmSession::onSessionStart();
 }
 
@@ -110,7 +110,7 @@ void RtmpSession::onBye(const AmSipRequest& req)
 }
 
 void RtmpSession::onSipReply(const AmSipRequest& req,
-			     const AmSipReply& reply, 
+			     const AmSipReply& reply,
 			     AmBasicSipDialog::Status old_dlg_status)
 {
   AmSession::onSipReply(req,reply,old_dlg_status);

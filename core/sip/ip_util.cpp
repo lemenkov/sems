@@ -38,7 +38,7 @@ int am_inet_pton(const char* src, struct sockaddr_storage* dst)
 
   sin = (struct sockaddr_in *)dst;
   sin6 = (struct sockaddr_in6 *)dst;
-    
+
   if(!must_be_ipv6 && (inet_pton(AF_INET, src_addr, &sin->sin_addr) > 0)) {
     dst->ss_family = AF_INET;
     return 1;

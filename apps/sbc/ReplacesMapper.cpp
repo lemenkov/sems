@@ -81,7 +81,7 @@ void fixReplaces(string& req_hdrs, bool is_invite) {
 	break;
       }
     }
-    
+
     if (replaces_hdr_it == hdrs.end()) {
       DBG("Replaces handler: no Replaces headers in Refer-To target, ignoring\n");
       return;
@@ -92,7 +92,7 @@ void fixReplaces(string& req_hdrs, bool is_invite) {
   size_t ftag_begin; size_t ftag_len;
   size_t ttag_begin; size_t ttag_len;
   size_t cid_len=0;
- 
+
   // todo: parse full replaces header and reconstruct including unknown params
   if (!findTag(replaces, "from-tag=", ftag_begin, ftag_len)) {
     WARN("Replaces missing 'from-tag', ignoring\n");
@@ -150,7 +150,7 @@ void fixReplaces(string& req_hdrs, bool is_invite) {
     DBG("Replaces handler: call with tag '%s' not found\n", ttag.c_str());
   }
 
- 
+
 }
 
 bool findTag(const string replaces, const string& tag, size_t& p1, size_t& len)
@@ -160,7 +160,7 @@ bool findTag(const string replaces, const string& tag, size_t& p1, size_t& len)
 
   p1 = i+tag.length();
   size_t j = replaces.find(';', p1);
-  
+
   if (j != string::npos) {
     len = j - p1;
   } else {

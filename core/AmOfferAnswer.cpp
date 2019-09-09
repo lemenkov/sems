@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmOfferAnswer.cpp */
@@ -49,13 +49,13 @@ static const char* getOAStateStr(AmOfferAnswer::OAState st) {
 
 
 AmOfferAnswer::AmOfferAnswer(AmSipDialog* dlg)
-  : state(OA_None), 
+  : state(OA_None),
     cseq(0),
     sdp_remote(),
     sdp_local(),
     dlg(dlg)
 {
-  
+
 }
 
 AmOfferAnswer::OAState AmOfferAnswer::getState()
@@ -121,8 +121,8 @@ int AmOfferAnswer::onRequestIn(const AmSipRequest& req)
   const char* err_txt  = NULL;
   int         err_code = 0;
 
-  if((req.method == SIP_METH_INVITE || 
-      req.method == SIP_METH_UPDATE || 
+  if((req.method == SIP_METH_INVITE ||
+      req.method == SIP_METH_UPDATE ||
       req.method == SIP_METH_ACK ||
       req.method == SIP_METH_PRACK) &&
      !req.body.empty() ) {
@@ -164,8 +164,8 @@ int AmOfferAnswer::onReplyIn(const AmSipReply& reply)
   const char* err_txt  = NULL;
   int         err_code = 0;
 
-  if((reply.cseq_method == SIP_METH_INVITE || 
-      reply.cseq_method == SIP_METH_UPDATE || 
+  if((reply.cseq_method == SIP_METH_INVITE ||
+      reply.cseq_method == SIP_METH_UPDATE ||
       reply.cseq_method == SIP_METH_PRACK) &&
      !reply.body.empty() ) {
 
@@ -175,7 +175,7 @@ int AmOfferAnswer::onReplyIn(const AmSipReply& reply)
       if(((state == OA_Completed) ||
 	  (state == OA_OfferRecved)) &&
 	 (reply.cseq == cseq)) {
-	
+
 	DBG("ignoring subsequent SDP reply within the same transaction\n");
 	DBG("this usually happens when 183 and 200 have SDP\n");
 
@@ -244,7 +244,7 @@ int AmOfferAnswer::onRxSdp(unsigned int m_cseq, const AmMimeBody& body, const ch
       setState(OA_OfferRecved);
       cseq = m_cseq;
       break;
-      
+
     case OA_OfferSent:
       setState(OA_Completed);
       break;
@@ -348,13 +348,13 @@ int AmOfferAnswer::onReplyOut(AmSipReply& reply)
     // let's see whether we should force SDP or not.
 
     if (reply.cseq_method == SIP_METH_INVITE){
-      
-      if ((reply.code == 183) 
+
+      if ((reply.code == 183)
 	  || ((reply.code >= 200) && (reply.code < 300))) {
-	
+
 	// either offer received or no offer at all:
 	//  -> force SDP
-	generate_sdp = (state == OA_OfferRecved) 
+	generate_sdp = (state == OA_OfferRecved)
 	  || (state == OA_None)
 	  || (state == OA_Completed);
       }
@@ -363,7 +363,7 @@ int AmOfferAnswer::onReplyOut(AmSipReply& reply)
 
       if ((reply.code >= 200) &&
 	  (reply.code < 300)) {
-	
+
 	// offer received:
 	//  -> force SDP
 	generate_sdp = (state == OA_OfferRecved);
@@ -394,8 +394,8 @@ int AmOfferAnswer::onReplyOut(AmSipReply& reply)
     }
     else {
       if(!sdp_body){
-        if( (sdp_body = 
-             reply.body.addPart(SIP_APPLICATION_SDP)) 
+        if( (sdp_body =
+             reply.body.addPart(SIP_APPLICATION_SDP))
             == NULL ) {
           DBG("AmMimeBody::addPart() failed\n");
           return -1;
@@ -414,7 +414,7 @@ int AmOfferAnswer::onReplyOut(AmSipReply& reply)
   }
 
   if (has_sdp && (onTxSdp(reply.cseq,reply.body) != 0)) {
-    
+
     DBG("onTxSdp() failed\n");
     return -1;
   }
@@ -461,7 +461,7 @@ int AmOfferAnswer::onReplySent(const AmSipReply& reply)
     DBG("transaction finished by final reply %u: resetting OA state\n", reply.cseq);
     clearTransitionalState();
   }
-  
+
   return ret;
 }
 
@@ -487,12 +487,12 @@ int AmOfferAnswer::getSdpBody(string& sdp_body)
 	return -1;
       }
       break;
-      
+
     case OA_OfferSent:
       DBG("Still waiting for a reply\n");
       return -1;
 
-    default: 
+    default:
       break;
     }
 

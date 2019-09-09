@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -54,7 +54,7 @@ SBCDSMInstance::SBCDSMInstance(SBCCallLeg *call, const VarMapT& values)
   if (startDiagName.empty()) {
     throw string("DSM SBC call control " DSM_SBC_CCVAR_START_DIAG " parameter not set (see call profile)'");
   }
-  
+
   map<string,string> config_vars;
   bool SetParamVariables; // unused
 
@@ -68,7 +68,7 @@ SBCDSMInstance::SBCDSMInstance(SBCCallLeg *call, const VarMapT& values)
   }
 
   for (map<string, string>::const_iterator it =
-	 config_vars.begin(); it != config_vars.end(); it++) 
+	 config_vars.begin(); it != config_vars.end(); it++)
     var["config."+it->first] = it->second;
 
   // overwrite config. variables with cc-instance variables (map::insert doesn't overwrite)
@@ -92,7 +92,7 @@ SBCDSMInstance::~SBCDSMInstance()
     delete *it;
 
   for (vector<AmAudio*>::iterator it=
-	 audiofiles.begin();it!=audiofiles.end();it++) 
+	 audiofiles.begin();it!=audiofiles.end();it++)
     delete *it;
 
   AmMediaProcessor::instance()->removeSession(call);
@@ -219,7 +219,7 @@ void SBCDSMInstance::onStateChange(SBCCallLeg *call, const CallLeg::StatusChange
     break;
   case CallLeg::StatusChangeCause::Other:
     event_params["reason"] = "other";
-    if (NULL != cause.param.desc) 
+    if (NULL != cause.param.desc)
       event_params["desc"] = string(cause.param.desc);
     break;
   case CallLeg::StatusChangeCause::Canceled: event_params["reason"] = "Canceled"; break;
@@ -437,7 +437,7 @@ void SBCDSMInstance::resetDummySession(SimpleRelayDialog *relay) {
   if (NULL == dummy_session.get())  {
     dummy_session.reset(new AmSession());
     // copy the most important things
-    // TODO: initialize stuff from relay dialog in dummy session to be visible in DSM 
+    // TODO: initialize stuff from relay dialog in dummy session to be visible in DSM
     dummy_session->dlg->setCallid(relay->getCallid());
     dummy_session->dlg->setLocalTag(relay->getLocalTag());
     dummy_session->dlg->setRemoteTag(relay->getRemoteTag());
@@ -679,7 +679,7 @@ void SBCDSMInstance::addToPlaylist(AmPlaylistItem* item, bool front) {
 
 void SBCDSMInstance::flushPlaylist() {
   DBG("flush playlist\n");
-  getPlaylist()->flush(); 
+  getPlaylist()->flush();
 }
 
 void SBCDSMInstance::addSeparator(const string& name, bool front) {

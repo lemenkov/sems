@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -81,7 +81,7 @@ int EmailTemplate::parse(char* buffer)
 {
   char* s=buffer;
   int state=0;
-    
+
   while(1){
     while( (*s==' ') || (*s=='\r') ) s++;
 
@@ -89,7 +89,7 @@ int EmailTemplate::parse(char* buffer)
       ERROR("EmailTemplate: parsing failed: end of file reached\n");
       return -1;
     }
-	
+
     if(*s=='\n'){ // empty line -> EOH
       s++;
       break;
@@ -97,7 +97,7 @@ int EmailTemplate::parse(char* buffer)
 
     char* begin = s;
     while( (*s!=':') && (*s!='\0') && (*s!='\n') ) s++;
-	
+
     if(!strncmp(begin,"subject",7)){
       state = P_SUBJECT;
     }
@@ -151,7 +151,7 @@ int EmailTemplate::parse(char* buffer)
     ERROR("EmailTemplate: invalid template: empty or no 'from' line\n");
     return -1;
   }
-    
+
   if(*s)
     body = s;
 
@@ -160,9 +160,9 @@ int EmailTemplate::parse(char* buffer)
     return -1;
   }
 
-  // multiple headers  
-  while (header.find("\\n") != string::npos) 
-    header.replace(header.find("\\n"), 2, "\n");  
+  // multiple headers
+  while (header.find("\\n") != string::npos)
+    header.replace(header.find("\\n"), 2, "\n");
 
   return 0;
 }
@@ -191,13 +191,13 @@ string EmailTemplate::replaceVars(const string& str,const EmailTmplDict& dict) c
 
     while( *s && (*s != '%') ) s++;
     if(!(*s)) break; // should throw a parser error...
-	
+
     string var = string(last,s-last);
     // 	if(var == "user") // local user
     // 	    res.append(cmd.user);
-    // 	else if(var == "email")  // local user's email 
+    // 	else if(var == "email")  // local user's email
     // 	    res.append(cmd.getHeader("P-Email-Address"));
-    // 	else if(var == "domain") // local user's domain 
+    // 	else if(var == "domain") // local user's domain
     // 	    res.append(cmd.domain);
     // 	else if(var == "from") // remote SIP address
     // 	    res.append(cmd.from);

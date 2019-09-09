@@ -29,7 +29,7 @@ RegisterDialog::~RegisterDialog()
 int RegisterDialog::parseContacts(const string& contacts, vector<AmUriParser>& cv)
 {
   list<cstring> contact_list;
-  
+
   DBG("parsing contacts: '%s'\n",contacts.c_str());
 
   if(parse_nameaddr_list(contact_list, contacts.c_str(),
@@ -37,7 +37,7 @@ int RegisterDialog::parseContacts(const string& contacts, vector<AmUriParser>& c
     DBG("Could not parse contact list\n");
     return -1;
   }
-  
+
   size_t end;
   for(list<cstring>::iterator ct_it = contact_list.begin();
       ct_it != contact_list.end(); ct_it++) {
@@ -48,12 +48,12 @@ int RegisterDialog::parseContacts(const string& contacts, vector<AmUriParser>& c
       return -1;
     } else {
       DBG("successfully parsed contact %s@%s\n",
-	  contact.uri_user.c_str(), 
+	  contact.uri_user.c_str(),
 	  contact.uri_host.c_str());
       cv.push_back(contact);
     }
   }
-  
+
   return 0;
 }
 
@@ -97,7 +97,7 @@ void RegisterDialog::fillAliasMap()
 {
   map<string,string> aor_alias_map;
   RegisterCache::instance()->getAorAliasMap(aor,aor_alias_map);
-  
+
   for(map<string,string>::iterator it = aor_alias_map.begin();
       it != aor_alias_map.end(); ++it) {
     AmUriParser& uri = alias_map[it->first];
@@ -151,7 +151,7 @@ int RegisterDialog::fixUacContacts(const AmSipRequest& req)
 	contact_it != uac_contacts.end(); contact_it++) {
 
       long int contact_expires=0;
-      map<string, string>::iterator expires_it = 
+      map<string, string>::iterator expires_it =
 	contact_it->params.find("expires");
 
       if(expires_it == contact_it->params.end()) {
@@ -161,7 +161,7 @@ int RegisterDialog::fixUacContacts(const AmSipRequest& req)
 	contact_expires = requested_expires;
       }
 
-      // the rest of this loop is 
+      // the rest of this loop is
       // only for register-cache support
       if(!reg_caching)
 	continue;
@@ -208,7 +208,7 @@ int RegisterDialog::fixUacContacts(const AmSipRequest& req)
 	reg_cache_reply = false;
       }
 
-      // Find out whether we should send the REGISTER 
+      // Find out whether we should send the REGISTER
       // to the registrar or not:
 
       struct timeval now;
@@ -224,7 +224,7 @@ int RegisterDialog::fixUacContacts(const AmSipRequest& req)
 
       contact_expires += now.tv_sec;
 
-      if(contact_expires + 4 /* 4 seconds buffer */ 
+      if(contact_expires + 4 /* 4 seconds buffer */
 	 >= reg_binding.reg_expire) {
 	reg_cache_reply = false;
 	continue;
@@ -254,7 +254,7 @@ int RegisterDialog::fixUacContacts(const AmSipRequest& req)
       }
 
       replyFromCache(req);
-      // not really an error but 
+      // not really an error but
       // SBCSimpleRelay::start() would
       // else not destroy the dialog
       return -1;
@@ -293,7 +293,7 @@ void RegisterDialog::fixUacContactHosts(const AmSipRequest& req,
       uac_contacts[i].uri_port.clear();
     else
       uac_contacts[i].uri_port = int2str(AmConfig::SIP_Ifs[oif].LocalPort);
-      
+
     DBG("Patching host, port and transport for Contact-HF: host='%s';port='%s'",
 	uac_contacts[i].uri_host.c_str(),uac_contacts[i].uri_port.c_str());
   }
@@ -413,7 +413,7 @@ int RegisterDialog::initUAC(const AmSipRequest& req, const SBCCallProfile& cp)
     }
     return 0;
   }
-  
+
   fixUacContactHosts(req,cp);
 
   return 0;
@@ -421,7 +421,7 @@ int RegisterDialog::initUAC(const AmSipRequest& req, const SBCCallProfile& cp)
 
 // AmBasicSipEventHandler interface
 void RegisterDialog::onSipReply(const AmSipRequest& req,
-				const AmSipReply& reply, 
+				const AmSipReply& reply,
 				AmBasicSipDialog::Status old_dlg_status)
 {
   string contacts;
@@ -465,7 +465,7 @@ void RegisterDialog::onSipReply(const AmSipRequest& req,
 	}
 
 	unsigned int expires=0;
-	// the registrar MUST add a 'expires' 
+	// the registrar MUST add a 'expires'
 	// parameter to each contact
 	string expires_str = it->params["expires"];
 	if (!expires_str.empty()) {
@@ -527,7 +527,7 @@ void RegisterDialog::onSipReply(const AmSipRequest& req,
     if(reg_caching && !alias_map.empty()) {
       for(map<string,AmUriParser>::iterator alias_it = alias_map.begin();
 	  alias_it != alias_map.end(); ++alias_it) {
-	
+
 	// search for missing Contact-URI
 	// and remove the binding
 	RegisterCache* reg_cache = RegisterCache::instance();
@@ -539,7 +539,7 @@ void RegisterDialog::onSipReply(const AmSipRequest& req,
       }
     }
   }
-  
+
   if (uas_contacts.size()) {
     vector<AmUriParser>::iterator it = uas_contacts.begin();
     contacts = it->print();
@@ -549,18 +549,18 @@ void RegisterDialog::onSipReply(const AmSipRequest& req,
       it++;
     }
   }
-  
+
   AmSipReply relay_reply(reply);
   if(!contacts.empty()) {
     DBG("generated new contacts: '%s'\n", contacts.c_str());
     relay_reply.hdrs += SIP_HDR_COLSP(SIP_HDR_CONTACT) + contacts + CRLF;
   }
-      
+
   SimpleRelayDialog::onSipReply(req,relay_reply,old_dlg_status);
   return;
 }
 
-int RegisterDialog::onTxReply(const AmSipRequest& req, AmSipReply& reply, 
+int RegisterDialog::onTxReply(const AmSipRequest& req, AmSipReply& reply,
 			      int& flags)
 {
   DBG("code = %i; hdrs = '%s'\n", reply.code, reply.hdrs.c_str());
@@ -611,13 +611,13 @@ string RegisterDialog::encodeUsername(const AmUriParser& original_contact,
   ch_dict["u"] = original_contact.uri_user;
   ch_dict["h"] = original_contact.uri_host;
   ch_dict["p"] = original_contact.uri_port;
-  
+
   string contact_hiding_prefix =
     ctx.replaceParameters(cp.contact.hiding_prefix, "CH prefix", req);
-  
+
   string contact_hiding_vars =
     ctx.replaceParameters(cp.contact.hiding_vars, "CH vars", req);
-  
+
   // ex contact_hiding_vars si=10.0.0.1;st=tcp
   if (!contact_hiding_vars.empty()) {
     vector<string> ve = explode(contact_hiding_vars, ";");
@@ -634,7 +634,7 @@ string RegisterDialog::encodeUsername(const AmUriParser& original_contact,
 
 bool RegisterDialog::decodeUsername(const string& encoded_user, AmUriParser& uri)
 {
-  DBG("trying to decode hidden contact variables from '%s'\n", 
+  DBG("trying to decode hidden contact variables from '%s'\n",
       encoded_user.c_str());
 
   AmArg vars;
@@ -647,11 +647,11 @@ bool RegisterDialog::decodeUsername(const string& encoded_user, AmUriParser& uri
   if(!vars.hasMember("u") || !isArgCStr(vars["u"]) ||
      !vars.hasMember("h") || !isArgCStr(vars["h"]) ||
      !vars.hasMember("p") || !isArgCStr(vars["p"]) ) {
-    
+
     DBG("missing variables or type mismatch!\n");
     return false;
   }
-  
+
   uri.uri_user = vars["u"].asCStr();
   uri.uri_host = vars["h"].asCStr();
   uri.uri_port = vars["p"].asCStr();

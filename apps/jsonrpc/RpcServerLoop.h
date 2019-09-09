@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 TelTech Systems Inc.
- * 
+ *
  * This file is part of SEMS, a free SIP media server.
  *
  * SEMS is free software; you can redistribute it and/or modify
@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -41,7 +41,7 @@
 
 #include <map>
 
-class JsonRPCServerLoop 
+class JsonRPCServerLoop
 : public AmThread, public AmEventQueue, public AmEventHandler
 {
   static  RpcServerThreadpool threadpool;
@@ -66,19 +66,19 @@ class JsonRPCServerLoop
   static void dispatchServerEvent(AmEvent* ev);
   static void _processEvents();
 
-  static void execRpc(const string& evq_link, 
+  static void execRpc(const string& evq_link,
 		      const string& notificationReceiver,
 		      const string& requestReceiver,
 		      int flags,
-		      const string& host, 
-		      int port, const string& method, 
+		      const string& host,
+		      int port, const string& method,
 		      const AmArg& params,
 		      const AmArg& udata,
 		      AmArg& ret);
 
-  static void sendMessage(const string& connection_id, 
-			  int msg_type, 
-			  const string& method, 
+  static void sendMessage(const string& connection_id,
+			  int msg_type,
+			  const string& method,
 			  const string& id,
 			  const string& reply_sink,
 			  const AmArg& params,

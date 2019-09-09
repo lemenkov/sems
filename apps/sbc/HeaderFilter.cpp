@@ -87,7 +87,7 @@ bool readFilter(AmConfigReader& cfg, const char* cfg_key_filter, const char* cfg
     return true;
 }
 
-int skip_header(const std::string& hdr, size_t start_pos, 
+int skip_header(const std::string& hdr, size_t start_pos,
 		size_t& name_end, size_t& val_begin,
 		size_t& val_end, size_t& hdr_end) {
     // adapted from sip/parse_header.cpp
@@ -108,7 +108,7 @@ int skip_header(const std::string& hdr, size_t start_pos,
     int st = H_NAME;
     int saved_st = 0;
 
-    
+
     size_t p = start_pos;
     for(;p<hdr.length() && st != ST_LF && st != ST_CRLF;p++){
 
@@ -145,7 +145,7 @@ int skip_header(const std::string& hdr, size_t start_pos,
 		st = H_VALUE;
 		val_begin = p;
 		break;
-		
+
 	    };
 	    break;
 
@@ -181,12 +181,12 @@ int skip_header(const std::string& hdr, size_t start_pos,
 	    break;
 	}
     }
-    
+
     hdr_end = p;
     if (p==hdr.length() && st==H_VALUE) {
-	val_end = p;	
+	val_end = p;
     }
-    
+
     return 0;
 }
 
@@ -199,7 +199,7 @@ int inplaceHeaderFilter(string& hdrs, const vector<FilterEntry>& filter_list) {
     for (vector<FilterEntry>::const_iterator fe =
 	     filter_list.begin(); fe != filter_list.end(); fe++) {
 	const set<string>& headerfilter_list = fe->filter_list;
-	const FilterType& f_type = fe->filter_type; 
+	const FilterType& f_type = fe->filter_type;
 
 	if (!isActiveFilter(f_type))
 	  continue;

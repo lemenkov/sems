@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -42,11 +42,11 @@ public:
   static string AnnounceFile;
 
   static string callee_numbers[10];
-  
+
   static string GWDomain;
   static string GWUser;
   static string GWDisplayname;
-	
+
   static string GWAuthuser;
   static string GWAuthrealm;
   static string GWAuthpwd;
@@ -61,7 +61,7 @@ public:
 class ServiceLineCallerDialog: public AmB2ABCallerSession
 {
   AmAudioFile wav_file;
-  // we use a playlist to keep media processing, RTP 
+  // we use a playlist to keep media processing, RTP
   // sending & DTMF detection after prompt has finished
   AmPlaylist playlist;
   string filename;
@@ -70,10 +70,10 @@ class ServiceLineCallerDialog: public AmB2ABCallerSession
   string callee_uri;
 
   bool started;
-    
+
 public:
   ServiceLineCallerDialog(const string& filename);
-    
+
   void process(AmEvent* event);
   void onDtmf(int event, int duration);
   void onSessionStart();
@@ -82,13 +82,13 @@ public:
 };
 
 // need this for auth
-class ServiceLineCalleeDialog 
+class ServiceLineCalleeDialog
   : public AmB2ABCalleeSession,
     public CredentialHolder {
   UACAuthCred cred;
 
 public:
-  ServiceLineCalleeDialog(const string& other_tag, 
+  ServiceLineCalleeDialog(const string& other_tag,
 			  AmSessionAudioConnector* connector);
   ~ServiceLineCalleeDialog();
   UACAuthCred* getCredentials();

@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _MOD_MYSQL_H
@@ -48,21 +48,21 @@
 #define DSM_ERRNO_MY_NOCOLUMN   "result"
 #define DSM_ERRNO_MY_NODATA     "result"
 
-class SCMysqlModule 
+class SCMysqlModule
 : public DSMModule {
 
  public:
   SCMysqlModule();
   ~SCMysqlModule();
-  
+
   DSMAction* getAction(const string& from_str);
   DSMCondition* getCondition(const string& from_str);
 
 };
 
-class DSMMyConnection 
+class DSMMyConnection
 : public AmObject,
-  public DSMDisposable 
+  public DSMDisposable
 {
  public:
  DSMMyConnection() : con(NULL)
@@ -77,9 +77,9 @@ class DSMMyConnection
   sql::Connection* con;
 };
 
-class DSMMyStoreQueryResult 
+class DSMMyStoreQueryResult
 : public AmObject,
-  public DSMDisposable 
+  public DSMDisposable
 {
   public:
   DSMMyStoreQueryResult() : res(NULL)

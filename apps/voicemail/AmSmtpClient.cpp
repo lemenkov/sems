@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -50,7 +50,7 @@
     }
 
 AmSmtpClient::AmSmtpClient()
-  : server_ip(), server_port(0), 
+  : server_ip(), server_port(0),
     sd(0)
 {
 }
@@ -69,10 +69,10 @@ bool AmSmtpClient::connect(const string& _server_ip, unsigned short _server_port
 
   server_ip = _server_ip;
   server_port = _server_port;
-    
+
   if(server_ip.empty())
     return true;
-    
+
   if(!server_port)
     server_port = 25; /* Not present on FreeBSD IPPORT_SMTP; */
 
@@ -84,7 +84,7 @@ bool AmSmtpClient::connect(const string& _server_ip, unsigned short _server_port
   {
     sockaddr_storage _sa;
     dns_handle       _dh;
-    
+
     if(resolver::instance()->resolve_name(server_ip.c_str(),
 					&_dh,&_sa,IPv4) < 0) {
       ERROR("address not valid (smtp server: %s)\n",server_ip.c_str());
@@ -99,7 +99,7 @@ bool AmSmtpClient::connect(const string& _server_ip, unsigned short _server_port
     ERROR("%s\n",strerror(errno));
     return false;
   }
-    
+
   INFO("connected to: %s\n",server_ip.c_str());
   bool cont = !get_response(); // server's welcome
 
@@ -160,14 +160,14 @@ bool AmSmtpClient::read_line()
   }
   else if(!s)
     DBG("AmSmtpClient::read_line(): EoF reached!\n");
-    
+
   return (s<=0);
 }
 
 bool AmSmtpClient::send_line(const string& cmd)
 {
   string snd_buf = cmd;
-    
+
   string::size_type pos = 0;
   while( (pos = snd_buf.find('\n',pos)) != string::npos ){
     if( (pos == 0) || ((pos > 0) && (snd_buf[pos-1] != '\r')) ){
@@ -232,7 +232,7 @@ bool AmSmtpClient::parse_response()
 
 bool AmSmtpClient::send_body(const vector<string>& hdrs, const AmMail& mail)
 {
-  return send_command("data") 
+  return send_command("data")
     || send_data(hdrs,mail)
     || send_command(".");
 }
@@ -242,8 +242,8 @@ static int base64_encode_file(FILE* in, int out);
 
 bool AmSmtpClient::send_data(const vector<string>& hdrs, const AmMail& mail)
 {
-  string part_delim = "----=_NextPart_" 
-    + int2str(int(time(NULL))) 
+  string part_delim = "----=_NextPart_"
+    + int2str(int(time(NULL)))
     + "_" + int2str(int(getpid()));
 
   for( vector<string>::const_iterator hdr_it = hdrs.begin();
@@ -272,7 +272,7 @@ bool AmSmtpClient::send_data(const vector<string>& hdrs, const AmMail& mail)
 
   for( Attachements::const_iterator att_it = mail.attachements.begin();
        att_it != mail.attachements.end(); ++att_it	) {
-	
+
     SEND_LINE("--" + part_delim );
     if(!att_it->content_type.empty()){
       SEND_LINE("Content-Type: " + att_it->content_type);
@@ -281,7 +281,7 @@ bool AmSmtpClient::send_data(const vector<string>& hdrs, const AmMail& mail)
       SEND_LINE("Content-Type: application/octet-stream");
     }
     SEND_LINE("Content-Transfer-Encoding: base64");
-	
+
     if(att_it->filename.empty()) {
       SEND_LINE("Content-Disposition: inline"); // | "attachement"
     }
@@ -305,7 +305,7 @@ bool AmSmtpClient::send_data(const vector<string>& hdrs, const AmMail& mail)
 // !! do not touch !! configure only B64_FRAME_LINE_SIZE & B64_MAX_BUF_LINES
 
 #define B64_IN_LINE_SIZE       (3 * B64_FRAME_LINE_SIZE)
-#define B64_OUT_LINE_SIZE      (4 * B64_FRAME_LINE_SIZE) 
+#define B64_OUT_LINE_SIZE      (4 * B64_FRAME_LINE_SIZE)
 
 #define B64_INPUT_BUFFER_SIZE  (B64_IN_LINE_SIZE * B64_MAX_BUF_LINES)
 #define B64_OUTPUT_BUFFER_SIZE (B64_OUT_LINE_SIZE * B64_MAX_BUF_LINES)
@@ -321,7 +321,7 @@ char base64_table[] = {
 static void base64_encode(unsigned char* in, unsigned char* out, unsigned int in_size)
 {
   unsigned int dw;
-	
+
   switch(in_size){
   case 3:
     dw = (((unsigned int)in[0]) << 16)
@@ -352,7 +352,7 @@ static int base64_encode_file(FILE* in, int out_fd)
   unsigned char ibuf[B64_INPUT_BUFFER_SIZE];
   unsigned char obuf[B64_OUTPUT_BUFFER_SIZE]={' '};
   int s;
-    
+
   FILE* out = fdopen(out_fd,"w");
 
   if(!out){
@@ -397,7 +397,7 @@ static int base64_encode_file(FILE* in, int out_fd)
 
     bytes_written += off;
   };
-    
+
   fflush(out);
   //fclose(in);
   DBG("%i bytes written\n",bytes_written);

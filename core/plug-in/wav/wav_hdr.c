@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -64,9 +64,9 @@
     }
 \
 
-/** \brief The file header of RIFF-WAVE files (*.wav). 
+/** \brief The file header of RIFF-WAVE files (*.wav).
  * Files are always in
- * little-endian byte-order.  
+ * little-endian byte-order.
  */
 
 struct wav_header
@@ -91,7 +91,7 @@ int wav_dummyread(FILE *fp, unsigned int size)
 {
   unsigned int s;
   char *dummybuf;
-  
+
   DBG("Skip chunk by reading dummy bytes from stream\n");
   dummybuf = (char*) malloc (size);
   if(dummybuf==NULL) {
@@ -102,7 +102,7 @@ int wav_dummyread(FILE *fp, unsigned int size)
   SAFE_READ(dummybuf,size,fp,s);
   free(dummybuf);
   return 0;
-} 
+}
 
 static int wav_read_header(FILE* fp, struct amci_file_desc_t* fmt_desc)
 {
@@ -149,11 +149,11 @@ static int wav_read_header(FILE* fp, struct amci_file_desc_t* fmt_desc)
     DBG("wrong format !\n");
     return -1;
   }
-    
+
   SAFE_READ(&chunk_size,4,fp,s);
   chunk_size=le_to_cpu32(chunk_size);
   DBG("chunk_size = <%u>\n",chunk_size);
-    
+
   SAFE_READ(&fmt,2,fp,s);
   fmt=le_to_cpu16(fmt);
   DBG("fmt = <%.2x>\n",fmt);
@@ -183,7 +183,7 @@ static int wav_read_header(FILE* fp, struct amci_file_desc_t* fmt_desc)
     return -1;
   }
 
-  if ((fseek(fp,chunk_size-16,SEEK_CUR) < 0) 
+  if ((fseek(fp,chunk_size-16,SEEK_CUR) < 0)
       && errno == EBADF) {
     is_seekable = 0;
     wav_dummyread(fp,chunk_size-16);
@@ -193,17 +193,17 @@ static int wav_read_header(FILE* fp, struct amci_file_desc_t* fmt_desc)
 
     SAFE_READ(tag,4,fp,s);
     DBG("tag = <%.4s>\n",tag);
-	
+
     SAFE_READ(&chunk_size,4,fp,s);
     chunk_size=le_to_cpu32(chunk_size);
     DBG("chunk size = <%i>\n",chunk_size);
-	
+
     if(!strncmp(tag,"data",4))
       break;
 
     if (is_seekable)
       fseek(fp,chunk_size,SEEK_CUR);
-    else 
+    else
       wav_dummyread(fp,chunk_size);
   }
   fmt_desc->data_size = chunk_size;
@@ -220,7 +220,7 @@ int wav_open(FILE* fp, struct amci_file_desc_t* fmt_desc, int options, long h_co
     /*  Reserve some space for the header */
     /*  We need this, as information for headers  */
     /*  like 'size' is not known yet */
-    fseek(fp,44L,SEEK_CUR); 
+    fseek(fp,44L,SEEK_CUR);
     return (ferror(fp) ? -1 : 0);
   }
 }
@@ -274,12 +274,12 @@ int wav_close(FILE* fp, struct amci_file_desc_t* fmt_desc, int options, long h_c
 #define SAFE_MEM_READ(buf,s,mptr,pos,size) \
     if (*pos+s>size) return -1; \
     memcpy(buf,mptr+*pos,s); \
-    *pos+=s; 
+    *pos+=s;
 
-int wav_mem_open(unsigned char* mptr, unsigned long size, unsigned long* pos, 
+int wav_mem_open(unsigned char* mptr, unsigned long size, unsigned long* pos,
 		 struct amci_file_desc_t* fmt_desc, int options, long h_codec) {
   if(options == AMCI_RDONLY){
-		
+
     char tag[4]={'\0'};
     unsigned int file_size=0;
     unsigned int chunk_size=0;
@@ -318,10 +318,10 @@ int wav_mem_open(unsigned char* mptr, unsigned long size, unsigned long* pos,
       DBG("wrong format !");
       return -1;
     }
-    
+
     SAFE_MEM_READ(&chunk_size,4,mptr,pos,size);
     DBG("chunk_size = <%u>\n",chunk_size);
-    
+
     SAFE_MEM_READ(&fmt,2,mptr,pos,size);
     DBG("fmt = <%.2x>\n",fmt);
 
@@ -353,10 +353,10 @@ int wav_mem_open(unsigned char* mptr, unsigned long size, unsigned long* pos,
 
       SAFE_MEM_READ(tag,4,mptr,pos,size);
       DBG("tag = <%.4s>\n",tag);
-	
+
       SAFE_MEM_READ(&chunk_size,4,mptr,pos,size);
       DBG("chunk size = <%i>\n",chunk_size);
-	
+
       if(!strncmp(tag,"data",4))
 	break;
 

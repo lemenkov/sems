@@ -140,7 +140,7 @@ void SyslogLogFac::log(int level, pid_t pid, pthread_t tid, const char* func, co
 #  ifdef LOG_LOC_DATA_ATEND
   syslog(log2syslog_level[level], "%s: %s [%s] [%s:%d]",
       log_level2str[level], msg, func, file, line);
-#  else 
+#  else
   syslog(log2syslog_level[level], "[%s, %s:%d] %s: %s",
 	 func, file, line, log_level2str[level], msg);
 #  endif

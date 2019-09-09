@@ -21,8 +21,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -40,7 +40,7 @@ void AmDynInvoke::invoke(const string& method, const AmArg& args, AmArg& ret)
 }
 
 AmDynInvokeFactory::AmDynInvokeFactory(const string& name)
-  : AmPluginFactory(name) 
+  : AmPluginFactory(name)
 {
 }
 
@@ -116,7 +116,7 @@ void AmSessionFactory::replyOptions(const AmSipRequest& req) {
 	(AmSession::getSessionNum() >= AmConfig::OptionsSessionLimit)) {
       // return error code if near to overload
       AmSipDialog::reply_error(req,
-          AmConfig::OptionsSessionLimitErrCode, 
+          AmConfig::OptionsSessionLimitErrCode,
           AmConfig::OptionsSessionLimitErrReason,
           hdrs);
       return;
@@ -141,11 +141,11 @@ void AmSessionFactory::replyOptions(const AmSipRequest& req) {
 // }
 
 AmSessionEventHandlerFactory::AmSessionEventHandlerFactory(const string& name)
-  : AmPluginFactory(name) 
+  : AmPluginFactory(name)
 {
 }
 
-bool AmSessionEventHandlerFactory::onInvite(const AmSipRequest& req, 
+bool AmSessionEventHandlerFactory::onInvite(const AmSipRequest& req,
 					    AmArg& session_params,
 					    AmConfigReader& cfg) {
   WARN("discarding session parameters for new session.\n");
@@ -153,7 +153,7 @@ bool AmSessionEventHandlerFactory::onInvite(const AmSipRequest& req,
 }
 
 
-AmLoggingFacility::AmLoggingFacility(const string& name) 
-  : AmPluginFactory(name) 
+AmLoggingFacility::AmLoggingFacility(const string& name)
+  : AmPluginFactory(name)
 {
 }

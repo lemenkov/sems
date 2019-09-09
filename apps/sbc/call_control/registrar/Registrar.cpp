@@ -90,7 +90,7 @@ int CCRegistrar::onLoad() {
   //   return 0;
   // }
 
-  // syslog_prefix = cfg.hasParameter("cdr_prefix") ? 
+  // syslog_prefix = cfg.hasParameter("cdr_prefix") ?
   //   cfg.getParameter("cdr_prefix") : syslog_prefix;
 
   return 0;
@@ -104,7 +104,7 @@ void CCRegistrar::invoke(const string& method, const AmArg& args, AmArg& ret)
 
     SBCCallProfile* call_profile =
       dynamic_cast<SBCCallProfile*>(args[CC_API_PARAMS_CALL_PROFILE].asObject());
-    
+
     const AmSipRequest* msg = dynamic_cast<const AmSipRequest*>(args[CC_API_PARAMS_SIP_MSG].asObject());
 
     start(args[CC_API_PARAMS_CC_NAMESPACE].asCStr(),
@@ -173,7 +173,7 @@ bool retarget(const string& r_uri, const AmArg& values, SBCCallProfile* call_pro
   // should we check if the R-URI has already been changed?
   string aor = RegisterCache::canonicalize_aor(r_uri);
   RegisterCache* reg_cache = RegisterCache::instance();
-    
+
   map<string,string> alias_map;
   if(!aor.empty() && reg_cache->getAorAliasMap(aor,alias_map) &&
      !alias_map.empty()) {
@@ -191,11 +191,11 @@ bool retarget(const string& r_uri, const AmArg& values, SBCCallProfile* call_pro
 	  call_profile->next_hop += ":" + int2str(alias_entry.source_port);
 	call_profile->next_hop += "/" + alias_entry.trsp;
       }
-    
+
       if (sticky_iface) {
 	string out_if = AmConfig::SIP_Ifs[alias_entry.local_if].name;
 	DBG("out_if = '%s'",out_if.c_str());
-	
+
 	call_profile->outbound_interface = out_if;
 	DBG("setting from registration cache: outbound_interface='%s'\n",
 	    call_profile->outbound_interface.c_str());
@@ -228,7 +228,7 @@ void CCRegistrar::start(const string& cc_name, const string& ltag,
   if (NULL == req)
     REFUSE_WITH_404;
 
-  if ((req->method == "INVITE") && (retarget(req->r_uri, values, call_profile))){  
+  if ((req->method == "INVITE") && (retarget(req->r_uri, values, call_profile))){
       return;
   }
 
@@ -253,8 +253,8 @@ void CCRegistrar::route(const string& cc_name,
 			const AmArg& values, AmArg& res)
 {
   DBG("CCRegistrar: route '%s %s'\n", ood_req->method.c_str(), ood_req->r_uri.c_str());
-	
-	
+
+
   if (ood_req->method == "REGISTER"){
     RegisterCacheCtx reg_cache_ctx;
 
@@ -268,7 +268,7 @@ void CCRegistrar::route(const string& cc_name,
       res_cmd[SBC_CC_ACTION] = SBC_CC_DROP_ACTION;
     }
   } else {
-    if (retarget(ood_req->r_uri, values, call_profile)){  
+    if (retarget(ood_req->r_uri, values, call_profile)){
       return;
     }
     REFUSE_WITH_404;

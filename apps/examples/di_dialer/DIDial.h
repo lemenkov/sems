@@ -7,10 +7,10 @@ using std::string;
 
 struct DIDialoutInfo : UACAuthCred {
   string userpart; // user part for dialout
-  DIDialoutInfo(const string& userpart, 
+  DIDialoutInfo(const string& userpart,
 	      const string& realm,
 	      const string& user,
-	      const string& pwd) 
+	      const string& pwd)
     : UACAuthCred(realm, user, pwd),
       userpart(userpart) { }
 
@@ -20,32 +20,32 @@ struct DIDialoutInfo : UACAuthCred {
 class DIDial : public AmDynInvoke
 
 {
-  string dialout(const string& application, 
+  string dialout(const string& application,
 		 const string& user,
-		 const string& from, 
+		 const string& from,
 		 const string& to,
 		 AmArg* extra_params);
 
-  string dialout_auth(const string& application, 
+  string dialout_auth(const string& application,
 		      const string& user,
-		      const string& from, 
+		      const string& from,
 		      const string& to,
-		      const string& realm, 
+		      const string& realm,
 		      const string& a_user,
 		      const string& pwd,
 		      AmArg* extra_params);
 
-  string dialout_auth_b2b(const string& application, 
-		       const string& announcement, 
-		       const string& from, 
+  string dialout_auth_b2b(const string& application,
+		       const string& announcement,
+		       const string& from,
 		       const string& to,
-		       const string& caller_ruri, 
+		       const string& caller_ruri,
 		       const string& callee_ruri,
-		       const string& a_realm, 
-		       const string& a_user, 
+		       const string& a_realm,
+		       const string& a_user,
 		       const string& a_pwd);
 
-  string dialout_pin(const string& application, 
+  string dialout_pin(const string& application,
 		     const string& user,
 		     const string& to_user,
 		     const string& pin);

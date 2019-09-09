@@ -5,7 +5,7 @@ AmEvent::AmEvent(int event_id)
 {
 }
 
-AmEvent::AmEvent(const AmEvent& rhs) 
+AmEvent::AmEvent(const AmEvent& rhs)
 : event_id(rhs.event_id), processed(rhs.processed)
 {
 }

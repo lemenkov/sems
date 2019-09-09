@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -60,7 +60,7 @@ int parse_cseq(sip_cseq* cseq, const char* beg, int len)
 		st = C_NUM_SWS;
 		cseq->num_str.set(beg, c-beg);
 		break;
-		
+
 	    default:
 		if(!IS_DIGIT(*c)){
 		    return MALFORMED_SIP_MSG;
@@ -78,7 +78,7 @@ int parse_cseq(sip_cseq* cseq, const char* beg, int len)
 	    case SP:
 	    case HTAB:
 		break;
-		
+
 	    default:
 		st = C_METHOD;
 		beg = c;
@@ -121,7 +121,7 @@ int parse_cseq(sip_cseq* cseq, const char* beg, int len)
 
     cseq->method_str.set(beg,c-beg);
     if(parse_method(&cseq->method, cseq->method_str.s, cseq->method_str.len) < 0){
-	
+
 	DBG("Cseq method parsing failed\n");
 	return MALFORMED_SIP_MSG;
     }

@@ -24,8 +24,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -158,7 +158,7 @@ int RtmpConnection::processPacket(RTMPPacket* packet)
   case 0x03:
     // bytes read report
     break;
-    
+
   case 0x04:
     // ctrl
     HandleCtrl(packet);
@@ -192,15 +192,15 @@ int RtmpConnection::processPacket(RTMPPacket* packet)
     rxVideo(packet);
     break;
 
-  case 0x0F:			
+  case 0x0F:
     // flex stream send
     break;
 
-  case 0x10:			
+  case 0x10:
     // flex shared object
     break;
 
-  case 0x11:			
+  case 0x11:
     // flex message
     DBG("flex message\n");
     if (invoke(packet, 1))
@@ -347,7 +347,7 @@ RtmpConnection::invoke(RTMPPacket *packet, unsigned int offset)
 	      rtmp.Link.tcUrl.av_len,
 	      rtmp.Link.tcUrl.av_val);
 
-	  if (rtmp.Link.app.av_val) 
+	  if (rtmp.Link.app.av_val)
 	    {
 	      DBG("app = <%.*s>\n",
 		  rtmp.Link.app.av_len,
@@ -375,7 +375,7 @@ RtmpConnection::invoke(RTMPPacket *packet, unsigned int offset)
 		  rtmp.Link.pageUrl.av_val);
 	    }
 	}
-      
+
       play_stream_id = packet->m_nInfoField2;
       m_session.lock();
       if(session) {
@@ -428,7 +428,7 @@ RtmpConnection::invoke(RTMPPacket *packet, unsigned int offset)
 	    sender->SendErrorResult(txn,"Sono.Call.Failed");
 	  }
 	}
-	
+
 	m_session.unlock();
       }
     }
@@ -490,7 +490,7 @@ void RtmpConnection::HandleCtrl(const RTMPPacket *packet)
   unsigned int tmp;
   if (packet->m_body && packet->m_nBodySize >= 2)
     nType = AMF_DecodeInt16(packet->m_body);
-  DBG("received ctrl. type: %d, len: %d", 
+  DBG("received ctrl. type: %d, len: %d",
       nType, packet->m_nBodySize);
   /*RTMP_LogHex(packet.m_body, packet.m_nBodySize);*/
 
@@ -648,14 +648,14 @@ void RtmpConnection::rxAudio(RTMPPacket *packet)
   dump_audio();
 #endif
 
-// soundType 	(byte & 0x01) » 0 	
+// soundType 	(byte & 0x01) » 0
 //   0: mono, 1: stereo
-// soundSize 	(byte & 0x02) » 1 	
+// soundSize 	(byte & 0x02) » 1
 //   0: 8-bit, 1: 16-bit
-// soundRate 	(byte & 0x0C) » 2 	
+// soundRate 	(byte & 0x0C) » 2
 //   0: 5.5 kHz, 1: 11 kHz, 2: 22 kHz, 3: 44 kHz
-// soundFormat 	(byte & 0xf0) » 4 	
-//   0: Uncompressed, 1: ADPCM, 2: MP3, 5: Nellymoser 8kHz mono, 6: Nellymoser, 11: Speex 
+// soundFormat 	(byte & 0xf0) » 4
+//   0: Uncompressed, 1: ADPCM, 2: MP3, 5: Nellymoser 8kHz mono, 6: Nellymoser, 11: Speex
 
   m_session.lock();
   // stream not yet started
@@ -679,7 +679,7 @@ RtmpSession* RtmpConnection::startSession(const char* uri)
   dialout_dlg->setRemoteParty("<" + string(uri) + ">");
   dialout_dlg->setRemoteUri(uri);
 
-  string local_party = 
+  string local_party =
     "\"" + rtmp_cfg->FromName + "\" <sip:" + ident + "@";
 
   if(!rtmp_cfg->FromDomain.empty()){
@@ -689,13 +689,13 @@ RtmpSession* RtmpConnection::startSession(const char* uri)
     int out_if = dialout_dlg->getOutboundIf();
     local_party += AmConfig::SIP_Ifs[out_if].LocalIP;
     if(AmConfig::SIP_Ifs[out_if].LocalPort != 5060)
-      local_party += 
+      local_party +=
 	":" + int2str(AmConfig::SIP_Ifs[out_if].LocalPort);
   }
 
   local_party += ">";
   dialout_dlg->setLocalParty(local_party);
-  
+
   n_session->setCallgroup(dialout_id);
   switch(AmSessionContainer::instance()->addSession(dialout_id,
 						    n_session.get())){
@@ -710,7 +710,7 @@ RtmpSession* RtmpConnection::startSession(const char* uri)
   case AmSessionContainer::Inserted:
     break;
   }
-  
+
   AmMimeBody sdp_body;
   sdp_body.addPart(SIP_APPLICATION_SDP);
 
@@ -764,7 +764,7 @@ void RtmpConnection::createRegistration(const string& domain,
   di_args.push("");
   di_args.push("");
   di_args.push(ident.c_str());
-  
+
   di_reg_client->invoke("createRegistration", di_args, ret);
 }
 

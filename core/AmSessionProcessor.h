@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -44,15 +44,15 @@ class AmSession;
 class AmSessionProcessor {
   static vector<AmSessionProcessorThread*> threads;
   static AmMutex threads_mut;
-  static vector<AmSessionProcessorThread*>::iterator 
+  static vector<AmSessionProcessorThread*>::iterator
     threads_it;
 
- public: 
+ public:
   static AmSessionProcessorThread* getProcessorThread();
   static void addThreads(unsigned int num_threads);
 };
 
-struct AmSessionProcessorThreadAddEvent 
+struct AmSessionProcessorThreadAddEvent
   : AmEvent
 {
   AmSession* s;
@@ -60,7 +60,7 @@ struct AmSessionProcessorThreadAddEvent
     : s(s), AmEvent(120) { }
 };
 
-class AmSessionProcessorThread 
+class AmSessionProcessorThread
 : public AmThread,
   public AmEventHandler,
   public AmEventNotificationSink

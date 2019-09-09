@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -61,15 +61,15 @@ class AmDtmfEvent;
 
 /**
  * \brief Implements the default behavior of one session
- * 
+ *
  * The session is identified by Call-ID, From-Tag and To-Tag.
  */
-class AmSession : 
+class AmSession :
   public virtual AmObject,
 #ifndef SESSION_THREADPOOL
   public AmThread,
 #endif
-  public AmEventQueue, 
+  public AmEventQueue,
   public AmEventHandler,
   public AmSipDialogEventHandler,
   public AmMediaSession,
@@ -91,7 +91,7 @@ private:
   AmDtmfEventQueue m_dtmfEventQueue;
   bool m_dtmfDetectionEnabled;
 
-  enum ProcessingStatus { 
+  enum ProcessingStatus {
     SESSION_PROCESSING_EVENTS = 0,
     SESSION_WAITING_DISCONNECTED,
     SESSION_ENDED_DISCONNECTED
@@ -139,7 +139,7 @@ protected:
 
   AmCondition<bool> sess_stopped;
 
-  /** this is the group the media is processed with 
+  /** this is the group the media is processed with
       - by default local tag */
   string callgroup;
 
@@ -156,7 +156,7 @@ protected:
 
   virtual AmSipDialog* createSipDialog();
 
-  /** process pending events,  
+  /** process pending events,
       @return whether everything went smoothly */
   virtual bool processEventsCatchExceptions();
 
@@ -201,9 +201,9 @@ public:
 
   AmSipDialog* dlg;
 
-  /** 
+  /**
    * \brief Exception occured in a Session
-   * 
+   *
    * Session (creation) should be aborted and replied with code/reason.
    */
   struct Exception {
@@ -213,7 +213,7 @@ public:
     Exception(int c, string r, string h="") : code(c), reason(r), hdrs(h) {}
   };
 
-  /** 
+  /**
    * Session constructor.
    */
   AmSession(AmSipDialog* dlg=NULL);
@@ -226,9 +226,9 @@ public:
   virtual void process(AmEvent*);
 
   /**
-   * add a handler which will be called 
+   * add a handler which will be called
    * for all events in session
-   * 
+   *
    * @see AmSessionEventHandler
    */
   void addHandler(AmSessionEventHandler*);
@@ -244,8 +244,8 @@ public:
   /**
    * Set the call group for this call; calls in the same
    * group are processed by the same media processor thread.
-   * 
-   * Note: this must be set before inserting 
+   *
+   * Note: this must be set before inserting
    * the session to the MediaProcessor!
    */
   void setCallgroup(const string& cg);
@@ -382,9 +382,9 @@ public:
 
   /**
    * Signals the session it should stop.
-   * This will cause the session to be able 
+   * This will cause the session to be able
    * to exit the main loop.
-   * If wakeup is set, a bogus event will 
+   * If wakeup is set, a bogus event will
    * be sent to wake up the session.
    */
   virtual void setStopped(bool wakeup = false);
@@ -455,7 +455,7 @@ public:
   /**
      remove all Timers
      @return true on success
-     Note: this doesn't clear timer events already in the 
+     Note: this doesn't clear timer events already in the
            event queue
   */
   virtual bool removeTimers();
@@ -483,7 +483,7 @@ public:
   virtual void onInvite(const AmSipRequest& req);
 
   /**
-   * onOutgoingInvite will be called if an INVITE 
+   * onOutgoingInvite will be called if an INVITE
    * is sent in the session.
    */
   virtual void onOutgoingInvite(const string& headers) { }
@@ -493,23 +493,23 @@ public:
    * dialog has been received. At this point, the CANCEL
    * transaction has been replied with 200.
    *
-   * A normal plug-in does not have to do anything special, 
-   * as normal dialogs are immediatly replied with 200 
-   * or error code. 
+   * A normal plug-in does not have to do anything special,
+   * as normal dialogs are immediatly replied with 200
+   * or error code.
    *
-   * Note: You are still responsible for responding the 
+   * Note: You are still responsible for responding the
    *       initial transaction.
    */
   virtual void onCancel(const AmSipRequest& req);
 
   /**
-   * onRinging will be called after 180 is received. 
+   * onRinging will be called after 180 is received.
    * If local audio is set up, session is added to media processor.
    */
   virtual void onRinging(const AmSipReply& reply) {}
 
   /**
-   * onBye is called whenever a BYE request is received. 
+   * onBye is called whenever a BYE request is received.
    */
   virtual void onBye(const AmSipRequest& req);
 
@@ -520,7 +520,7 @@ public:
   virtual void onSipRequest(const AmSipRequest& req);
 
   /** Entry point for SIP Replies   */
-  virtual void onSipReply(const AmSipRequest& req, const AmSipReply& reply, 
+  virtual void onSipReply(const AmSipRequest& req, const AmSipReply& reply,
 			  AmBasicSipDialog::Status old_dlg_status);
 
   /** 2xx reply has been received for an INVITE transaction */
@@ -532,7 +532,7 @@ public:
   virtual void onPrack2xx(const AmSipReply &);
 
   virtual void onFailure();
-  
+
   virtual void onNoAck(unsigned int cseq);
   virtual void onNoPrack(const AmSipRequest &req, const AmSipReply &rpl);
 
@@ -545,7 +545,7 @@ public:
    * entry point for system events
    */
   virtual void onSystemEvent(AmSystemEvent* ev);
-  
+
 #ifdef WITH_ZRTP
   /**
    * ZRTP events @see ZRTP
@@ -582,7 +582,7 @@ public:
   /** Hook called when the session creation is completed (INV trans replied with 200) */
   virtual void onSessionStart();
 
-  /** 
+  /**
    * called in the session thread before the session is destroyed,
    * i.e. after the main event loop has finished
    */
@@ -604,7 +604,7 @@ public:
 
   /* ----------------- media processing interface ------------------- */
 
-public: 
+public:
   virtual int readStreams(unsigned long long ts, unsigned char *buffer);
   virtual int writeStreams(unsigned long long ts, unsigned char *buffer);
   virtual void clearRTPTimeout() { RTPStream()->clearRTPTimeout(); }
@@ -612,7 +612,7 @@ public:
 
   /**
    * Call-backs used by RTP stream(s)
-   * 
+   *
    * Note: these methods will be called from the RTP receiver thread.
    */
   virtual bool onBeforeRTPRelay(AmRtpPacket* p, sockaddr_storage* remote_addr)
@@ -626,7 +626,7 @@ public:
 
 inline AmRtpAudio* AmSession::RTPStream() {
   if (NULL == _rtp_str.get()) {
-    DBG("creating RTP stream instance for session [%p]\n", 
+    DBG("creating RTP stream instance for session [%p]\n",
 	this);
     _rtp_str.reset(new AmRtpAudio(this,rtp_interface));
   }

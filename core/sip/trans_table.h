@@ -8,7 +8,7 @@
 #define H_TABLE_POWER   10
 #define H_TABLE_ENTRIES (1<<H_TABLE_POWER)
 
-class trans_bucket: 
+class trans_bucket:
     public ht_bucket<sip_trans>
 {
     trans_bucket(unsigned long id);
@@ -20,7 +20,7 @@ public:
 
     typedef ht_bucket<sip_trans>::value_list trans_list;
 
-    
+
     // Match a request to UAS/UAC transactions
     // in this bucket
     sip_trans* match_request(sip_msg* msg, unsigned int ttype);
@@ -54,7 +54,7 @@ unsigned int hash(const cstring& ci, const cstring& cs);
 
 #define BRANCH_BUF_LEN 8
 
-void compute_branch(char* branch/*[BRANCH_BUF_LEN]*/, 
+void compute_branch(char* branch/*[BRANCH_BUF_LEN]*/,
 		    const cstring& callid, const cstring& cseq);
 
 #define SL_TOTAG_LEN BRANCH_BUF_LEN

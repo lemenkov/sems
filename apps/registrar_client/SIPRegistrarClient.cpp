@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -64,7 +64,7 @@ SIPRegistrarClient::SIPRegistrarClient(const string& name)
     AmDynInvokeFactory(MOD_NAME),
     uac_auth_i(NULL),
     stop_requested(false)
-{ 
+{
 }
 
 void SIPRegistrarClient::run() {
@@ -106,19 +106,19 @@ void SIPRegistrarClient::checkTimeouts() {
       if (it->second->registerExpired(now.tv_sec)) {
 	AmSIPRegistration* reg = it->second;
 	reg->onRegisterExpired();
-      } else if (!it->second->waiting_result && 
+      } else if (!it->second->waiting_result &&
 		 it->second->timeToReregister(now.tv_sec)) {
 	it->second->doRegistration();
-      } 
+      }
     } else if (it->second->remove) {
       remove_regs.push_back(it->first);
-    } else if (it->second->waiting_result && 
+    } else if (it->second->waiting_result &&
 	       it->second->registerSendTimeout(now.tv_sec)) {
       AmSIPRegistration* reg = it->second;
       reg->onRegisterSendTimeout();
     }
   }
-  for (vector<string>::iterator it = remove_regs.begin(); 
+  for (vector<string>::iterator it = remove_regs.begin();
        it != remove_regs.end(); it++) {
     DBG("removing registration\n");
     AmSIPRegistration* reg = registrations[*it];
@@ -145,16 +145,16 @@ void SIPRegistrarClient::onServerShutdown() {
   }
 
   stop_requested.set(true);
-//   
+//
 //   setStopped();
 //   return;
 }
 
-void SIPRegistrarClient::process(AmEvent* ev) 
+void SIPRegistrarClient::process(AmEvent* ev)
 {
   if (ev->event_id == E_SYSTEM) {
     AmSystemEvent* sys_ev = dynamic_cast<AmSystemEvent*>(ev);
-    if(sys_ev){	
+    if(sys_ev){
       DBG("Session received system Event\n");
       if (sys_ev->sys_event == AmSystemEvent::ServerShutdown) {
 	onServerShutdown();
@@ -193,12 +193,12 @@ void SIPRegistrarClient::onSipReplyEvent(AmSipReplyEvent* ev) {
 
 void SIPRegistrarClient::onNewRegistration(SIPNewRegistrationEvent* new_reg) {
 
-  AmSIPRegistration* reg = new AmSIPRegistration(new_reg->handle, new_reg->info, 
+  AmSIPRegistration* reg = new AmSIPRegistration(new_reg->handle, new_reg->info,
 						 new_reg->sess_link);
-  
+
   if (uac_auth_i != NULL) {
     DBG("enabling UAC Auth for new registration.\n");
-    
+
     // get a sessionEventHandler from uac_auth
     AmArg di_args,ret;
     AmArg a;
@@ -213,13 +213,13 @@ void SIPRegistrarClient::onNewRegistration(SIPNewRegistrationEvent* new_reg) {
     } else {
       AmObject* p = ret.get(0).asObject();
       if (p != NULL) {
-	AmSessionEventHandler* h = dynamic_cast<AmSessionEventHandler*>(p);	
+	AmSessionEventHandler* h = dynamic_cast<AmSessionEventHandler*>(p);
 	if (h != NULL)
 	  reg->setSessionEventHandler(h);
       }
     }
   }
-  
+
   add_reg(new_reg->handle, reg);
   reg->doRegistration();
 }
@@ -236,11 +236,11 @@ void SIPRegistrarClient::on_stop() { }
 
 bool SIPRegistrarClient::onSipReply(const AmSipReply& rep, AmSipDialog::Status old_dlg_status) {
   DBG("got reply with tag '%s'\n", rep.from_tag.c_str());
-	
+
   if (instance()->hasRegistration(rep.from_tag)) {
     instance()->postEvent(new AmSipReplyEvent(rep));
     return true;
-  } else 
+  } else
     return false;
 }
 
@@ -249,12 +249,12 @@ bool SIPRegistrarClient::hasRegistration(const string& handle) {
 }
 
 AmSIPRegistration* SIPRegistrarClient::
-get_reg(const string& reg_id) 
+get_reg(const string& reg_id)
 {
   DBG("get registration '%s'\n", reg_id.c_str());
   AmSIPRegistration* res = NULL;
   reg_mut.lock();
-  map<string, AmSIPRegistration*>::iterator it = 
+  map<string, AmSIPRegistration*>::iterator it =
     registrations.find(reg_id);
   if (it!=registrations.end())
     res = it->second;
@@ -264,11 +264,11 @@ get_reg(const string& reg_id)
 }
 
 AmSIPRegistration* SIPRegistrarClient::
-get_reg_unsafe(const string& reg_id) 
+get_reg_unsafe(const string& reg_id)
 {
   //	DBG("get registration_unsafe '%s'\n", reg_id.c_str());
   AmSIPRegistration* res = NULL;
-  map<string, AmSIPRegistration*>::iterator it = 
+  map<string, AmSIPRegistration*>::iterator it =
     registrations.find(reg_id);
   if (it!=registrations.end())
     res = it->second;
@@ -288,7 +288,7 @@ AmSIPRegistration* SIPRegistrarClient::
 remove_reg_unsafe(const string& reg_id) {
   DBG("removing registration '%s'\n", reg_id.c_str());
   AmSIPRegistration* reg = NULL;
-  map<string, AmSIPRegistration*>::iterator it = 
+  map<string, AmSIPRegistration*>::iterator it =
     registrations.find(reg_id);
   if (it!=registrations.end()) {
     reg = it->second;
@@ -301,16 +301,16 @@ remove_reg_unsafe(const string& reg_id) {
 }
 
 void SIPRegistrarClient::
-add_reg(const string& reg_id, AmSIPRegistration* new_reg) 
+add_reg(const string& reg_id, AmSIPRegistration* new_reg)
 {
   DBG("adding registration '%s'  (this = %ld)\n", reg_id.c_str(), (long)this);
   AmSIPRegistration* reg = NULL;
   reg_mut.lock();
-  map<string, AmSIPRegistration*>::iterator it = 
+  map<string, AmSIPRegistration*>::iterator it =
     registrations.find(reg_id);
   if (it!=registrations.end()) {
     reg = it->second;
-		
+
   }
   registrations[reg_id] = new_reg;
 
@@ -324,7 +324,7 @@ add_reg(const string& reg_id, AmSIPRegistration* new_reg)
 
 
 // API
-string SIPRegistrarClient::createRegistration(const string& domain, 
+string SIPRegistrarClient::createRegistration(const string& domain,
 					      const string& user,
 					      const string& name,
 					      const string& auth_user,
@@ -333,11 +333,11 @@ string SIPRegistrarClient::createRegistration(const string& domain,
 					      const string& proxy,
                                               const string& contact,
 					      const string& handle) {
-	
+
   string l_handle = handle.empty() ? AmSession::getNewId() : handle;
   instance()->
-    postEvent(new SIPNewRegistrationEvent(SIPRegistrationInfo(domain, user, 
-							      name, auth_user, pwd, 
+    postEvent(new SIPNewRegistrationEvent(SIPRegistrationInfo(domain, user,
+							      name, auth_user, pwd,
 							      proxy, contact),
 					  l_handle, sess_link));
 
@@ -350,8 +350,8 @@ void SIPRegistrarClient::removeRegistration(const string& handle) {
 
 }
 
-bool SIPRegistrarClient::getRegistrationState(const string& handle, 
-					      unsigned int& state, 
+bool SIPRegistrarClient::getRegistrationState(const string& handle,
+					      unsigned int& state,
 					      unsigned int& expires_left) {
   bool res = false;
   reg_mut.lock();
@@ -362,7 +362,7 @@ bool SIPRegistrarClient::getRegistrationState(const string& handle,
     state = reg->getState();
     expires_left = reg->getExpiresLeft();
   }
-		
+
   reg_mut.unlock();
   return res;
 }
@@ -370,7 +370,7 @@ bool SIPRegistrarClient::getRegistrationState(const string& handle,
 void SIPRegistrarClient::listRegistrations(AmArg& res) {
   reg_mut.lock();
 
-  for (map<string, AmSIPRegistration*>::iterator it = 
+  for (map<string, AmSIPRegistration*>::iterator it =
 	 registrations.begin(); it != registrations.end(); it++) {
     AmArg r;
     r["handle"] = it->first;
@@ -388,7 +388,7 @@ void SIPRegistrarClient::listRegistrations(AmArg& res) {
 }
 
 
-void SIPRegistrarClient::invoke(const string& method, const AmArg& args, 
+void SIPRegistrarClient::invoke(const string& method, const AmArg& args,
 				AmArg& ret)
 {
   if(method == "createRegistration"){
@@ -414,7 +414,7 @@ void SIPRegistrarClient::invoke(const string& method, const AmArg& args,
   } else if(method == "getRegistrationState"){
     unsigned int state;
     unsigned int expires;
-    if (instance()->getRegistrationState(args.get(0).asCStr(), 
+    if (instance()->getRegistrationState(args.get(0).asCStr(),
 					 state, expires)){
       ret.push(1);
       ret.push((int)state);
@@ -424,7 +424,7 @@ void SIPRegistrarClient::invoke(const string& method, const AmArg& args,
     }
   } else if(method == "listRegistrations"){
     listRegistrations(ret);
-  } else if(method == "_list"){ 
+  } else if(method == "_list"){
     ret.push(AmArg("createRegistration"));
     ret.push(AmArg("removeRegistration"));
     ret.push(AmArg("getRegistrationState"));

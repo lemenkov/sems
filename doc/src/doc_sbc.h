@@ -1,8 +1,8 @@
 
-/*! \page ModuleDoc_sbc SBC (flexible B2BUA) Application 
+/*! \page ModuleDoc_sbc SBC (flexible B2BUA) Application
  *  \section Readme_sbc Readme file
  *  \verbinclude Readme.sbc.txt
- *  
+ *
  *  \section Links
  \subsection sbc_example_profiles Example profiles
  <ul>
@@ -28,7 +28,7 @@
 
    \section transparent_sbcprofile transparent.sbcprofile.conf
    \verbinclude transparent.sbcprofile.conf
-   
+
    \section Links
    Back to \ref ModuleDoc_sbc, \ref AppDoc, to \ref AppDocExample.
  */
@@ -40,7 +40,7 @@
 
    \section auth_b2b_sbcprofile auth_b2b.sbcprofile.conf
    \verbinclude auth_b2b.sbcprofile.conf
-   
+
    \section Links
    Back to \ref ModuleDoc_sbc, \ref AppDoc, to \ref AppDocExample.
  */
@@ -52,7 +52,7 @@
 
    \section sst_b2b_sbcprofile sst_b2b.sbcprofile.conf
    \verbinclude sst_b2b.sbcprofile.conf
-   
+
    \section Links
    Back to \ref ModuleDoc_sbc, \ref AppDoc, to \ref AppDocExample.
  */
@@ -64,7 +64,7 @@
 
    \section call_timer_sbcprofile call_timer.sbcprofile.conf
    \verbinclude call_timer.sbcprofile.conf
-   
+
    \section Links
    Back to \ref ModuleDoc_sbc, \ref AppDoc, to \ref AppDocExample.
  */
@@ -76,7 +76,7 @@
 
    \section prepaid_sbcprofile prepaid.sbcprofile.conf
    \verbinclude prepaid.sbcprofile.conf
-   
+
    \section Links
    Back to \ref ModuleDoc_sbc, \ref AppDoc, to \ref AppDocExample.
  */
@@ -89,7 +89,7 @@
 
    \section codecfilter_sbcprofile codecfilter.sbcprofile.conf
    \verbinclude codecfilter.sbcprofile.conf
-   
+
    \section Links
    Back to \ref ModuleDoc_sbc, \ref AppDoc, to \ref AppDocExample.
  */
@@ -100,7 +100,7 @@
 
    \section replytranslate_sbcprofile replytranslate.sbcprofile.conf
    \verbinclude replytranslate.sbcprofile.conf
-   
+
    \section Links
    Back to \ref ModuleDoc_sbc, \ref AppDoc, to \ref AppDocExample.
  */
@@ -111,7 +111,7 @@
 
    \section refuse_sbcprofile refuse.sbcprofile.conf
    \verbinclude refuse.sbcprofile.conf
-   
+
    \section Links
    Back to \ref ModuleDoc_sbc, \ref AppDoc, to \ref AppDocExample.
  */
@@ -123,7 +123,7 @@
 
    \section symmetricrtp_sbcprofile symmetricrtp.sbcprofile.conf
    \verbinclude symmetricrtp.sbcprofile.conf
-   
+
    \section Links
    Back to \ref ModuleDoc_sbc, \ref AppDoc, to \ref AppDocExample.
  */

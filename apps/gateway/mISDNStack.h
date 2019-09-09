@@ -46,7 +46,7 @@ class mISDNStack: public AmThread
 	int init();
 	void run();
 	void on_stop();
-	    
+
 public:
 	mISDNStack();
 	~mISDNStack();
@@ -62,7 +62,7 @@ public:
 	mISDNChannel* NewCR(mISDNport *port,mISDN::iframe_t *frame);
 	mISDNChannel* FindCR(mISDN::iframe_t *frame);
 	mISDNChannel* FindBC(mISDN::iframe_t *frame);
-	
+
 	static mISDNStack* instance();
 	static int GetPortInfo();
 	int GenerateCR();
@@ -83,7 +83,7 @@ enum {
         B_STATE_IMPORTING,      /* BCHANNEL_REMOVE sent */
 };
 #define ISDN_PID_L3_B_USER 0x430000ff
-#define ISDN_PID_L4_B_USER 0x440000ff                                                        
+#define ISDN_PID_L4_B_USER 0x440000ff
 #endif
 
 

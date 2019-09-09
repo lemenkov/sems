@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "ModDlg.h"
@@ -78,7 +78,7 @@ MOD_CONDITIONEXPORT_BEGIN(MOD_CLS_NAME) {
 } MOD_CONDITIONEXPORT_END;
 
 bool DLGModule::onInvite(const AmSipRequest& req, DSMSession* sess) {
-  // save inivital invite to last_req 
+  // save inivital invite to last_req
   // todo: save this in avar
  sess->last_req.reset(new AmSipRequest(req));
  return true;
@@ -102,7 +102,7 @@ string replaceLineEnds(string input)
 }
 
 // todo: convert errors to exceptions
-void replyRequest(DSMSession* sc_sess, AmSession* sess, 
+void replyRequest(DSMSession* sc_sess, AmSession* sess,
 		  EventParamT* event_params,
 		  const string& par1, const string& par2,
 		  const AmSipRequest& req) {
@@ -145,11 +145,11 @@ EXEC_ACTION_START(DLGReplyRequestAction) {
 
   AVarMapT::iterator it = sc_sess->avar.find(DSM_AVAR_REQUEST);
   if (it == sc_sess->avar.end() ||
-      !isArgAObject(it->second) || 
+      !isArgAObject(it->second) ||
       !(sip_req = dynamic_cast<DSMSipRequest*>(it->second.asObject()))) {
     throw DSMException("dlg", "cause", "no request");
   }
-    
+
   replyRequest(sc_sess, sess, event_params, par1, par2, *sip_req->req);
 } EXEC_ACTION_END;
 
@@ -211,7 +211,7 @@ EXEC_ACTION_START(DLGByeAction) {
 
 
 CONST_ACTION_2P(DLGConnectCalleeRelayedAction,',', false);
-EXEC_ACTION_START(DLGConnectCalleeRelayedAction) {  
+EXEC_ACTION_START(DLGConnectCalleeRelayedAction) {
   string remote_party = resolveVars(par1, sess, sc_sess, event_params);
   string remote_uri = resolveVars(par2, sess, sc_sess, event_params);
 
@@ -221,15 +221,15 @@ EXEC_ACTION_START(DLGConnectCalleeRelayedAction) {
   //   WARN("internal error: initial INVITE request missing.\n");
   // }
   // AmB2BSession* b2b_sess = dynamic_cast<AmB2BSession*>(sess);
-  // if (b2b_sess) 
+  // if (b2b_sess)
   //   b2b_sess->set_sip_relay_only(true);
-  // else 
+  // else
   //   ERROR("getting B2B session.\n");
 
   sc_sess->B2BconnectCallee(remote_party, remote_uri, true);
 } EXEC_ACTION_END;
 
-EXEC_ACTION_START(DLGDialoutAction) {  
+EXEC_ACTION_START(DLGDialoutAction) {
   string arrayname = resolveVars(arg, sess, sc_sess, event_params);
 
 #define GET_VARIABLE_MANDATORY(varname_suffix, outvar)			\
@@ -246,7 +246,7 @@ EXEC_ACTION_START(DLGDialoutAction) {
   if (it != sc_sess->var.end())		      \
     outvar = it->second;
 
-  map<string, string>::iterator it; 
+  map<string, string>::iterator it;
 
   string v_from;
   GET_VARIABLE_MANDATORY("_caller", v_from);
@@ -262,27 +262,27 @@ EXEC_ACTION_START(DLGDialoutAction) {
 
   GET_VARIABLE_OPTIONAL("_r_uri", r_uri);
 
-  string from = "<sip:"+v_from+"@"+v_domain+">"; 
+  string from = "<sip:"+v_from+"@"+v_domain+">";
   GET_VARIABLE_OPTIONAL("_from", from);
 
-  string from_uri = "sip:"+v_from+"@"+v_domain; 
+  string from_uri = "sip:"+v_from+"@"+v_domain;
   GET_VARIABLE_OPTIONAL("_from_uri", from_uri);
 
   string to = "<sip:"+v_to+"@"+v_domain+">";
   GET_VARIABLE_OPTIONAL("_to", to);
 
-  string auth_user; 
+  string auth_user;
   GET_VARIABLE_OPTIONAL("_auth_user", auth_user);
 
-  string auth_pwd; 
+  string auth_pwd;
   GET_VARIABLE_OPTIONAL("_auth_pwd", auth_pwd);
-   
-  string ltag; 
+
+  string ltag;
   GET_VARIABLE_OPTIONAL("_ltag", ltag);
 
-  string hdrs; 
+  string hdrs;
   GET_VARIABLE_OPTIONAL("_hdrs", hdrs);
-  
+
   if (hdrs.length()) {
     size_t crpos;
     while ((crpos=hdrs.find("\\r\\n")) != string::npos) {
@@ -326,7 +326,7 @@ EXEC_ACTION_START(DLGDialoutAction) {
 
   if (has_vars && has_auth)
       sess_params->push(var_struct);
- 
+
   DBG("sess_params: '%s'\n", AmArg::print(*sess_params).c_str());
 
   string new_sess_tag = AmUAC::dialout(user, app_name, r_uri, from, from_uri, to, ltag, hdrs, sess_params);
@@ -556,7 +556,7 @@ EXEC_ACTION_START(DLGB2BRelayErrorAction) {
 
   AVarMapT::iterator it = sc_sess->avar.find(DSM_AVAR_REQUEST);
   if (it == sc_sess->avar.end() ||
-      !isArgAObject(it->second) || 
+      !isArgAObject(it->second) ||
       !(sip_req = dynamic_cast<DSMSipRequest*>(it->second.asObject()))) {
     throw DSMException("dlg", "cause", "no request");
   }

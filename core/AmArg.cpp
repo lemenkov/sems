@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -47,7 +47,7 @@ const char* AmArg::t2str(int type) {
 }
 
 AmArg::AmArg(const AmArg& v)
-{ 
+{
   type = Undef;
 
   *this = v;
@@ -56,7 +56,7 @@ AmArg::AmArg(const AmArg& v)
 AmArg& AmArg::operator=(const AmArg& v) {
   if (this != &v) {
     invalidate();
-    
+
     type = v.type;
     switch(type){
     case Int:    { v_int = v.v_int; } break;
@@ -76,7 +76,7 @@ AmArg& AmArg::operator=(const AmArg& v) {
   return *this;
 }
 
-AmArg::AmArg(std::map<std::string, std::string>& v) 
+AmArg::AmArg(std::map<std::string, std::string>& v)
   : type(Undef) {
   assertStruct();
   for (std::map<std::string, std::string>::iterator it=
@@ -84,7 +84,7 @@ AmArg::AmArg(std::map<std::string, std::string>& v)
     (*v_struct)[it->first] = AmArg(it->second.c_str());
 }
 
-AmArg::AmArg(std::map<std::string, AmArg>& v) 
+AmArg::AmArg(std::map<std::string, AmArg>& v)
   : type(Undef) {
   assertStruct();
   for (std::map<std::string, AmArg>::iterator it=
@@ -95,16 +95,16 @@ AmArg::AmArg(std::map<std::string, AmArg>& v)
 AmArg::AmArg(vector<std::string>& v)
   : type(Array) {
   assertArray(0);
-  for (vector<std::string>::iterator it 
+  for (vector<std::string>::iterator it
 	 = v.begin(); it != v.end(); it++) {
     push(AmArg(it->c_str()));
   }
 }
-    
-AmArg::AmArg(const vector<int>& v ) 
+
+AmArg::AmArg(const vector<int>& v )
   : type(Array) {
   assertArray(0);
-  for (vector<int>::const_iterator it 
+  for (vector<int>::const_iterator it
 	 = v.begin(); it != v.end(); it++) {
     push(AmArg(*it));
   }
@@ -113,7 +113,7 @@ AmArg::AmArg(const vector<int>& v )
 AmArg::AmArg(const vector<double>& v)
   : type(Array) {
   assertArray(0);
-  for (vector<double>::const_iterator it 
+  for (vector<double>::const_iterator it
 	 = v.begin(); it != v.end(); it++) {
     push(AmArg(*it));
   }
@@ -126,7 +126,7 @@ void AmArg::assertArray() {
     type = Array;
     v_array = new ValueArray();
     return;
-  } 
+  }
   throw TypeMismatchException();
 }
 
@@ -136,7 +136,7 @@ void AmArg::assertArray() const {
 }
 
 void AmArg::assertArray(size_t s) {
-    
+
   if (Undef == type) {
     type = Array;
     v_array = new ValueArray();
@@ -154,7 +154,7 @@ void AmArg::assertStruct() {
     type = Struct;
     v_struct = new ValueStruct();
     return;
-  } 
+  }
   throw TypeMismatchException();
 }
 
@@ -184,7 +184,7 @@ void AmArg::push(const string &key, const AmArg &val) {
 void AmArg::pop(AmArg &a) {
   assertArray();
   if (!size()) {
-    if (a.getType() == AmArg::Undef) 
+    if (a.getType() == AmArg::Undef)
       return;
     a = AmArg();
     return;
@@ -196,7 +196,7 @@ void AmArg::pop(AmArg &a) {
 void AmArg::pop_back(AmArg &a) {
   assertArray();
   if (!size()) {
-    if (a.getType() == AmArg::Undef) 
+    if (a.getType() == AmArg::Undef)
       return;
     a = AmArg();
     return;
@@ -214,7 +214,7 @@ void AmArg::pop_back() {
 
 void AmArg::concat(const AmArg& a) {
   assertArray();
-  if (a.getType() == Array) { 
+  if (a.getType() == Array) {
   for (size_t i=0;i<a.size();i++)
     v_array->push_back(a[i]);
   } else {
@@ -224,16 +224,16 @@ void AmArg::concat(const AmArg& a) {
 
 size_t AmArg::size() const {
   if (Array == type)
-    return v_array->size(); 
+    return v_array->size();
 
   if (Struct == type)
-    return v_struct->size(); 
+    return v_struct->size();
 
   throw TypeMismatchException();
 }
 
 AmArg& AmArg::back() {
-  assertArray();  
+  assertArray();
   if (!v_array->size())
     throw OutOfBoundsException();
 
@@ -252,7 +252,7 @@ AmArg& AmArg::get(size_t idx) {
   assertArray();
   if (idx >= v_array->size())
     throw OutOfBoundsException();
-    
+
   return (*v_array)[idx];
 }
 
@@ -260,39 +260,39 @@ AmArg& AmArg::get(size_t idx) const {
   assertArray();
   if (idx >= v_array->size())
     throw OutOfBoundsException();
-    
+
   return (*v_array)[idx];
 }
 
-AmArg& AmArg::operator[](size_t idx) { 
-  assertArray(idx+1); 
+AmArg& AmArg::operator[](size_t idx) {
+  assertArray(idx+1);
   return (*v_array)[idx];
 }
 
-AmArg& AmArg::operator[](size_t idx) const { 
-  assertArray();  
+AmArg& AmArg::operator[](size_t idx) const {
+  assertArray();
   if (idx >= v_array->size())
     throw OutOfBoundsException();
-    
+
   return (*v_array)[idx];
 }
 
-AmArg& AmArg::operator[](int idx) { 
+AmArg& AmArg::operator[](int idx) {
   if (idx<0)
     throw OutOfBoundsException();
 
-  assertArray(idx+1); 
+  assertArray(idx+1);
   return (*v_array)[idx];
 }
 
-AmArg& AmArg::operator[](int idx) const { 
+AmArg& AmArg::operator[](int idx) const {
   if (idx<0)
     throw OutOfBoundsException();
 
-  assertArray();  
+  assertArray();
   if ((size_t)idx >= v_array->size())
     throw OutOfBoundsException();
-    
+
   return (*v_array)[idx];
 }
 
@@ -330,7 +330,7 @@ bool operator==(const AmArg& lhs, const AmArg& rhs) {
   case AmArg::ADynInv:{ return lhs.v_inv == rhs.v_inv; } break;
   case AmArg::Array:  { return lhs.v_array == rhs.v_array;  } break;
   case AmArg::Struct: { return lhs.v_struct == rhs.v_struct;  } break;
-  case AmArg::Blob:   {  return (lhs.v_blob->len == rhs.v_blob->len) &&  
+  case AmArg::Blob:   {  return (lhs.v_blob->len == rhs.v_blob->len) &&
 	!memcmp(lhs.v_blob->data, rhs.v_blob->data, lhs.v_blob->len); } break;
   case AmArg::Undef:  return true;
   default: assert(0);
@@ -348,7 +348,7 @@ bool AmArg::hasMember(const string& name) const {
 std::vector<std::string> AmArg::enumerateKeys() const {
   assertStruct();
   std::vector<std::string> res;
-  for (ValueStruct::iterator it = 
+  for (ValueStruct::iterator it =
 	 v_struct->begin(); it != v_struct->end(); it++)
     res.push_back(it->first);
   return res;
@@ -390,7 +390,7 @@ void AmArg::assertArrayFmt(const char* format) const {
       case 'a': assertArgArray(get(i)); got+='a'; break;
       case 'b': assertArgBlob(get(i)); got+='b'; break;
       case 'u': assertArgStruct(get(i)); got+='u'; break;
-      default: got+='?'; ERROR("ignoring unknown format type '%c'\n", 
+      default: got+='?'; ERROR("ignoring unknown format type '%c'\n",
 			       format[i]); break;
       }
     }
@@ -407,7 +407,7 @@ void AmArg::assertArrayFmt(const char* format) const {
     for (size_t i=0;i<size();i++)		\
       res.push_back(get(i).getter());		\
     return res;					\
-  }			
+  }
 VECTOR_GETTER(string, asStringVector, asCStr)
 VECTOR_GETTER(int, asIntVector, asInt)
 VECTOR_GETTER(bool, asBoolVector, asBool)
@@ -415,12 +415,12 @@ VECTOR_GETTER(double, asDoubleVector, asDouble)
 VECTOR_GETTER(AmObject*, asAmObjectVector, asObject)
 #undef  VECTOR_GETTER
 
-vector<ArgBlob> AmArg::asArgBlobVector() const {		
-  vector<ArgBlob> res;				
-  for (size_t i=0;i<size();i++)		
-    res.push_back(*get(i).asBlob());		
-  return res;					
-}			
+vector<ArgBlob> AmArg::asArgBlobVector() const {
+  vector<ArgBlob> res;
+  for (size_t i=0;i<size();i++)
+    res.push_back(*get(i).asBlob());
+  return res;
+}
 
 void AmArg::clear() {
   invalidate();

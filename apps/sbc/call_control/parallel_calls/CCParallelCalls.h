@@ -61,4 +61,4 @@ class CCParallelCalls : public AmDynInvoke
   int onLoad();
 };
 
-#endif 
+#endif

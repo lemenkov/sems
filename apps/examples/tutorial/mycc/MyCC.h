@@ -20,9 +20,9 @@ public:
   static string Dialing;
   static string DialFailed;
   static string ConnectSuffix;
-  
+
   MyCCFactory(const string& _app_name);
-  
+
   int onLoad();
   AmSession* onInvite(const AmSipRequest& req, const string& app_name,
 		      const map<string,string>& app_params);
@@ -39,7 +39,7 @@ class MyCCDialog : public AmB2BCallerSession
   AmPlaylist playlist;
 
   int state;
-  
+
   string pin;
   string number;
   int credit;

@@ -49,7 +49,7 @@ class AmEventProcessingThread
   public AmEventQueue,
   public AmEventHandler
 {
-  
+
   bool processing_events;
 
   void process(AmEvent* ev);

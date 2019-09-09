@@ -11,7 +11,7 @@
 #include "AmConfig.h"
 
 #include "fct.h"      /* FCTX is installed! */
-  
+
 #include "AmSipMsg.h"
 #include "AmSipHeaders.h"
 
@@ -33,16 +33,16 @@ FCT_BGN() {
 
 // FCT_BGN() {
 // FCT_FIXTURE_SUITE_BGN(example_suite) {
- 
+
 // FCT_SETUP_BGN() {
 // } FCT_SETUP_END();
- 
+
 // FCT_TEARDOWN_BGN() {
 // } FCT_TEARDOWN_END();
 
 // FCT_TEST_BGN(test_object_basic) {
 // } FCT_TEST_END();
- 
+
 // } FCT_FIXTURE_SUITE_END();
- 
+
 // } FCT_END();

@@ -1,5 +1,5 @@
 // Author: Hong Jiang <hong@hjiang.net>
-/* 
+/*
 source: http://github.com/hjiang/jsonxx/
 
 Copyright (c) 2010 Hong Jiang
@@ -33,7 +33,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace jsonxx {
-  bool match(const std::string& pattern, std::istream& input, 
+  bool match(const std::string& pattern, std::istream& input,
 	     bool ignore_ws = true);
   bool parse_string(std::istream& input, std::string* value);
   bool parse_bool(std::istream& input, bool* value);
@@ -41,7 +41,7 @@ namespace jsonxx {
   bool parse_float(std::istream& input, double* value);
   bool parse_number(std::istream& input, long* value);
   bool parse_number(std::istream& input, int* value);
-  
+
 // TODO: *::parse() should be static functions.
 
 class Value;

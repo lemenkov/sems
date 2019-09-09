@@ -26,7 +26,7 @@ class RestParams {
     /* retrieve data from given URL and decode them using given format
      * can throw an exception if something strange happens (see get) */
     bool retrieve(const std::string &url, Format fmt = TEXT);
-    
+
     // sets dst to value of given parameter if the parameter is set
     void getIfSet(const char *param_name, string &dst);
     void getIfSet(const char *param_name, bool &dst);

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 TelTech Systems Inc.
- * 
+ *
  * This file is part of SEMS, a free SIP media server.
  *
  * SEMS is free software; you can redistribute it and/or modify
@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -42,7 +42,7 @@ struct JsonrpcNetstringsConnection;
 struct JsonRpcEvent
   : public AmEvent {
   string connection_id;
-  JsonRpcEvent() 
+  JsonRpcEvent()
     : AmEvent(122) { }
   virtual ~JsonRpcEvent() { }
 };
@@ -51,10 +51,10 @@ struct JsonRpcResponse {
   string id;
   AmArg data;
   bool is_error;
-  
+
   JsonRpcResponse(bool is_error, string id, const AmArg& data)
   : id(id), data(data), is_error(is_error) { }
-  JsonRpcResponse(bool is_error, string id) 
+  JsonRpcResponse(bool is_error, string id)
   : id(id), is_error(is_error) { }
 
   ~JsonRpcResponse() { }
@@ -80,22 +80,22 @@ struct JsonRpcRequestEvent
   string id;
   AmArg params;
 
-  // notification without parameters 
- JsonRpcRequestEvent(string method) 
+  // notification without parameters
+ JsonRpcRequestEvent(string method)
     : method(method) { }
-  
+
   // notification with parameters
- JsonRpcRequestEvent(string method, AmArg params) 
+ JsonRpcRequestEvent(string method, AmArg params)
    : method(method), params(params) { }
 
-  // request without parameters 
- JsonRpcRequestEvent(string method, string id) 
+  // request without parameters
+ JsonRpcRequestEvent(string method, string id)
    : method(method), id(id) { }
 
-  // request with parameters 
- JsonRpcRequestEvent(string method, string id, AmArg params) 
+  // request with parameters
+ JsonRpcRequestEvent(string method, string id, AmArg params)
    : method(method), id(id), params(params) { }
-  
+
   bool isNotification() { return id.empty(); }
 };
 
@@ -109,20 +109,20 @@ struct JsonRpcConnectionEvent
   int what;
   string connection_id;
 
- JsonRpcConnectionEvent(int what, const string& connection_id) 
+ JsonRpcConnectionEvent(int what, const string& connection_id)
    : what(what), connection_id(connection_id) { }
   ~JsonRpcConnectionEvent() { }
 };
 
 
-// events used internally: 
+// events used internally:
 
-struct JsonServerEvent 
+struct JsonServerEvent
  : public AmEvent {
 
-  enum EventType { 
+  enum EventType {
     StartReadLoop = 0,
-    SendMessage    
+    SendMessage
   };
 
   JsonrpcNetstringsConnection* conn;
@@ -143,7 +143,7 @@ struct JsonServerEvent
 struct JsonServerSendMessageEvent
   : public JsonServerEvent {
 
-  bool is_reply; 
+  bool is_reply;
   string method;
   string id;
   AmArg params;

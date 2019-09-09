@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2002-2003 Fhg Fokus
  *
  * This file is part of SEMS, a free SIP media server.
@@ -49,18 +49,18 @@ struct PySemsScriptDesc
   DialogType dt;
 
 PySemsScriptDesc()
-: mod(0), 
+: mod(0),
     dlg_class(0),
     dt(None)
   {}
 
 PySemsScriptDesc(const PySemsScriptDesc& d)
-: mod(d.mod), 
+: mod(d.mod),
     dlg_class(d.dlg_class),
     dt(d.dt)
   {}
 
-PySemsScriptDesc(PyObject* mod, 
+PySemsScriptDesc(PyObject* mod,
 		 PyObject* dlg_class,
 		 DialogType dt)
 : mod(mod),
@@ -85,7 +85,7 @@ class PySemsFactory: public AmSessionFactory
 
   PyObject* import_module(const char* modname);
   void import_object(PyObject* m,
-		     char* name, 
+		     char* name,
 		     PyTypeObject* type);
 
   /** @return true if everything ok */
@@ -95,7 +95,7 @@ class PySemsFactory: public AmSessionFactory
   bool checkCfg();
 
   AmSession* newDlg(const string& name);
-    
+
  public:
   PySemsFactory(const string& _app_name);
 

@@ -84,7 +84,7 @@ bool parse_rack(sip_rack *rack, const char *start, int len)
   READ_NUMBER(rseq, pos, end);
   if (pos == sav)
     goto error;
-  
+
   EAT_WS(pos, end);
 
   sav = pos;

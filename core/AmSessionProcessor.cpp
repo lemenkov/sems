@@ -22,8 +22,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -38,7 +38,7 @@
 vector<AmSessionProcessorThread*> AmSessionProcessor::threads;
 AmMutex AmSessionProcessor::threads_mut;
 
-vector<AmSessionProcessorThread*>::iterator 
+vector<AmSessionProcessorThread*>::iterator
 AmSessionProcessor::threads_it = AmSessionProcessor::threads.begin();
 
 AmSessionProcessorThread* AmSessionProcessor::getProcessorThread() {
@@ -72,7 +72,7 @@ void AmSessionProcessor::addThreads(unsigned int num_threads) {
 }
 
 
-AmSessionProcessorThread::AmSessionProcessorThread() 
+AmSessionProcessorThread::AmSessionProcessorThread()
   : events(this), runcond(false)
 {
 }
@@ -99,7 +99,7 @@ void AmSessionProcessorThread::run() {
     process_sessions_mut.lock();
     runcond.set(false);
     // get the list of session s that need processing
-    std::set<AmEventQueue*> pending_process_sessions 
+    std::set<AmEventQueue*> pending_process_sessions
       = process_sessions;
     process_sessions.clear();
     process_sessions_mut.unlock();
@@ -112,9 +112,9 @@ void AmSessionProcessorThread::run() {
       DBG("starting up %zd sessions\n", startup_sessions.size());
 
       for (std::vector<AmSession*>::iterator it=
-	     startup_sessions.begin(); 
+	     startup_sessions.begin();
 	   it != startup_sessions.end(); it++) {
-	
+
 	DBG("starting up [%s|%s]: [%p]\n",
 	    (*it)->getCallID().c_str(), (*it)->getLocalTag().c_str(),*it);
 	if ((*it)->startup()) {
@@ -148,7 +148,7 @@ void AmSessionProcessorThread::run() {
 
     if (fin_sessions.size()) {
       DBG("finalizing %zd sessions\n", fin_sessions.size());
-      for (std::vector<AmSession*>::iterator it=fin_sessions.begin(); 
+      for (std::vector<AmSession*>::iterator it=fin_sessions.begin();
 	   it != fin_sessions.end(); it++) {
 	DBG("finalizing session [%p/%s/%s]\n",
 	    *it, (*it)->getCallID().c_str(), (*it)->getLocalTag().c_str());
@@ -165,7 +165,7 @@ void AmSessionProcessorThread::on_stop() {
 
 // AmEventHandler interface
 void AmSessionProcessorThread::process(AmEvent* e) {
-  AmSessionProcessorThreadAddEvent* add_ev = 
+  AmSessionProcessorThreadAddEvent* add_ev =
     dynamic_cast<AmSessionProcessorThreadAddEvent*>(e);
 
   if (NULL==add_ev) {

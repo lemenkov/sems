@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -27,11 +27,11 @@
 #include "AmUtils.h"
 #include "log.h"
 
-AmPromptCollection::AmPromptCollection() 
+AmPromptCollection::AmPromptCollection()
 {
 }
 
-AmPromptCollection::~AmPromptCollection() 
+AmPromptCollection::~AmPromptCollection()
 {
   // clean up
   for (std::map<std::string, AudioFileEntry*>::iterator it=
@@ -39,7 +39,7 @@ AmPromptCollection::~AmPromptCollection()
     delete it->second;
 }
 
-int AmPromptCollection::configureModule(AmConfigReader& cfg, 
+int AmPromptCollection::configureModule(AmConfigReader& cfg,
 					std::vector<std::pair<std::string, std::string> >& announcements,
 					const char* mod_name) {
   int res = 0;
@@ -59,23 +59,23 @@ int AmPromptCollection::configureModule(AmConfigReader& cfg,
   return res;
 }
 
-int AmPromptCollection::setPrompt(const std::string& name, 
+int AmPromptCollection::setPrompt(const std::string& name,
 				  const std::string& filename,
 				  const char* mod_name) {
   if (!file_exists(filename)) {
-    ERROR("'%s' prompt for module %s does not exist at '%s'.\n", 
+    ERROR("'%s' prompt for module %s does not exist at '%s'.\n",
 	  name.c_str(), mod_name, filename.c_str());
     return -1;
   }
- 
+
   AudioFileEntry* af = new AudioFileEntry();
   if (af->load(filename)) {
-    ERROR("Could not load '%s' prompt for module %s at '%s'.\n", 
+    ERROR("Could not load '%s' prompt for module %s at '%s'.\n",
 	  name.c_str(), mod_name, filename.c_str());
     delete af;
     return -1;
   }
-  DBG("adding prompt '%s' to prompt collection.\n", 
+  DBG("adding prompt '%s' to prompt collection.\n",
       name.c_str());
   store[name]=af;
   return 0;
@@ -116,8 +116,8 @@ bool AmPromptCollection::hasPrompt(const string& name) {
 
 }
 
-int AmPromptCollection::addToPlaylist(const std::string& name, long sess_id, 
-				      AmPlaylist& list, bool front, 
+int AmPromptCollection::addToPlaylist(const std::string& name, long sess_id,
+				      AmPlaylist& list, bool front,
 				      bool loop) {
   string s = name;
   std::map<std::string, AudioFileEntry*>::iterator it=store.begin();
@@ -132,7 +132,7 @@ int AmPromptCollection::addToPlaylist(const std::string& name, long sess_id,
     return -1;
   }
 
-  DBG("adding '%s' prompt to playlist at the %s'\n", it->first.c_str(), 
+  DBG("adding '%s' prompt to playlist at the %s'\n", it->first.c_str(),
       front ? "front":"back");
 
   AmCachedAudioFile* af = it->second->getAudio();
@@ -140,14 +140,14 @@ int AmPromptCollection::addToPlaylist(const std::string& name, long sess_id,
     return -2;
   }
 
-  if (loop) 
+  if (loop)
     af->loop.set(true);
 
   if (front)
     list.addToPlayListFront(new AmPlaylistItem(af,NULL));
-  else 
+  else
     list.addToPlaylist(new AmPlaylistItem(af,NULL));
-  
+
   items_mut.lock();
   items[sess_id].push_back(af);
   items_mut.unlock();
@@ -158,7 +158,7 @@ int AmPromptCollection::addToPlaylist(const std::string& name, long sess_id,
 
 void AmPromptCollection::cleanup(long sess_id) {
   items_mut.lock();
-  for (std::vector<AmCachedAudioFile*>::iterator it = 
+  for (std::vector<AmCachedAudioFile*>::iterator it =
 	 items[sess_id].begin(); it!=items[sess_id].end(); it++)
     delete *it;
   items.erase(sess_id);

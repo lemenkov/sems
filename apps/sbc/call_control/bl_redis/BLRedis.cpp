@@ -243,13 +243,13 @@ int CCBLRedis::handle_redis_reply(redisContext* redis_context, redisReply* reply
       case REDIS_REPLY_INTEGER:
 	if (full_logging) {
 	  DBG("REDIS: %lld\n", reply->element[i]->integer);
-	} 
+	}
 	if (reply->element[i]->integer) {
 	  hit = true;
 	}
 	break;
 
-      case REDIS_REPLY_NIL: 
+      case REDIS_REPLY_NIL:
 	if (full_logging) {
 	  DBG("REDIS: nil\n");
 	} break;
@@ -258,7 +258,7 @@ int CCBLRedis::handle_redis_reply(redisContext* redis_context, redisReply* reply
       case REDIS_REPLY_STRING:
 	if (full_logging) {
 	  if (reply->element[i]->len >= 0) {
-	    DBG("REDIS: %.*s\n", reply->element[i]->len, reply->element[i]->str); 
+	    DBG("REDIS: %.*s\n", reply->element[i]->len, reply->element[i]->str);
 	  }
 	}
 	if (reply->element[i]->len >= 0) {
@@ -289,7 +289,7 @@ void CCBLRedis::start(const string& cc_name, const string& ltag,
 #define MAX_ARGV_ITEMS    20
   const char* argv[MAX_ARGV_ITEMS];
   size_t argvlen[MAX_ARGV_ITEMS];
-  
+
   unsigned int argv_max = 0;
 
   if (!values.hasMember("argc") ||
@@ -356,7 +356,7 @@ void CCBLRedis::start(const string& cc_name, const string& ltag,
 
 
   if (hit) {
-    if (values.hasMember("action") && isArgCStr(values["action"]) && 
+    if (values.hasMember("action") && isArgCStr(values["action"]) &&
 	values["action"] == "drop") {
       DBG("Blacklist: Dropping call\n");
       res_cmd[SBC_CC_ACTION] = SBC_CC_DROP_ACTION;
@@ -364,7 +364,7 @@ void CCBLRedis::start(const string& cc_name, const string& ltag,
       DBG("Blacklist: Refusing call\n");
       res_cmd[SBC_CC_ACTION] = SBC_CC_REFUSE_ACTION;
       res_cmd[SBC_CC_REFUSE_CODE] = 403;
-      res_cmd[SBC_CC_REFUSE_REASON] = "Unauthorized";  
+      res_cmd[SBC_CC_REFUSE_REASON] = "Unauthorized";
     }
   }
 }

@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -49,7 +49,7 @@ struct RegInfo {
 class RegThread : public AmThread {
 
   vector<RegInfo> registrations;
- 
+
   void create_registration(RegInfo& ri);
   bool check_registration(const RegInfo& ri);
 
@@ -63,12 +63,12 @@ class RegThread : public AmThread {
 
 class RegistrationAgentFactory: public AmSessionFactory
 {
-  RegThread dialer;    
+  RegThread dialer;
   AmSessionEventHandlerFactory* uac_auth_f;
 
  public:
   RegistrationAgentFactory(const string& _app_name);
-	
+
   int onLoad();
   AmSession* onInvite(const AmSipRequest& req, const string& app_name,
 		      const map<string,string>& app_params);

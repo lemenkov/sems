@@ -1,19 +1,19 @@
 /*
   This is a simple interface to the spandsp's g722 implementation.
-  This uses the 8khz compatibility mode - audio is encodec and decoded 
+  This uses the 8khz compatibility mode - audio is encodec and decoded
   in 8khz.
 
-  Copyright (C) 2008 iptego GmbH 
+  Copyright (C) 2008 iptego GmbH
 
   This code is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation.
-  
+
   This code is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   Lesser General Public License for more details.
-  
+
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -50,13 +50,13 @@ BEGIN_EXPORTS("g722", AMCI_NO_MODULEINIT, AMCI_NO_MODULEDESTROY)
           G722NB_create, G722NB_destroy,
           G722NB_bytes2samples, G722NB_samples2bytes)
   END_CODECS
-  
+
   BEGIN_PAYLOADS
 #if SYSTEM_SAMPLECLOCK_RATE >= 16000
     PAYLOAD(9, "g722", 16000, 8000, 1, CODEC_G722_NB, AMCI_PT_AUDIO_FRAME)
 #endif
   END_PAYLOADS
-  
+
   BEGIN_FILE_FORMATS
   END_FILE_FORMATS
 
@@ -64,7 +64,7 @@ END_EXPORTS
 
 typedef struct {
   g722_encode_state_t* encode_state;
-  g722_decode_state_t* decode_state;    
+  g722_decode_state_t* decode_state;
 } G722State;
 
 
@@ -72,7 +72,7 @@ long G722NB_create(const char* format_parameters, const char** format_parameters
 		   amci_codec_fmt_info_t** format_description)
 {
   G722State* gs;
-        
+
   gs = (G722State*) calloc(1, sizeof(G722State));
   if (!gs) {
     ERROR("error allocating memory for G722 codec state\n");
@@ -88,7 +88,7 @@ long G722NB_create(const char* format_parameters, const char** format_parameters
     return 0;
   }
 
-  gs->decode_state = g722_decode_init(NULL, 
+  gs->decode_state = g722_decode_init(NULL,
 				      64000, 0 /* G722_SAMPLE_RATE_8000 */);
   if (!gs->decode_state) {
     ERROR("error initializing G722 decoder\n");
@@ -108,7 +108,7 @@ void G722NB_destroy(long handle)
     return;
 
   gs = (G722State*) handle;
-  
+
   if (gs->encode_state) {
     g722_encode_release(gs->encode_state);
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2009 TelTech Systems Inc.
- * 
+ *
  * This file is part of SEMS, a free SIP media server.
  *
  * SEMS is free software; you can redistribute it and/or modify
@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -69,7 +69,7 @@ int SCAwsModule::preload() {
      return -1;
    }
 
-   unsigned int initial_connections_s3 = cfg.getParameterInt("s3_initial_connections", 0);  
+   unsigned int initial_connections_s3 = cfg.getParameterInt("s3_initial_connections", 0);
    try {
      s3ConnectionPool = new ConnectionPool<S3ConnectionPtr>(initial_connections_s3,
 							    aws_access_key, aws_secret_access_key);
@@ -90,7 +90,7 @@ int SCAwsModule::preload() {
      return -1;
    }
 
-   unsigned int initial_connections_sqs = cfg.getParameterInt("sqs_initial_connections", 0);  
+   unsigned int initial_connections_sqs = cfg.getParameterInt("sqs_initial_connections", 0);
    try {
      sqsConnectionPool = new ConnectionPool<SQSConnectionPtr>(initial_connections_sqs,
 							      aws_access_key, aws_secret_access_key);
@@ -120,7 +120,7 @@ int SCAwsModule::preload() {
     throw DSMException("aws", "cause", "need preload"); \
     return false;					\
   }							\
-  
+
 
 #define GET_CONNECTION_S3						\
   S3ConnectionPtr aS3 = SCAwsModule::s3ConnectionPool->getConnection(); \
@@ -144,7 +144,7 @@ EXEC_ACTION_START(SCS3PutFileAction) {
     throw DSMException("aws", "cause", "empty bucket");
     return false;
   }
-    
+
   GET_CONNECTION_S3;
   try {
     std::ifstream lInStream(filename.c_str());
@@ -154,7 +154,7 @@ EXEC_ACTION_START(SCS3PutFileAction) {
       throw DSMException("aws", "cause", "file not found");
       return false;
     }
-    PutResponsePtr lPut = aS3->put(bucket, keyname.length()==0?filename:keyname, 
+    PutResponsePtr lPut = aS3->put(bucket, keyname.length()==0?filename:keyname,
 				   lInStream, "application/octet-stream");
 
     sc_sess->SET_ERRNO(DSM_ERRNO_OK);
@@ -213,7 +213,7 @@ EXEC_ACTION_START(SCS3PutMultiFileAction) {
     sc_sess->SET_STRERROR("S3: trying to put with empty bucket name!\n");
     return false;
   }
-    
+
   GET_CONNECTION_S3;
 
   for (unsigned int i=0;i<num_files;i++) {
@@ -229,9 +229,9 @@ EXEC_ACTION_START(SCS3PutMultiFileAction) {
 	FREE_CONNECTION_S3;
 	return false;
       }
-      PutResponsePtr lPut = aS3->put(bucket, keyname.length()==0?filename:keyname, 
+      PutResponsePtr lPut = aS3->put(bucket, keyname.length()==0?filename:keyname,
 				     lInStream, "application/octet-stream");
-      
+
       sc_sess->CLR_ERRNO;
     } catch (const AWSException &e) {
       WARN("S3 put failed: '%s'\n", e.what());
@@ -291,7 +291,7 @@ EXEC_ACTION_START(SCS3CreateBucketAction) {
     sc_sess->SET_STRERROR("getting SQS connection from connection pool"); \
     return false;							\
   }									\
-  
+
 #define FREE_CONNECTION_SQS  SCAwsModule::sqsConnectionPool->release(aSQS);
 
 #define GET_QUEUE_ARG(paramname)					\
@@ -304,7 +304,7 @@ EXEC_ACTION_START(SCS3CreateBucketAction) {
     sc_sess->SET_STRERROR("SQS: trying to operate on empty queue name!"); \
     return false;							\
   }									\
-  
+
 
 CONST_ACTION_2P(SCSQSCreateQueueAction, ',', true);
 EXEC_ACTION_START(SCSQSCreateQueueAction) {

@@ -8,7 +8,7 @@
 
 unsigned short dns_msg_count(u_char* begin, dns_section_type sect);
 int dns_skip_name(u_char** p, u_char* end);
-int dns_expand_name(u_char** ptr, u_char* begin, u_char* end, 
+int dns_expand_name(u_char** ptr, u_char* begin, u_char* end,
 		    u_char* buf, unsigned int len);
 
 
@@ -42,7 +42,7 @@ int dns_msg_parse(u_char* msg, int len, dns_parse_fct fct, void* data)
     // skip query type+class
     if((p += 4) > end) return -1;
   }
-  
+
   dns_record rr;
   for(int s = (int)dns_s_an; s < (int)__dns_max_sections; ++s){
     for(int i=0; i<dns_msg_count(begin,(dns_section_type)s); i++){
@@ -52,7 +52,7 @@ int dns_msg_parse(u_char* msg, int len, dns_parse_fct fct, void* data)
 
       // at least 8 bytes for type+class+ttl left?
       if((p + 8) > end) return -1;
-      
+
       rr.type = dns_get_16(p);
       p += 2;
 
@@ -89,7 +89,7 @@ unsigned short dns_msg_count(u_char* begin, dns_section_type sect)
 int dns_skip_name(u_char** p, u_char* end)
 {
   while(*p < end) {
-    
+
     if(!**p) { // zero label
       if(++(*p) < end)	return 0;
       return -1;
@@ -106,7 +106,7 @@ int dns_skip_name(u_char** p, u_char* end)
   return -1;
 }
 
-int dns_expand_name(u_char** ptr, u_char* begin, u_char* end, 
+int dns_expand_name(u_char** ptr, u_char* begin, u_char* end,
 		    u_char* start_buf, unsigned int len)
 {
   u_char* buf = start_buf;
@@ -114,16 +114,16 @@ int dns_expand_name(u_char** ptr, u_char* begin, u_char* end,
   bool    is_ptr=false;
 
   while(p < end) {
-    
+
     if(!*p) { // reached the end of a label
-      if(len){ 
+      if(len){
 	*buf = '\0'; // zero-term
 	if(!is_ptr){ *ptr = p+1; }
-	return (buf-start_buf); 
+	return (buf-start_buf);
       }
       return -1;
     }
-    
+
     if( (*p & 0xC0) == 0xC0 ){ // ptr
 
       unsigned short l_off = (((unsigned short)*p & 0x3F) << 8);
@@ -147,7 +147,7 @@ int dns_expand_name(u_char** ptr, u_char* begin, u_char* end,
 
     if(p + *p + 1 >= end) return -1;
     if(len <= *p) return -1;
-    
+
     memcpy(buf,p+1,*p);
     len -= *p;
     buf += *p;

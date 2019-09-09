@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -90,7 +90,7 @@ int WebConferenceFactory::onLoad()
 int WebConferenceFactory::load()
 {
   // only execute this once
-  if (configured) 
+  if (configured)
     return 0;
   configured = true;
 
@@ -100,7 +100,7 @@ int WebConferenceFactory::load()
   // get application specific global parameters
   configureModule(cfg);
 
-  
+
   participant_id_paramname = cfg.getParameter("participant_id_param");
   if (cfg.hasParameter("participant_id_header"))
     participant_id_hdr = cfg.getParameter("participant_id_header");
@@ -123,7 +123,7 @@ int WebConferenceFactory::load()
   if (!DigitsDir.length()) {
     WARN("No digits_dir specified in configuration.\n");
   }
-  for (int i=0;i<10;i++) 
+  for (int i=0;i<10;i++)
     prompts.setPrompt(int2str(i), DigitsDir+int2str(i)+".wav", APP_NAME);
 
   string playout_type = cfg.getParameter("playout_type");
@@ -136,12 +136,12 @@ int WebConferenceFactory::load()
   } else {
     DBG("Using adaptive playout buffer as playout technique.\n");
   }
-  
+
   string direct_room_re_str = cfg.getParameter("direct_room_re");
   if (!direct_room_re_str.length()) {
     DBG("no direct room access prefixes set.\n");
   } else {
-    if (regcomp(&direct_room_re, direct_room_re_str.c_str(), 
+    if (regcomp(&direct_room_re, direct_room_re_str.c_str(),
 		 REG_EXTENDED|REG_NOSUB)) {
       ERROR("unable to compile direct room RE '%s'.\n",
 	    direct_room_re_str.c_str());
@@ -177,13 +177,13 @@ int WebConferenceFactory::load()
     if (!feedback_file.good()) {
       WARN("opening feedback file '%s' failed\n", feedback_filename.c_str());
     } else {
-      DBG("successfully opened feedback file '%s'\n", 
+      DBG("successfully opened feedback file '%s'\n",
 	    feedback_filename.c_str());
     }
   }
 
   string stats_dir = cfg.getParameter("stats_dir");
-  if (stats_dir.empty()) 
+  if (stats_dir.empty())
     DBG("call statistics will not be persistent across restart.\n");
   stats = new WCCCallStats(stats_dir);
 
@@ -194,9 +194,9 @@ int WebConferenceFactory::load()
   MasterPassword  = cfg.getParameter("master_password");
   if (!MasterPassword.empty()) {
     DBG("Master password set.\n");
-  }  
+  }
 
-  if (cfg.getParameter("participants_expire") == "no") { 
+  if (cfg.getParameter("participants_expire") == "no") {
     ParticipantExpiredDelay = -1;
   } else {
     // default: 10s
@@ -206,7 +206,7 @@ int WebConferenceFactory::load()
   DBG("Ignore PINs  enabled: %s\n", ignore_pin?"yes":"no");
 
 
-  if (cfg.getParameter("rooms_expire") == "no") { 
+  if (cfg.getParameter("rooms_expire") == "no") {
     RoomExpiredDelay = -1;
   } else {
     RoomExpiredDelay = cfg.getParameterInt("rooms_expire_delay", 7200); // default: 2h
@@ -214,10 +214,10 @@ int WebConferenceFactory::load()
 
   // default: every 10 times
   RoomSweepInterval = cfg.getParameterInt("room_sweep_interval", 10);
- 
+
   // seed the rng (at least a little)
   struct timeval now;
-  gettimeofday(&now, NULL);    
+  gettimeofday(&now, NULL);
   srandom(now.tv_usec + now.tv_sec);
 
   vector<string> predefined_rooms = explode(cfg.getParameter("predefined_rooms"), ";");
@@ -236,7 +236,7 @@ int WebConferenceFactory::load()
   }
 
 
-  if (cfg.getParameter("private_rooms") == "yes") 
+  if (cfg.getParameter("private_rooms") == "yes")
     PrivateRoomsMode = true;
   DBG("Private rooms mode %sabled.\n", PrivateRoomsMode ? "en":"dis");
 
@@ -286,8 +286,8 @@ bool WebConferenceFactory::isValidConference(const string& conf_id, const string
   return res;
 }
 
-bool WebConferenceFactory::newParticipant(const string& conf_id, 
-					  const string& localtag, 
+bool WebConferenceFactory::newParticipant(const string& conf_id,
+					  const string& localtag,
 					  const string& number,
 					  const string& participant_id,
 					  bool check_exisiting) {
@@ -315,8 +315,8 @@ bool WebConferenceFactory::newParticipant(const string& conf_id,
   return true;
 }
 
-void WebConferenceFactory::updateStatus(const string& conf_id, 
-					const string& localtag, 
+void WebConferenceFactory::updateStatus(const string& conf_id,
+					const string& localtag,
 					ConferenceRoomParticipant::ParticipantStatus status,
 					const string& reason) {
   rooms_mut.lock();
@@ -330,13 +330,13 @@ string WebConferenceFactory::getAdminpin(const string& room) {
   string res = "";
   rooms_mut.lock();
   map<string, ConferenceRoom>::iterator it = rooms.find(room);
-  if (it != rooms.end()) 
+  if (it != rooms.end())
     res = it->second.adminpin;
   rooms_mut.unlock();
   return res;
 }
 
-ConferenceRoom* WebConferenceFactory::getRoom(const string& room, 
+ConferenceRoom* WebConferenceFactory::getRoom(const string& room,
 					      const string& adminpin,
 					      bool ignore_adminpin = false) {
   ConferenceRoom* res = NULL;
@@ -347,26 +347,26 @@ ConferenceRoom* WebConferenceFactory::getRoom(const string& room,
 
     // (re)open room
     rooms[room] = ConferenceRoom();
-    rooms[room].adminpin = adminpin;   
+    rooms[room].adminpin = adminpin;
     res = &rooms[room];
   } else {
     if ((!ignore_pin) &&
-	(!ignore_adminpin) && 
-	(!it->second.adminpin.empty()) && 
+	(!ignore_adminpin) &&
+	(!it->second.adminpin.empty()) &&
 	(it->second.adminpin != adminpin)) {
       // wrong pin
     } else {
       // update adminpin if room was created by dialin
-      if (it->second.adminpin.empty()) 
+      if (it->second.adminpin.empty())
 	it->second.adminpin = adminpin;
       res = &it->second;
-      
+
       if (res->expired()) {
 	DBG("clearing expired room '%s'\n", room.c_str());
 	rooms.erase(it);
 	res = NULL;
       }
-    } 
+    }
   }
 
   return res;
@@ -378,7 +378,7 @@ string WebConferenceFactory::getAccessUri(const string& room) {
     res = WebConferenceFactory::urlbase;
     if (!room.empty()) {
       res+="&newRoomNumber="+room;
-      
+
       string adminpin = getAdminpin(room);
       if (!adminpin.empty())
 	res+="&roomAdminPassword="+adminpin;
@@ -403,7 +403,7 @@ void WebConferenceFactory::setupSessionTimer(AmSession* s) {
   }
 }
 
-// incoming calls 
+// incoming calls
 AmSession* WebConferenceFactory::onInvite(const AmSipRequest& req, const string& app_name,
 					  const map<string,string>& app_params)
 {
@@ -418,17 +418,17 @@ AmSession* WebConferenceFactory::onInvite(const AmSipRequest& req, const string&
   if (enter_room_it != app_params.end() && enter_room_it->second=="true") {
     // enter the room
     DBG("creating new Webconference call, room name to be entered via keypad\n");
-    w = new WebConferenceDialog(prompts, getInstance(), NULL);    
+    w = new WebConferenceDialog(prompts, getInstance(), NULL);
   } else if (r_it != app_params.end()) {
     // use provided room name
     string room = r_it->second;
     DBG("creating new Webconference call, room name '%s'\n", room.c_str());
     w = new WebConferenceDialog(prompts, getInstance(), room);
-    w->setUri(getAccessUri(room));    
+    w->setUri(getAccessUri(room));
   } else if (use_direct_room && !regexec(&direct_room_re, req.user.c_str(), 0,0,0)) {
     // regegex match
     string room = req.user;
-    if (room.length() > direct_room_strip) 
+    if (room.length() > direct_room_strip)
       room = room.substr(direct_room_strip);
     DBG("direct room access match. connecting to room '%s'\n", room.c_str());
 
@@ -443,12 +443,12 @@ AmSession* WebConferenceFactory::onInvite(const AmSipRequest& req, const string&
   return w;
 }
 
-// outgoing calls 
+// outgoing calls
 AmSession* WebConferenceFactory::onInvite(const AmSipRequest& req, const string& app_name,
 					  AmArg& session_params)
 {
   UACAuthCred* cred = AmUACAuth::unpackCredentials(session_params);
-  AmSession* s = new WebConferenceDialog(prompts, getInstance(), cred); 
+  AmSession* s = new WebConferenceDialog(prompts, getInstance(), cred);
 
   if (NULL == cred) {
     WARN("discarding unknown session parameters.\n");
@@ -463,11 +463,11 @@ AmSession* WebConferenceFactory::onInvite(const AmSipRequest& req, const string&
   return s;
 }
 
-void WebConferenceFactory::invoke(const string& method, 
-				  const AmArg& args, 
+void WebConferenceFactory::invoke(const string& method,
+				  const AmArg& args,
 				  AmArg& ret)
 {
-  
+
 
   if (method == "roomCreate"){
     args.assertArrayFmt("s");
@@ -482,7 +482,7 @@ void WebConferenceFactory::invoke(const string& method,
     roomDelete(args, ret);
     ret.push(getServerInfoString().c_str());
   } else if(method == "addParticipant"){
-    args.assertArrayFmt("sss"); // conf_id, participant_id, number  
+    args.assertArrayFmt("sss"); // conf_id, participant_id, number
     roomAddParticipant(args, ret);
     ret.push(getServerInfoString().c_str());
   } else if(method == "dialout"){
@@ -504,43 +504,43 @@ void WebConferenceFactory::invoke(const string& method,
   } else if(method == "changeRoomAdminpin"){
     args.assertArrayFmt("sss");
     changeRoomAdminpin(args, ret);
-    ret.push(getServerInfoString().c_str());    
+    ret.push(getServerInfoString().c_str());
   } else if(method == "serverInfo"){
-    serverInfo(args, ret);		
-    ret.push(getServerInfoString().c_str());    
+    serverInfo(args, ret);
+    ret.push(getServerInfoString().c_str());
   } else if(method == "vqRoomFeedback"){
     args.assertArrayFmt("ssi");
-    vqRoomFeedback(args, ret);		
-    ret.push(getServerInfoString().c_str());    
+    vqRoomFeedback(args, ret);
+    ret.push(getServerInfoString().c_str());
   } else if(method == "vqCallFeedback"){
     args.assertArrayFmt("sssi");
-    vqCallFeedback(args, ret);		
-    ret.push(getServerInfoString().c_str());    
+    vqCallFeedback(args, ret);
+    ret.push(getServerInfoString().c_str());
   } else if(method == "vqConferenceFeedback"){
     args.assertArrayFmt("ssssi");
-    vqConferenceFeedback(args, ret);		
-    ret.push(getServerInfoString().c_str());    
+    vqConferenceFeedback(args, ret);
+    ret.push(getServerInfoString().c_str());
   } else if(method == "help"){
     ret.push("help text goes here");
     ret.push(getServerInfoString().c_str());
   } else if(method == "resetFeedback"){
-    resetFeedback(args, ret);		
-    ret.push(getServerInfoString().c_str());    
+    resetFeedback(args, ret);
+    ret.push(getServerInfoString().c_str());
   } else if(method == "flushFeedback"){
-    flushFeedback(args, ret);		
-    ret.push(getServerInfoString().c_str());    
+    flushFeedback(args, ret);
+    ret.push(getServerInfoString().c_str());
   } else if(method == "getRoomPassword"){
     args.assertArrayFmt("ss");
     getRoomPassword(args, ret);
-    ret.push(getServerInfoString().c_str());    
+    ret.push(getServerInfoString().c_str());
   } else if(method == "listRooms"){
     args.assertArrayFmt("s");
     listRooms(args, ret);
-    ret.push(getServerInfoString().c_str());    
+    ret.push(getServerInfoString().c_str());
   } else if(method == "findParticipant"){
     args.assertArrayFmt("s");
     findParticipant(args, ret);
-    ret.push(getServerInfoString().c_str());    
+    ret.push(getServerInfoString().c_str());
   } else if(method == "_list"){
     ret.push("roomCreate");
     ret.push("roomDelete");
@@ -562,8 +562,8 @@ void WebConferenceFactory::invoke(const string& method,
 }
 
 string WebConferenceFactory::getServerInfoString() {
-  string res = "Server: " 
-    DEFAULT_SIGNATURE  " calls: " + 
+  string res = "Server: "
+    DEFAULT_SIGNATURE  " calls: " +
       int2str(AmSession::getSessionNum())+
     " active";
 
@@ -586,12 +586,12 @@ void WebConferenceFactory::sweepRooms() {
   if ((RoomSweepInterval>0) && (!((++room_sweep_cnt)%RoomSweepInterval))) {
     struct timeval now;
     gettimeofday(&now, NULL);
-    
+
     map<string, ConferenceRoom>::iterator it=rooms.begin();
-    while (it != rooms.end()) { 
+    while (it != rooms.end()) {
       if (it->second.expired(now)) {
 	map<string, ConferenceRoom>::iterator d_it = it;
-	it++;       
+	it++;
 	DBG("clearing expired room '%s'\n", d_it->first.c_str());
 	rooms.erase(d_it);
       } else {
@@ -611,7 +611,7 @@ void WebConferenceFactory::roomCreate(const AmArg& args, AmArg& ret) {
   }
 
   rooms_mut.lock();
-  
+
   // sweep rooms (if necessary)
   sweepRooms();
 
@@ -671,9 +671,9 @@ void WebConferenceFactory::roomDelete(const string& room, const string& adminpin
     return;
   }
 
-  rooms_mut.unlock();   
+  rooms_mut.unlock();
 
-  postAllConfEvent(room, adminpin, ret, 
+  postAllConfEvent(room, adminpin, ret,
 		   WebConferenceEvent::Kick, ignore_adminpin);
 
   if (ret.get(0).asInt()==0) {
@@ -699,7 +699,7 @@ void WebConferenceFactory::closeExpiredRooms() {
   vector<string> expired_rooms;
 
   rooms_mut.lock();
-  for (map<string, ConferenceRoom>::iterator it = 
+  for (map<string, ConferenceRoom>::iterator it =
 	 rooms.begin(); it !=rooms.end(); it++) {
     if (it->second.hard_expired(now))
       expired_rooms.push_back(it->first);
@@ -765,7 +765,7 @@ void WebConferenceFactory::dialout(const AmArg& args, AmArg& ret) {
 	callee_domain = domain;
       }
     }
-    
+
     if (args.size()>9) {
       try {
 	assertArgCStr(args.get(9));
@@ -782,7 +782,7 @@ void WebConferenceFactory::dialout(const AmArg& args, AmArg& ret) {
 
   // check adminpin
   rooms_mut.lock();
-  
+
   // sweep rooms (if necessary)
   sweepRooms();
 
@@ -796,15 +796,15 @@ void WebConferenceFactory::dialout(const AmArg& args, AmArg& ret) {
     return;
   }
 
-  DBG("dialout webconference room '%s', from '%s', to '%s'", 
+  DBG("dialout webconference room '%s', from '%s', to '%s'",
       room.c_str(), from.c_str(), to.c_str());
 
   AmArg* a = new AmArg();
   a->setBorrowedPointer(new UACAuthCred("", auth_user, auth_pwd));
 
   string app_name = APP_NAME;
-  string localtag = AmUAC::dialout(room.c_str(), app_name,  to,  
-				   "<" + from +  ">", from, "<" + to + ">", 
+  string localtag = AmUAC::dialout(room.c_str(), app_name,  to,
+				   "<" + from +  ">", from, "<" + to + ">",
 				   string(""), // callid
 				   headers,    // headers
 				   a);
@@ -824,20 +824,20 @@ void WebConferenceFactory::dialout(const AmArg& args, AmArg& ret) {
   }
 }
 
-void WebConferenceFactory::postAllConfEvent(const string& room, const string& adminpin, 
+void WebConferenceFactory::postAllConfEvent(const string& room, const string& adminpin,
 					    AmArg& ret, int id, bool ignore_adminpin = false) {
   vector<string> ltags;
   rooms_mut.lock(); {
     ConferenceRoom* r = getRoom(room, adminpin, ignore_adminpin);
     if (NULL == r) {
-      rooms_mut.unlock();  
+      rooms_mut.unlock();
       return;
     }
-    
+
     ltags = r->participantLtags();
   } rooms_mut.unlock();
 
-  for (vector<string>::iterator it = 
+  for (vector<string>::iterator it =
 	 ltags.begin(); it != ltags.end(); it++) {
     AmSessionContainer::instance()->postEvent(*it,
 					      new WebConferenceEvent(id));
@@ -854,22 +854,22 @@ void WebConferenceFactory::postConfEvent(const AmArg& args, AmArg& ret,
   string call_tag    = args.get(2).asCStr();
 
   // check adminpin
-  
+
   rooms_mut.lock();
   ConferenceRoom* r = getRoom(room, adminpin);
   if (NULL == r) {
     ret.push(1);
     ret.push("wrong adminpin or inexisting room");
-    rooms_mut.unlock();  
+    rooms_mut.unlock();
     return;
-  } 
-  bool p_exists = r->hasParticipant(call_tag);  
+  }
+  bool p_exists = r->hasParticipant(call_tag);
   if (p_exists && (mute >= 0))
     r->setMuted(call_tag, mute);
   rooms_mut.unlock();
 
   if (p_exists) {
-    AmSessionContainer::instance()->postEvent(call_tag, 
+    AmSessionContainer::instance()->postEvent(call_tag,
 					      new WebConferenceEvent(id));
     ret.push(0);
     ret.push("OK");
@@ -900,7 +900,7 @@ void WebConferenceFactory::getRoomPassword(const AmArg& args, AmArg& ret) {
   string pwd  = args.get(0).asCStr();
   string room = args.get(1).asCStr();
 
-  if ((!MasterPassword.length()) || 
+  if ((!MasterPassword.length()) ||
       pwd != MasterPassword) {
     ret.push(403);
     ret.push("Wrong Master Password.");
@@ -911,13 +911,13 @@ void WebConferenceFactory::getRoomPassword(const AmArg& args, AmArg& ret) {
   rooms_mut.lock();
   map<string, ConferenceRoom>::iterator it = rooms.find(room);
   if (it != rooms.end())  {
-    res = it->second.adminpin; 
+    res = it->second.adminpin;
     res_code = 0;
   }
   rooms_mut.unlock();
 
-  ret.push(res_code);  
-  ret.push(res.c_str());  
+  ret.push(res_code);
+  ret.push(res.c_str());
 }
 
 void WebConferenceFactory::changeRoomAdminpin(const AmArg& args, AmArg& ret) {
@@ -942,7 +942,7 @@ void WebConferenceFactory::listRooms(const AmArg& args, AmArg& ret) {
 
   string pwd  = args.get(0).asCStr();
 
-  if ((!MasterPassword.length()) || 
+  if ((!MasterPassword.length()) ||
       pwd != MasterPassword) {
     ret.push(407);
     AmArg res;
@@ -955,7 +955,7 @@ void WebConferenceFactory::listRooms(const AmArg& args, AmArg& ret) {
   room_list.assertArray();
 
   rooms_mut.lock();
-  for (map<string, ConferenceRoom>::iterator it = 
+  for (map<string, ConferenceRoom>::iterator it =
 	 rooms.begin(); it != rooms.end(); it++) {
     if (!it->second.expired()) {
       room_list.push(it->first.c_str());
@@ -963,8 +963,8 @@ void WebConferenceFactory::listRooms(const AmArg& args, AmArg& ret) {
   }
   rooms_mut.unlock();
 
-  ret.push(200);  
-  ret.push(room_list);  
+  ret.push(200);
+  ret.push(room_list);
 }
 
 void WebConferenceFactory::findParticipant(const AmArg& args, AmArg& ret) {
@@ -972,7 +972,7 @@ void WebConferenceFactory::findParticipant(const AmArg& args, AmArg& ret) {
   AmArg r_ret;
   r_ret.assertArray();
   rooms_mut.lock();
-  for (map<string, ConferenceRoom>::iterator it = 
+  for (map<string, ConferenceRoom>::iterator it =
 	 rooms.begin(); it != rooms.end(); it++) {
     for (list<ConferenceRoomParticipant>::iterator p_it=
 	   it->second.participants.begin(); p_it != it->second.participants.end(); p_it++) {
@@ -986,12 +986,12 @@ void WebConferenceFactory::findParticipant(const AmArg& args, AmArg& ret) {
   ret.push(r_ret);
 }
 
-void WebConferenceFactory::vqRoomFeedback(const AmArg& args, AmArg& ret) {  
+void WebConferenceFactory::vqRoomFeedback(const AmArg& args, AmArg& ret) {
   string room = args.get(0).asCStr();
   string adminpin = args.get(1).asCStr();
   int opinion = args.get(2).asInt();
 
-  saveFeedback(string("RO "+ room + "|||" + adminpin + "|||" + 
+  saveFeedback(string("RO "+ room + "|||" + adminpin + "|||" +
 		      int2str(opinion) + "|||" + int2str((unsigned int)time(NULL)) + "|||\n"));
 
   ret.push(0);
@@ -1004,7 +1004,7 @@ void WebConferenceFactory::vqCallFeedback(const AmArg& args, AmArg& ret) {
   string tag = args.get(2).asCStr();
   int opinion = args.get(3).asInt();
 
-  saveFeedback("CA|||"+ room + "|||" + adminpin + "|||" + tag + "|||" + 
+  saveFeedback("CA|||"+ room + "|||" + adminpin + "|||" + tag + "|||" +
 	       int2str(opinion) + "|||" + int2str((unsigned int)time(NULL)) + "|||\n");
 
   ret.push(0);
@@ -1018,7 +1018,7 @@ void WebConferenceFactory::vqConferenceFeedback(const AmArg& args, AmArg& ret) {
   string comment = args.get(3).asCStr();
   int opinion = args.get(4).asInt();
 
-  saveFeedback("CO|||"+ room + "|||" + adminpin + "|||" + int2str(opinion) + "|||" + 
+  saveFeedback("CO|||"+ room + "|||" + adminpin + "|||" + int2str(opinion) + "|||" +
 	       sender + "|||" + comment +"|||" + int2str((unsigned int)time(NULL)) + "|||\n");
 
   ret.push(0);
@@ -1033,13 +1033,13 @@ void WebConferenceFactory::resetFeedback(const AmArg& args, AmArg& ret) {
   if (!feedback_filename.empty()) {
     feedback_file.open(feedback_filename.c_str(), std::ios::out);
     if (!feedback_file.good()) {
-      ERROR("opening new feedback file '%s'\n", 
+      ERROR("opening new feedback file '%s'\n",
 	    feedback_filename.c_str());
       ret.push(-1);
       ret.push("error opening new feedback file");
 
     } else {
-      DBG("successfully opened new feedback file '%s'\n", 
+      DBG("successfully opened new feedback file '%s'\n",
 	  feedback_filename.c_str());
       ret.push(0);
       ret.push("OK");

@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _STATE_ENGINE_H
@@ -47,7 +47,7 @@ using std::pair;
 #include "log.h"
 
 class DSMElement {
- public: 
+ public:
   DSMElement() { }
   virtual ~DSMElement() { }
   string name; // documentary only
@@ -88,7 +88,7 @@ class DSMCondition
     NoAudio,
     PlaylistSeparator,
 
-    DSMEvent,    
+    DSMEvent,
     B2BEvent,
     DSMException,
 
@@ -131,8 +131,8 @@ class DSMCondition
 
   static const char* type2str(EventType event);
 
-  bool invert; 
-  
+  bool invert;
+
   DSMCondition() : invert(false) { }
   virtual ~DSMCondition() { }
 
@@ -146,7 +146,7 @@ class DSMCondition
 		     map<string,string>* event_params);
 };
 
-class DSMAction 
+class DSMAction
 : public DSMElement {
  public:
   /** modifies State Engine operation */
@@ -155,7 +155,7 @@ class DSMAction
     Repost, // repost current event
     Jump,   // jump FSM
     Call,   // call FSM
-    Return, // return from FSM call 
+    Return, // return from FSM call
     Break   // break execution of current action list
   };
 
@@ -163,7 +163,7 @@ class DSMAction
   virtual ~DSMAction() { /* DBG("dest action\n"); */ }
 
   /** @return whether state engine is to be modified (via getSEAction) */
-  virtual bool execute(AmSession* sess, DSMSession* sc_sess, 
+  virtual bool execute(AmSession* sess, DSMSession* sc_sess,
 		       DSMCondition::EventType event,
 		       map<string,string>* event_params) = 0;
 
@@ -183,7 +183,7 @@ class State
   ~State();
   vector<DSMElement*> pre_actions;
   vector<DSMElement*> post_actions;
-  
+
   vector<DSMTransition> transitions;
 };
 
@@ -261,19 +261,19 @@ class DSMStateDiagram  {
 
 class DSMException {
  public:
-  DSMException(const string& e_type) 
+  DSMException(const string& e_type)
     { params["type"] = e_type; }
 
-  DSMException(const string& e_type, 
-	       const string& key1, const string& val1) 
-    { params["type"] = e_type; 
+  DSMException(const string& e_type,
+	       const string& key1, const string& val1)
+    { params["type"] = e_type;
       params[key1] = val1; }
 
-  DSMException(const string& e_type, 
+  DSMException(const string& e_type,
 	       const string& key1, const string& val1,
-	       const string& key2, const string& val2) 
-    { params["type"] = e_type; 
-      params[key1] = val1; 
+	       const string& key2, const string& val2)
+    { params["type"] = e_type;
+      params[key1] = val1;
       params[key2] = val2; }
 
   DSMException(map<string, string>& params)
@@ -281,7 +281,7 @@ class DSMException {
 
   ~DSMException() { }
 
-  map<string, string> params;    
+  map<string, string> params;
 };
 
 struct DSMStackElement {
@@ -305,7 +305,7 @@ class DSMStateEngine {
   //  vector<pair<DSMStateDiagram*, State*> > stack;
   vector<DSMStackElement> stack;
 
-  bool callDiag(const string& diag_name, AmSession* sess, DSMSession* sc_sess, 
+  bool callDiag(const string& diag_name, AmSession* sess, DSMSession* sc_sess,
 		DSMCondition::EventType event,
 		map<string,string>* event_params,
 		vector<DSMElement*>::iterator actions_from, vector<DSMElement*>::iterator actions_to);
@@ -313,18 +313,18 @@ class DSMStateEngine {
 		DSMCondition::EventType event,
 		map<string,string>* event_params);
   bool returnDiag(AmSession* sess, DSMSession* sc_sess, DSMCondition::EventType event, map<string,string>* event_params);
-  bool runactions(vector<DSMElement*>::iterator from, 
-		  vector<DSMElement*>::iterator to, 
+  bool runactions(vector<DSMElement*>::iterator from,
+		  vector<DSMElement*>::iterator to,
 		  AmSession* sess, DSMSession* sc_sess, DSMCondition::EventType event,
 		  map<string,string>* event_params, bool& is_consumed, bool& do_break);
 
   vector<DSMModule*> mods;
 
- public: 
+ public:
   DSMStateEngine();
   ~DSMStateEngine();
 
-  void addDiagram(DSMStateDiagram* diag); 
+  void addDiagram(DSMStateDiagram* diag);
   void addModules(vector<DSMModule*> modules);
 
   bool init(AmSession* sess, DSMSession* sc_sess,

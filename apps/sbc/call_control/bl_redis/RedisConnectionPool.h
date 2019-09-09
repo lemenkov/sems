@@ -29,19 +29,19 @@ class RedisConnectionPool
 
   string redis_server;
   unsigned int redis_port;
-  unsigned int max_wait;  
+  unsigned int max_wait;
 
  public:
   RedisConnectionPool();
   ~RedisConnectionPool();
 
   redisContext* getActiveConnection();
-  
+
   void returnConnection(redisContext* c);
 
   void returnFailedConnection(redisContext* c);
 
-  void set_config(string& server, unsigned int port, 
+  void set_config(string& server, unsigned int port,
 		  vector<unsigned int> timers, unsigned int max_conn_wait);
 
   void add_connections(unsigned int count);

@@ -71,7 +71,7 @@ string DILog::dumpLog() {
   return log.str();
 }
 
-void DILog::log(int level, pid_t pid, pthread_t tid, 
+void DILog::log(int level, pid_t pid, pthread_t tid,
 		const char* func, const char* file, int line, char* msg) {
   strncpy(ring_buf[pos], msg, sizeof(ring_buf[0]));
   pos = (pos + 1) % MAX_LINES;

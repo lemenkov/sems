@@ -20,11 +20,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef _AMEVENTDISPATCHER_h_ 
+#ifndef _AMEVENTDISPATCHER_h_
 #define _AMEVENTDISPATCHER_h_
 
 #include "AmEventQueue.h"
@@ -46,15 +46,15 @@ public:
 	: q(NULL), id() {}
 
       QueueEntry(AmEventQueueInterface* q)
-        : q(q), id() {} 
+        : q(q), id() {}
 
       QueueEntry(AmEventQueueInterface* q, string id)
-	: q(q), id(id){} 
+	: q(q), id(id){}
     };
 
     typedef std::map<string, QueueEntry> EvQueueMap;
     typedef EvQueueMap::iterator         EvQueueMapIter;
-    
+
     typedef std::map<string,string>  Dictionnary;
     typedef Dictionnary::iterator    DictIter;
 
@@ -63,22 +63,22 @@ private:
 
     static AmEventDispatcher *_instance;
 
-    /** 
-     * Container for active sessions 
+    /**
+     * Container for active sessions
      * local tag -> event queue
      */
     EvQueueMap queues[EVENT_DISPATCHER_BUCKETS];
-    
-    // mutex for "queues" 
+
+    // mutex for "queues"
     AmMutex queues_mut[EVENT_DISPATCHER_BUCKETS];
 
-    /** 
-     * Call ID + remote tag + via_branch -> local tag 
+    /**
+     * Call ID + remote tag + via_branch -> local tag
      *  (needed for CANCELs)
      *  (UAS sessions only)
      */
     Dictionnary id_lookup[EVENT_DISPATCHER_BUCKETS];
-    // mutex for "id_lookup" 
+    // mutex for "id_lookup"
     AmMutex id_lookup_mut[EVENT_DISPATCHER_BUCKETS];
 
     unsigned int hash(const string& s1);
@@ -91,8 +91,8 @@ public:
     bool postSipRequest(const AmSipRequest& req);
 
     bool post(const string& local_tag, AmEvent* ev);
-    bool post(const string& callid, 
-	      const string& remote_tag, 
+    bool post(const string& callid,
+	      const string& remote_tag,
 	      const string& via_branch,
 	      AmEvent* ev);
 
@@ -102,9 +102,9 @@ public:
     bool addEventQueue(const string& local_tag,
 		       AmEventQueueInterface* q);
 
-    bool addEventQueue(const string& local_tag, 
+    bool addEventQueue(const string& local_tag,
 		       AmEventQueueInterface* q,
-		       const string& callid, 
+		       const string& callid,
 		       const string& remote_tag,
 		       const string& via_branch);
 

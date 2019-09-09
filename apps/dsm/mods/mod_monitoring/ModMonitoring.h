@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _MOD_SYS_H
@@ -29,13 +29,13 @@
 #include "DSMModule.h"
 #include "DSMSession.h"
 
-class MonitoringModule 
+class MonitoringModule
 : public DSMModule {
 
  public:
   MonitoringModule() { }
   ~MonitoringModule() { }
-  
+
   DSMAction* getAction(const string& from_str);
   DSMCondition* getCondition(const string& from_str);
 };

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 TelTech Systems Inc.
- * 
+ *
  * This file is part of SEMS, a free SIP media server.
  *
  * SEMS is free software; you can redistribute it and/or modify
@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -37,8 +37,8 @@
 #include "AmSession.h"
 #include "AmUtils.h"
 
-int JsonRpcServer::createRequest(const string& evq_link, const string& method, 
-				 AmArg& params, JsonrpcNetstringsConnection* peer, 
+int JsonRpcServer::createRequest(const string& evq_link, const string& method,
+				 AmArg& params, JsonrpcNetstringsConnection* peer,
 				 const AmArg& udata,
 				 bool is_notification) {
   AmArg rpc_params;
@@ -50,16 +50,16 @@ int JsonRpcServer::createRequest(const string& evq_link, const string& method,
     string req_id = int2str(peer->req_id);
     rpc_params["id"] = req_id;
 
-    if (!evq_link.empty()) 
+    if (!evq_link.empty())
       peer->replyReceivers[req_id] = make_pair(evq_link, udata);
-    DBG("registering reply sink '%s' for id %s\n", 
+    DBG("registering reply sink '%s' for id %s\n",
 	evq_link.c_str(), req_id.c_str());
 
   }
 
   string rpc_params_json = arg2json(rpc_params);
   if (rpc_params_json.length() > MAX_RPC_MSG_SIZE) {
-    ERROR("internal error: message exceeded MAX_RPC_MSG_SIZE (%d)\n", 
+    ERROR("internal error: message exceeded MAX_RPC_MSG_SIZE (%d)\n",
 	  MAX_RPC_MSG_SIZE);
     return -3;
   }
@@ -72,7 +72,7 @@ int JsonRpcServer::createRequest(const string& evq_link, const string& method,
   return 0;
 }
 
-int JsonRpcServer::createReply(JsonrpcNetstringsConnection* peer, 
+int JsonRpcServer::createReply(JsonrpcNetstringsConnection* peer,
 			       const string& id, AmArg& result, bool is_error) {
 
   AmArg rpc_res;
@@ -85,7 +85,7 @@ int JsonRpcServer::createReply(JsonrpcNetstringsConnection* peer,
 
   string res_s = arg2json(rpc_res);
   if (res_s.length() > MAX_RPC_MSG_SIZE) {
-    ERROR("internal error: reply exceeded MAX_RPC_MSG_SIZE (%d)\n", 
+    ERROR("internal error: reply exceeded MAX_RPC_MSG_SIZE (%d)\n",
 	  MAX_RPC_MSG_SIZE);
     return -3;
   }
@@ -97,7 +97,7 @@ int JsonRpcServer::createReply(JsonrpcNetstringsConnection* peer,
   return 0;
 }
 
-int JsonRpcServer::processMessage(char* msgbuf, unsigned int* msg_size, 
+int JsonRpcServer::processMessage(char* msgbuf, unsigned int* msg_size,
 				  JsonrpcPeerConnection* peer) {
   DBG("parsing message ...\n");
   // const char* txt = "{\"jsonrpc\": \"2.0\", \"result\": 19, \"id\": 1}";
@@ -115,15 +115,15 @@ int JsonRpcServer::processMessage(char* msgbuf, unsigned int* msg_size,
   bool is_request = (rpc_params.hasMember("method") && isArgCStr(rpc_params["method"]));
   if (!is_request) {
     // todo: move this to  peer->processReply(rpc_params);
-    
+
     // process reply
-    if (!rpc_params.hasMember("id") || !isArgCStr(rpc_params["id"]) 
+    if (!rpc_params.hasMember("id") || !isArgCStr(rpc_params["id"])
 	|| rpc_params["id"] == "") {
       INFO("Error parsing jsonrpc message: no id in reply!\n");
       return -2;// todo: check value, reply with error?
     }
     string id = rpc_params["id"].asCStr();
-    
+
     std::map<std::string, std::pair<std::string, AmArg > >::iterator
       rep_recv_q = peer->replyReceivers.find(id);
     if (rep_recv_q == peer->replyReceivers.end()) {
@@ -139,7 +139,7 @@ int JsonRpcServer::processMessage(char* msgbuf, unsigned int* msg_size,
     const AmArg& udata = rep_recv_q->second.second;
     const string& event_queue_id = rep_recv_q->second.first;
 
-    JsonRpcResponseEvent* resp_ev = NULL; 
+    JsonRpcResponseEvent* resp_ev = NULL;
     if (rpc_params.hasMember("result")) {
       resp_ev = new JsonRpcResponseEvent(false, id, rpc_params["result"], udata);
     } else {
@@ -161,8 +161,8 @@ int JsonRpcServer::processMessage(char* msgbuf, unsigned int* msg_size,
 	INFO("closing connection where reply link missing");
 	return -2;
       }
-      return 0; 
-    }	
+      return 0;
+    }
     DBG("successfully posted reply to event queue\n");
     peer->replyReceivers.erase(rep_recv_q);
     // don't send a reply
@@ -179,7 +179,7 @@ int JsonRpcServer::processMessage(char* msgbuf, unsigned int* msg_size,
       id = int2str(rpc_params["id"].asInt());
       id_is_int = true;
     } else {
-      ERROR("incorrect type for jsonrpc id <%s>\n", 
+      ERROR("incorrect type for jsonrpc id <%s>\n",
 	    AmArg::print(rpc_params["id"]).c_str());
     }
   } else {
@@ -187,12 +187,12 @@ int JsonRpcServer::processMessage(char* msgbuf, unsigned int* msg_size,
   }
 
   // send directly to event queue
-  if ((id.empty() && !peer->notificationReceiver.empty()) || 
+  if ((id.empty() && !peer->notificationReceiver.empty()) ||
       (!id.empty() && !peer->requestReceiver.empty())) {
     // don't send a reply
     *msg_size = 0;
 
-    string dst_evqueue = id.empty() ? 
+    string dst_evqueue = id.empty() ?
       peer->notificationReceiver.c_str() : peer->requestReceiver.c_str();
 
     DBG("directly passing %s to event queue '%s'\n",
@@ -202,15 +202,15 @@ int JsonRpcServer::processMessage(char* msgbuf, unsigned int* msg_size,
     AmArg& params = none_params;
     if (rpc_params.hasMember("params")) {
       params = rpc_params["params"];
-    } 
-    JsonRpcRequestEvent* request_ev = 
-      new JsonRpcRequestEvent(rpc_params["method"].asCStr(), 
+    }
+    JsonRpcRequestEvent* request_ev =
+      new JsonRpcRequestEvent(rpc_params["method"].asCStr(),
 			      id, params);
     request_ev->connection_id = peer->id;
-    
-    bool posted = AmEventDispatcher::instance()-> 
+
+    bool posted = AmEventDispatcher::instance()->
       post(dst_evqueue, request_ev);
-    
+
     if (!posted) {
       DBG("%s receiver event queue '%s' does not exist (any more)\n",
 	   id.empty() ? "notification":"request",
@@ -219,15 +219,15 @@ int JsonRpcServer::processMessage(char* msgbuf, unsigned int* msg_size,
 
       if (id.empty() && (peer->flags & JsonrpcPeerConnection::FL_CLOSE_NO_NOTIF_RECV)) {
 	INFO("closing connection on missing notification receiver queue\n");
-	return -1; // todo: reply error? 
-      } 
+	return -1; // todo: reply error?
+      }
 
       if (!id.empty() && (peer->flags & JsonrpcPeerConnection::FL_CLOSE_NO_REQUEST_RECV)) {
 	INFO("closing connection on missing request receiver queue\n");
-	return -1; // todo: reply error? 
+	return -1; // todo: reply error?
       }
     }	else {
-      DBG("successfully posted %s to event queue '%s'\n", 
+      DBG("successfully posted %s to event queue '%s'\n",
 	  id.empty() ? "notification":"request",
 	  dst_evqueue.c_str());
     }
@@ -250,7 +250,7 @@ int JsonRpcServer::processMessage(char* msgbuf, unsigned int* msg_size,
 
   string res_s = arg2json(rpc_res);
   if (res_s.length() > MAX_RPC_MSG_SIZE) {
-    ERROR("internal error: reply exceeded MAX_RPC_MSG_SIZE (%d)\n", 
+    ERROR("internal error: reply exceeded MAX_RPC_MSG_SIZE (%d)\n",
 	  MAX_RPC_MSG_SIZE);
     return -3;
   }
@@ -268,7 +268,7 @@ void JsonRpcServer::execRpc(const AmArg& rpc_params, AmArg& rpc_res) {
     AmArg& params = none_params;
     if (rpc_params.hasMember("params")) {
       params = rpc_params["params"];
-    } 
+    }
     string method = rpc_params["method"].asCStr();
     string id;
     if (rpc_params.hasMember("id") && isArgCStr(rpc_params["id"]))
@@ -282,8 +282,8 @@ void JsonRpcServer::execRpc(const string& method, const string& id, const AmArg&
   try  {
     size_t dot_pos = method.find('.');
     if (dot_pos == string::npos || dot_pos == method.length()) {
-      throw JsonRpcError(-32601, "Method not found", 
-			 "use module.method as rpc method name");    
+      throw JsonRpcError(-32601, "Method not found",
+			 "use module.method as rpc method name");
     }
     string factory = method.substr(0, method.find('.'));
     string fact_meth = method.substr(method.find('.')+1);
@@ -299,31 +299,31 @@ void JsonRpcServer::execRpc(const string& method, const string& id, const AmArg&
 
       DBG("searching for factory '%s' method '%s'\n",
 	  factory.c_str(), fact_meth.c_str());
-      
-      AmDynInvokeFactory* fact = 
+
+      AmDynInvokeFactory* fact =
 	AmPlugIn::instance()->getFactory4Di(factory);
       if (fact==NULL) {
-	throw JsonRpcError(-32601, "Method not found", 
+	throw JsonRpcError(-32601, "Method not found",
 			   "module not loaded");
       }
       AmDynInvoke* di_inst = fact->getInstance();
       if(!di_inst) {
-	throw JsonRpcError(-32601, "Method not found", 
+	throw JsonRpcError(-32601, "Method not found",
 			   "failed to instanciate module");
       }
 
       di_inst->invoke(fact_meth, params, rpc_res["result"]);
     } catch (const AmDynInvoke::NotImplemented& ni) {
-      INFO("not implemented DI function '%s'\n", 
+      INFO("not implemented DI function '%s'\n",
 	   ni.what.c_str());
-      throw JsonRpcError(-32601, "Method not found", 
+      throw JsonRpcError(-32601, "Method not found",
 			 "function unknown in module");
     } catch (const AmArg::OutOfBoundsException& oob) {
       INFO("out of bounds in  RPC DI call\n");
       throw JsonRpcError(-32602, "Invalid params",
 			 "out of bounds in function call");
     } catch (const AmArg::TypeMismatchException& oob) {
-      INFO("type mismatch  in  RPC DI call\n"); 
+      INFO("type mismatch  in  RPC DI call\n");
      throw JsonRpcError(-32602, "Invalid params",
 			 "parameters type mismatch in function call");
     } catch (const JsonRpcError& e) {
@@ -332,16 +332,16 @@ void JsonRpcServer::execRpc(const string& method, const string& id, const AmArg&
     } catch (...) {
       ERROR("unexpected Exception in  RPC DI call\n");
       throw JsonRpcError(-32000, "Server error",
-			 "unexpected Exception");      
+			 "unexpected Exception");
     }
 
     // todo: notification!
     rpc_res["id"] = id;
     rpc_res["jsonrpc"] = "2.0";
   } catch (const JsonRpcError& e) {
-    INFO("got JsonRpcError core %d message '%s'\n", 
+    INFO("got JsonRpcError core %d message '%s'\n",
 	 e.code, e.message.c_str());
-    rpc_res["error"] = AmArg(); 
+    rpc_res["error"] = AmArg();
     rpc_res["error"]["code"] = e.code;
     rpc_res["error"]["message"] = e.message;
     rpc_res["error"]["data"] = e.data;
@@ -365,7 +365,7 @@ void JsonRpcServer::runCoreMethod(const string& method, const AmArg& params, AmA
     res[0] = log_level;
     DBG("get_log_level returns %d\n", log_level);
   } else {
-    throw JsonRpcError(-32601, "Method not found", 
+    throw JsonRpcError(-32601, "Method not found",
 		       "function unknown in core");
   }
 }

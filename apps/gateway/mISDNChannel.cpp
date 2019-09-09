@@ -37,7 +37,7 @@ int mISDNChannel::read(unsigned int user_ts, unsigned int size) {
 	fromISDN_buffer.copy((char *)((unsigned char*)samples),size);
 	fromISDN_buffer.erase(0,size);
 	return size;
-} 
+}
 int mISDNChannel::write(unsigned int user_ts, unsigned int size) {
 	char buf[4096+mISDN_HEADER_LEN];
         mISDN::iframe_t *frame = (mISDN::iframe_t *)buf;
@@ -45,14 +45,14 @@ int mISDNChannel::write(unsigned int user_ts, unsigned int size) {
 //    DBG("mISDNChannel::write user_ts=%d size=%d\n",user_ts,size);
 	if(m_BC==0) {
 //		DBG("bchannel is already detached or not yet initialised\n"); //we silently discard this to avoid log flooding
-		return 0; 
+		return 0;
 	}
 	if(size>=4096) {
 	    DBG("truncating output audio (%d)\n",size);
 	    size=4096;
 	}
 	memcpy(buf + (mISDN_HEADER_LEN), (unsigned char*)samples, size);
-	flip_buf_bits( buf + mISDN_HEADER_LEN, size); 
+	flip_buf_bits( buf + mISDN_HEADER_LEN, size);
 	frame->addr = m_BC | FLG_MSG_DOWN;
 	frame->prim = DL_DATA | REQUEST;
 	frame->dinfo = 0;
@@ -76,8 +76,8 @@ void mISDNChannel::bchan_receive(char *msg_buf,int msg_buf_s) {
 //	int l,ret;
 //	int i,t;
 //	char *s;
-//	
-//	flip_buf_bits( buf + mISDN_HEADER_LEN, PLAY_SIZE);  
+//
+//	flip_buf_bits( buf + mISDN_HEADER_LEN, PLAY_SIZE);
 //	frame->addr = m_BC | FLG_MSG_DOWN;
 //	frame->prim = DL_DATA | REQUEST;
 //	frame->dinfo = 0;
@@ -136,7 +136,7 @@ int mISDN_AddIE(mISDN::Q931_info_t *qi, u_char *p, u_char ie, u_char *iep) {
                 l = 0;
         } else {
                 if (!iep || !iep[0])
-                        return(-3); 
+                        return(-3);
                 ies = &qi->bearer_capability;
                 if (_mISDN_l3_ie2pos[ie]<0) {
                         return(-2);
@@ -226,21 +226,21 @@ void mISDNChannel::unregister_BC() {
 		m_BC=0;
 	} else DBG("mISDNChannel::unregister_BC BC already removed or not initialized, this=%p (0x%08x)\n",this,m_BC);
 }
-	
+
 int mISDNChannel::placeCall(const AmSipRequest &req, std::string tonumber, std::string fromnumber) {
         m_called=tonumber;
         m_TON_d=0; //Unknown
         m_NPI_d=1; // ISDN E.164
 	if(fromnumber.empty()) {
 	    m_caller=gwconf.getParameter("out_msn","");
-	} else 
+	} else
 	    m_caller=fromnumber;
         m_TON_r=0; //Unknown
         m_NPI_r=1; // ISDN E.164
         m_Screening_r=0; // user provided
         m_Presentation_r=0; // allowed
-        return call(); 
-                                                                        
+        return call();
+
 }
 int mISDNChannel::accept() {
 	mISDNStack* stack=mISDNStack::instance();
@@ -254,7 +254,7 @@ int mISDNChannel::accept() {
 	frame->len= 0;
 	DBG("Sending CC_CONNECT | REQUEST for CR=0x%04x \n",m_CR);
     	mISDN::mISDN_write(stack->m_mISDNdevice, buf, mISDN_HEADER_LEN+frame->len, TIMEOUT_1SEC);
-	
+
 	return OK;
 }
 
@@ -263,7 +263,7 @@ int mISDNChannel::hangup() {
 	char buf[MAX_MSG_SIZE];
         // mISDN::Q931_info_t *qi;
         mISDN::iframe_t *frame = (mISDN::iframe_t *)buf;
-                        
+
 	DBG("mISDNChannel::hangup\n");
 	frame->prim = CC_DISCONNECT | REQUEST;
 	frame->addr = m_port->upper_id | FLG_MSG_DOWN;
@@ -271,7 +271,7 @@ int mISDNChannel::hangup() {
 	frame->len= 0;
 	DBG("Sending CC_DISCONNECT | REQUEST for CR=0x%04x \n",m_CR);
     	mISDN::mISDN_write(stack->m_mISDNdevice, buf, mISDN_HEADER_LEN+frame->len, TIMEOUT_1SEC);
-	
+
 	return OK;
 }
 
@@ -343,12 +343,12 @@ int mISDNChannel::call() {
 	frame->addr = m_port->upper_id | FLG_MSG_DOWN;
 	frame->dinfo= m_CR;
 	frame->len= p - msg;
-	ret=mISDN::mISDN_write(mISDNStack::instance()->m_mISDNdevice, buf, mISDN_HEADER_LEN+frame->len, TIMEOUT_1SEC);                                                                                                                                                        
+	ret=mISDN::mISDN_write(mISDNStack::instance()->m_mISDNdevice, buf, mISDN_HEADER_LEN+frame->len, TIMEOUT_1SEC);
 	if ( ret<0) {
     		ERROR("mISDNChannel::call error dending CC_SETUP | REQUEST %d\n", ret);
     		return FAIL;
         }
-    	return OK;	
+    	return OK;
 }
 
 int mISDNChannel::processMsg(char *msg_buf,int msg_buf_s) {
@@ -382,7 +382,7 @@ int mISDNChannel::processMsg(char *msg_buf,int msg_buf_s) {
 	                    frame->len= 0;
 	            	    ret=mISDN::mISDN_write(mISDNStack::instance()->m_mISDNdevice, buf, mISDN_HEADER_LEN+frame->len, TIMEOUT_1SEC);
 			    DBG("m_session=%p Not null sending CC_PROCEEDING |REQUEST\n",m_session);
-			}                                       
+			}
 			break;
 		case CC_PROCEEDING |INDICATION:
 			DBG("CC_PROCEEDING | INDICATION for CR=0x%04x \n",m_CR);
@@ -431,7 +431,7 @@ int mISDNChannel::processMsg(char *msg_buf,int msg_buf_s) {
 		    	bchan_deactivate();
 			break;
 		case CC_RELEASE | INDICATION:
-		case CC_RELEASE_COMPLETE | INDICATION:	
+		case CC_RELEASE_COMPLETE | INDICATION:
 			DBG("CC_RELEASE(_COMPLETE) | INDICATION for CR=0x%04x \n",m_CR);
 //			mISDN::mISDN_write_frame(stack->m_mISDNdevice, buf, m_port->upper_id | FLG_MSG_DOWN, CC_RELEASE_COMPLETE | REQUEST, m_CR, 0, NULL, TIMEOUT_1SEC);
 			frame->prim = CC_RELEASE_COMPLETE| REQUEST;
@@ -446,7 +446,7 @@ int mISDNChannel::processMsg(char *msg_buf,int msg_buf_s) {
                         ERROR("mISDNChannel::processMsg unhandled: prim(0x%x) addr(0x%x) msg->len(%d)\n", m_frame->prim, m_frame->addr, msg_buf_s);
                         return FAIL;
                         break;
-                                                                                
+
 	}
 	return OK;
 }
@@ -454,7 +454,7 @@ int mISDNChannel::processMsg(char *msg_buf,int msg_buf_s) {
 int mISDNChannel::GetIEchannel_id(){
 	char *p;
 	m_bchannel=-1; //no ie or error (for now)
-	
+
 	if (m_qi->channel_id.off==0) {	ERROR("No channel_id IE here\n");		return FAIL; }
 	p = m_ie_data + m_qi->channel_id.off;
 	//p[0] is 0x18 - code for this ie;
@@ -462,7 +462,7 @@ int mISDNChannel::GetIEchannel_id(){
 	if(p[1]<1) {		ERROR("IE Too short\n"); 				return FAIL; }
 	if(p[2] & 0x40)	{	ERROR("Channels on other interfaces not supported\n"); 	return FAIL; } // bit 7 - other interface
 	if(p[2] & 0x04)	{	ERROR("using d-channel not supported\n");		return FAIL; } // bit 3 - d channel;
-	if(m_port->pri) { 
+	if(m_port->pri) {
 	    switch((p[2]&0x03)) {
 		case 0:	m_bchannel=-2; 			return OK; 	break; //no Channel
 		case 1: 						break; //channel num in folowing bytes
@@ -474,7 +474,7 @@ int mISDNChannel::GetIEchannel_id(){
 	    m_bchannel=p[4]&0x7f;
 	    if(m_bchannel<1 || m_bchannel==16) {
 		    ERROR("PRI channel out of range (%d)\n",m_bchannel);
-		    m_bchannel=-1; 
+		    m_bchannel=-1;
 		    return FAIL;
 	    }
 	    DBG("mISDNChannel::GetIEchannel_id will use PRI b_channel=%d\n",m_bchannel);
@@ -489,12 +489,12 @@ int mISDNChannel::GetIEchannel_id(){
 	    }
 	    DBG("mISDNChannel::GetIEchannel_id will use BRI b_channel=%d\n",m_bchannel);
 	    return OK;
-	}	    
+	}
 }
 int mISDNChannel::GetCallerNum(){
 	char *p;
 	int len;
-	
+
 	if (m_qi->calling_nr.off==0) {	ERROR("No calling_nr IE here\n");		return FAIL; }
 	p = m_ie_data + m_qi->calling_nr.off;
 	//p[0] is 0x6C - code for this ie;
@@ -522,7 +522,7 @@ int mISDNChannel::GetCallerNum(){
 int mISDNChannel::GetCalledNum(){
 	char *p;
 	int len;
-	
+
 	if (m_qi->called_nr.off==0) {	ERROR("No called_nr IE here\n");		return FAIL; }
 	p = m_ie_data + m_qi->called_nr.off;
 	//p[0] is 0x70 - code for this ie;
@@ -580,7 +580,7 @@ int mISDNChannel::bchan_event(char *msg_buf,int msg_buf_s) {
                 return FAIL;
                 break;
         }
-	return OK;		
+	return OK;
 }
 
 int mISDNChannel::bchan_create() {
@@ -588,7 +588,7 @@ int mISDNChannel::bchan_create() {
 	mISDN_pid_t pid;
 	int ret;
 	mISDNStack* stack=mISDNStack::instance();
-	
+
 	if(m_bchannel<=0) {			ERROR("b-channel num not known or invalid (%d)\n",m_bchannel);	return FAIL; }
 	if(m_port->b_stid[m_bchannel-1]==0) {	ERROR("No stack for b-channel (%d)\n",m_bchannel);		return FAIL; }
 	if(m_port->b_addr[m_bchannel-1]!=0) {	ERROR("Stack already created for b-channel (%d)\n",m_bchannel);	return FAIL; }
@@ -628,7 +628,7 @@ int mISDNChannel::bchan_activate() {
 	mISDN::iframe_t frame;
 	mISDNStack* stack=mISDNStack::instance();
 	int ret;
-	
+
 	if(m_BC==0) {	ERROR("bchannel (%d) not created\n",m_bchannel);		return FAIL; }
 	DBG("sending DL_ESTABLISH | REQUEST to device=%d for bchannel=%d addr=0x%08x dinfo=0x%08x\n",stack->m_mISDNdevice, m_bchannel,frame.addr, frame.dinfo);
 	ret = mISDN::mISDN_write_frame(stack->m_mISDNdevice, &frame, m_BC | FLG_MSG_DOWN, DL_ESTABLISH | REQUEST, 0, 0, NULL, TIMEOUT_1SEC);
@@ -638,7 +638,7 @@ int mISDNChannel::bchan_deactivate() {
 	mISDN::iframe_t frame;
 	mISDNStack* stack=mISDNStack::instance();
 	int ret;
-	
+
 	DBG("sending DL_RELEASE | REQUEST to device=%d for bchannel=%d addr=0x%08x dinfo=0x%08x\n",stack->m_mISDNdevice, m_bchannel,frame.addr, frame.dinfo);
 	ret = mISDN::mISDN_write_frame(stack->m_mISDNdevice, &frame, m_BC | FLG_MSG_DOWN, DL_RELEASE | REQUEST, 0, 0, NULL, TIMEOUT_1SEC);
 	return OK;
@@ -648,7 +648,7 @@ int mISDNChannel::bchan_destroy() {
 	mISDN::iframe_t frame;
 	mISDNStack* stack=mISDNStack::instance();
 	int ret;
-	
+
 	ret = mISDN_clear_stack(stack->m_mISDNdevice, m_port->b_stid[m_bchannel-1]);
 	DBG("sending MGR_DELLAYER | REQUEST to device=%d for bchannel=%d addr=0x%08x dinfo=0x%08x\n",stack->m_mISDNdevice, m_bchannel,frame.addr, frame.dinfo);
 	ret = mISDN::mISDN_write_frame(stack->m_mISDNdevice, &frame, m_BC | FLG_MSG_DOWN, MGR_DELLAYER | REQUEST, 0, 0, NULL, TIMEOUT_1SEC);

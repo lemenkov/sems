@@ -18,8 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -38,7 +38,7 @@
 #define APP_NAME "callgen"
 #define PLAY_FILE "play_file"
 
-#define CALL_TIMER 1 
+#define CALL_TIMER 1
 
 #include <vector>
 using std::vector;
@@ -69,7 +69,7 @@ int CallGenFactory::onLoad()
 
 int CallGenFactory::load() {
   // only execute this once
-  if (configured) 
+  if (configured)
     return 0;
   configured = true;
 
@@ -82,7 +82,7 @@ int CallGenFactory::load() {
 
   string play_fname = cfg.getParameter(PLAY_FILE, "default.wav");
   if (play_file.load(play_fname)) {
-    ERROR("file %s could not be loaded.\n", 
+    ERROR("file %s could not be loaded.\n",
 	  play_fname.c_str());
     return -1;
   }
@@ -100,7 +100,7 @@ int CallGenFactory::load() {
   if (!DigitsDir.length()) {
     WARN("No digits_dir specified in configuration.\n");
   }
-  for (int i=0;i<10;i++) 
+  for (int i=0;i<10;i++)
     prompts.setPrompt(int2str(i), DigitsDir+int2str(i)+".wav", APP_NAME);
 
   prompts.setPrompt("*", DigitsDir+"s.wav", APP_NAME);
@@ -117,18 +117,18 @@ void CallGenFactory::run() {
     vector<AmArg> todo;
     time_t now;
     time(&now);
-    multimap<time_t, AmArg>::iterator it = 
+    multimap<time_t, AmArg>::iterator it =
       actions.begin();
     while (it != actions.end()) {
       if (it->first > now)
 	break;
       todo.push_back(it->second);
       actions.erase(it);
-      it = actions.begin(); 
-    }      
+      it = actions.begin();
+    }
     actions_mut.unlock();
 
-    for (vector<AmArg>::iterator it=todo.begin(); 
+    for (vector<AmArg>::iterator it=todo.begin();
 	 it != todo.end(); it++)  {
       createCall(*it);
       if (scheduled>0)
@@ -147,13 +147,13 @@ void CallGenFactory::checkTarget() {
   DBG("%zd active calls, %d current target, %d already scheduled\n",
       active_calls.size(), target_args->get(0).asInt(), scheduled);
 
-  int missing_calls = 
+  int missing_calls =
     target_args->get(0).asInt() - active_calls.size() - scheduled;
 
-  if (missing_calls > 0) { 
+  if (missing_calls > 0) {
     AmArg*  to_schedule_args = new AmArg(*target_args);
     (*to_schedule_args)[0] = AmArg(missing_calls);
-  
+
     AmArg ret;
     scheduleCalls(*to_schedule_args, ret);
     scheduled += missing_calls;
@@ -170,11 +170,11 @@ AmSession* CallGenFactory::onInvite(const AmSipRequest& req, const string& app_n
   return NULL;
 }
 
-// outgoing calls 
+// outgoing calls
 AmSession* CallGenFactory::onInvite(const AmSipRequest& req, const string& app_name,
 				    AmArg& args)
-{  
-  size_t cnt = 0; 
+{
+  size_t cnt = 0;
   cnt++; // int    ncalls           = args.get(cnt++).asInt();
   cnt++; // int    wait_time_base   = args.get(cnt++).asInt();
   cnt++; // int    wait_time_rand   = args.get(cnt++).asInt();
@@ -185,15 +185,15 @@ AmSession* CallGenFactory::onInvite(const AmSipRequest& req, const string& app_n
   int    call_time_base   = args.get(cnt++).asInt();
   int    call_time_rand   = args.get(cnt++).asInt();
 
-  return new CallGenDialog(prompts, play_rand_digits, 
-			   call_time_base, call_time_rand); 
+  return new CallGenDialog(prompts, play_rand_digits,
+			   call_time_base, call_time_rand);
 }
 
-void CallGenFactory::invoke(const string& method, 
-				  const AmArg& args, 
+void CallGenFactory::invoke(const string& method,
+				  const AmArg& args,
 				  AmArg& ret)
 {
-  
+
 
   if (method == "createCalls"){
     args.assertArrayFmt("iiissiiii");
@@ -237,7 +237,7 @@ void CallGenFactory::invoke(const string& method,
 }
 
 void CallGenFactory::createCall(const AmArg& args) {
-  size_t cnt = 0; 
+  size_t cnt = 0;
   cnt++; // int    ncalls           = args.get(cnt++).asInt();
   cnt++; // int    wait_time_base   = args.get(cnt++).asInt();
   cnt++; // int    wait_time_rand   = args.get(cnt++).asInt();
@@ -251,19 +251,19 @@ void CallGenFactory::createCall(const AmArg& args) {
   string from = "sip:callgen@"+from_host;
   string call_ruri = "sip:"+ruri_user;
 
-  for (int i=0;i<ruri_rand_digits;i++) 
+  for (int i=0;i<ruri_rand_digits;i++)
     call_ruri+=int2str(rand()%10);
-  
+
   call_ruri+="@"+ruri_host;
-  
+
   AmArg* c_args = new AmArg(args);
-  
+
   DBG("placing new call to %s\n", call_ruri.c_str());
   /* string tag = */ AmUAC::dialout("callgen", // user
-				APP_NAME,  
+				APP_NAME,
 				call_ruri,
-				"<" + from +  ">", from, 
-				call_ruri, 
+				"<" + from +  ">", from,
+				call_ruri,
 				string(""), // callid
 				string(""), // headers
 				c_args);
@@ -271,7 +271,7 @@ void CallGenFactory::createCall(const AmArg& args) {
 }
 
 void CallGenFactory::createCalls(const AmArg& args, AmArg& ret) {
-  size_t cnt = 0; 
+  size_t cnt = 0;
   int    ncalls           = args.get(cnt++).asInt();
   int    wait_time_base   = args.get(cnt++).asInt();
   int    wait_time_rand   = args.get(cnt++).asInt();
@@ -289,12 +289,12 @@ void CallGenFactory::createCalls(const AmArg& args, AmArg& ret) {
   }
 
   ret.push(0);
-  ret.push("OK");  
+  ret.push("OK");
 }
 
 void CallGenFactory::scheduleCalls(const AmArg& args, AmArg& ret) {
 
-  size_t cnt = 0; 
+  size_t cnt = 0;
   int    ncalls           = args.get(cnt++).asInt();
   int    wait_time_base   = args.get(cnt++).asInt();
   int    wait_time_rand   = args.get(cnt++).asInt();
@@ -303,7 +303,7 @@ void CallGenFactory::scheduleCalls(const AmArg& args, AmArg& ret) {
     ncalls_per_sec = args[9].asInt();
 
   DBG("scheduling %d calls (%d/s)\n", ncalls, ncalls_per_sec);
-  
+
   time_t now;
   time(&now);
   actions_mut.lock();
@@ -322,8 +322,8 @@ void CallGenFactory::scheduleCalls(const AmArg& args, AmArg& ret) {
       wait_nsec+=(rand()%wait_time_rand);
 
     now+=wait_nsec;
-  }  
-  actions_mut.unlock();  
+  }
+  actions_mut.unlock();
 }
 
 void CallGenFactory::setTarget(const AmArg& args, AmArg& ret) {
@@ -333,13 +333,13 @@ void CallGenFactory::setTarget(const AmArg& args, AmArg& ret) {
   if (old_args)
     delete old_args;
 
-  DBG("target now set to %d calls\n", 
+  DBG("target now set to %d calls\n",
       target_args->get(0).asInt());
 }
 
 void CallGenFactory::callGenStats(const AmArg& args, AmArg& ret) {
   int target = 0;
-  if (target_args) 
+  if (target_args)
     target = target_args->get(0).asInt();
 
   string res = "CallGen statistics: \n " +
@@ -354,13 +354,13 @@ void CallGenFactory::callGenStats(const AmArg& args, AmArg& ret) {
 }
 
 void CallGenFactory::reportCall(string callid,
-				CallGenEvent ev, 
+				CallGenEvent ev,
 				time_t connect_ts,
 				time_t disconnect_ts) {
 
   calls_list_mut.lock();
   // FIXME: not 100% correct: disconnect should be moving to past_calls
-  if (ev == CGDestroy) { 
+  if (ev == CGDestroy) {
     active_calls.erase(callid);
     CallInfo ci;
     ci.connect_ts = connect_ts;
@@ -375,14 +375,14 @@ void CallGenFactory::reportCall(string callid,
   calls_list_mut.unlock();
 }
 
-CallGenDialog::CallGenDialog(AmPromptCollection& prompts, 
+CallGenDialog::CallGenDialog(AmPromptCollection& prompts,
 		int play_rand_digits, int call_time_base, int call_time_rand)
   : play_list(this),
     play_file(&CallGenFactory::play_file),
     prompts(prompts),
-    connect_ts(-1), disconnect_ts(-1), 
-    play_rand_digits(play_rand_digits), 
-    call_time_base(call_time_base), 
+    connect_ts(-1), disconnect_ts(-1),
+    play_rand_digits(play_rand_digits),
+    call_time_base(call_time_base),
     call_time_rand(call_time_rand),
     timer_started(false)
 {
@@ -400,9 +400,9 @@ void CallGenDialog::onStart() {
 }
 
 void CallGenDialog::report(CallGenEvent what) {
-  CallGenFactory::instance()->reportCall(getLocalTag(), 
+  CallGenFactory::instance()->reportCall(getLocalTag(),
 					 what,
-					 connect_ts, 
+					 connect_ts,
 					 disconnect_ts);
 }
 
@@ -432,14 +432,14 @@ void CallGenDialog::onEarlySessionStart() {
 }
 
 void CallGenDialog::onSessionStart() {
-  time(&connect_ts);  
+  time(&connect_ts);
 
   report(CGConnect);
-					    
+
   // add some random digits
-  for (int i=0;i<play_rand_digits;i++) 
+  for (int i=0;i<play_rand_digits;i++)
     prompts.addToPlaylist(int2str(rand()%10),  (long)this, play_list);
-  if (play_rand_digits > 0) 
+  if (play_rand_digits > 0)
     prompts.addToPlaylist("#",  (long)this, play_list);
 
   play_file.loop.set(true);
@@ -470,7 +470,7 @@ void CallGenDialog::process(AmEvent* event)
   }
   else
     AmSession::process(event);
-  
+
 }
 
 void CallGenDialog::onBye(const AmSipRequest& req) {

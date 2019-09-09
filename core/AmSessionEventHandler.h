@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #ifndef _AmSessionEventHandler_h
@@ -39,7 +39,7 @@ class AmConfigReader;
 /**
  * \brief Interface for SIP signaling plugins that
  *        change requests or replies using hooks (ex: session timer).
- * 
+ *
  *        From this type of plugins, an AmSessionEventHandler
  *        can be added to an AmSession. AmSessionEventHandler functions
  *        are called as hooks by the Session's event handler function.
@@ -61,8 +61,8 @@ public:
   virtual int configure(AmConfigReader& conf)
   { return 0; }
 
-  /* 
-   * All the methods return true if the event processing 
+  /*
+   * All the methods return true if the event processing
    * shall be stopped after them.
    */
   virtual bool process(AmEvent*)
@@ -71,8 +71,8 @@ public:
   virtual bool onSipRequest(const AmSipRequest& req)
   { return false; }
 
-  virtual bool onSipReply(const AmSipRequest& req, 
-  			  const AmSipReply& reply, 
+  virtual bool onSipReply(const AmSipRequest& req,
+  			  const AmSipReply& reply,
   			  AmBasicSipDialog::Status old_dlg_status)
   { return false; }
 

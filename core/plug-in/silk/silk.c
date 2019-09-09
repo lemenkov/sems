@@ -5,12 +5,12 @@
   This code is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation.
-  
+
   This code is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   Lesser General Public License for more details.
-  
+
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -52,25 +52,25 @@ BEGIN_EXPORTS("silk", AMCI_NO_MODULEINIT, AMCI_NO_MODULEDESTROY)
 
 BEGIN_CODECS
 #if SYSTEM_SAMPLECLOCK_RATE >=24000
-CODEC(CODEC_SILK_UB, Pcm16_2_SILK, SILK_2_Pcm16, AMCI_NO_CODEC_PLC, 
-      SILK_UB_create, SILK_destroy, 
+CODEC(CODEC_SILK_UB, Pcm16_2_SILK, SILK_2_Pcm16, AMCI_NO_CODEC_PLC,
+      SILK_UB_create, SILK_destroy,
       SILK_bytes2samples, SILK_samples2bytes)
 #endif
 #if SYSTEM_SAMPLECLOCK_RATE >=16000
-CODEC(CODEC_SILK_WB, Pcm16_2_SILK, SILK_2_Pcm16, AMCI_NO_CODEC_PLC, 
-      SILK_WB_create, SILK_destroy, 
+CODEC(CODEC_SILK_WB, Pcm16_2_SILK, SILK_2_Pcm16, AMCI_NO_CODEC_PLC,
+      SILK_WB_create, SILK_destroy,
       SILK_bytes2samples, SILK_samples2bytes)
 #endif
 #if SYSTEM_SAMPLECLOCK_RATE >=12000
-CODEC(CODEC_SILK_MB, Pcm16_2_SILK, SILK_2_Pcm16, AMCI_NO_CODEC_PLC, 
-      SILK_MB_create, SILK_destroy, 
+CODEC(CODEC_SILK_MB, Pcm16_2_SILK, SILK_2_Pcm16, AMCI_NO_CODEC_PLC,
+      SILK_MB_create, SILK_destroy,
       SILK_bytes2samples, SILK_samples2bytes)
 #endif
-CODEC(CODEC_SILK_NB, Pcm16_2_SILK, SILK_2_Pcm16, AMCI_NO_CODEC_PLC, 
-      SILK_NB_create, SILK_destroy, 
+CODEC(CODEC_SILK_NB, Pcm16_2_SILK, SILK_2_Pcm16, AMCI_NO_CODEC_PLC,
+      SILK_NB_create, SILK_destroy,
       SILK_bytes2samples, SILK_samples2bytes)
 END_CODECS
-  
+
 BEGIN_PAYLOADS
 #if SYSTEM_SAMPLECLOCK_RATE >=24000
 PAYLOAD(-1, "SILK", 24000, 24000, 1, CODEC_SILK_UB, AMCI_PT_AUDIO_FRAME)
@@ -83,7 +83,7 @@ PAYLOAD(-1, "SILK", 12000, 12000, 1, CODEC_SILK_MB, AMCI_PT_AUDIO_FRAME)
 #endif
 PAYLOAD(-1, "SILK", 8000, 8000, 1, CODEC_SILK_NB, AMCI_PT_AUDIO_FRAME)
 END_PAYLOADS
-  
+
 BEGIN_FILE_FORMATS
 END_FILE_FORMATS
 
@@ -99,7 +99,7 @@ typedef struct
 } SILK_state;
 
 
-static int create_SILK_encoder(SILK_state* st, 
+static int create_SILK_encoder(SILK_state* st,
 			       unsigned int rtp_Hz,
 			       unsigned int avg_bit_rate)
 {
@@ -117,14 +117,14 @@ static int create_SILK_encoder(SILK_state* st,
     ERROR( "could not allocate SILK encoder state" );
     return -1;
   }
-  
+
   /* Reset Encoder */
   ret = SKP_Silk_SDK_InitEncoder( st->psEnc, &st->encControl );
   if( ret ) {
     ERROR( "SKP_Silk_SDK_InitEncoder returned %d", ret );
     return ret;
   }
-  
+
   /* Set Encoder parameters */
   st->encControl.API_sampleRate        = rtp_Hz;
   st->encControl.maxInternalSampleRate = rtp_Hz;
@@ -134,11 +134,11 @@ static int create_SILK_encoder(SILK_state* st,
   st->encControl.useDTX                = 0;
   st->encControl.complexity            = 2;
   st->encControl.bitRate               = avg_bit_rate;
-  
+
   return 0;
 }
 
-static int create_SILK_decoder(SILK_state* st, 
+static int create_SILK_decoder(SILK_state* st,
 			       unsigned int rtp_Hz)
 {
   SKP_int32 ret, decSizeBytes;
@@ -226,7 +226,7 @@ void SILK_destroy(long handle)
   SILK_state* st = (SILK_state*)handle;
   if(st->psEnc) free(st->psEnc);
   if(st->psDec) free(st->psDec);
-  free(st);  
+  free(st);
 }
 
 static unsigned int SILK_bytes2samples(long h_codec, unsigned int num_bytes) {
@@ -247,7 +247,7 @@ int Pcm16_2_SILK( unsigned char* out_buf, unsigned char* in_buf, unsigned int si
   SKP_int16 nBytes = AUDIO_BUFFER_SIZE;
 
   /* Silk Encoder */
-  ret = SKP_Silk_SDK_Encode( st->psEnc, &st->encControl, (SKP_int16*)in_buf, 
+  ret = SKP_Silk_SDK_Encode( st->psEnc, &st->encControl, (SKP_int16*)in_buf,
 			     (SKP_int16)size/2, out_buf, &nBytes );
   if( ret ) {
     ERROR( "SKP_Silk_Encode returned %d (size=%u)\n", ret, size );

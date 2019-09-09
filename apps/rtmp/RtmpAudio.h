@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -67,9 +67,9 @@ public:
   ~RtmpAudio();
 
   /* @see AmAudio */
-  int get(unsigned long long system_ts, unsigned char* buffer, 
+  int get(unsigned long long system_ts, unsigned char* buffer,
 	  int output_sample_rate, unsigned int nb_samples);
-  int put(unsigned long long system_ts, unsigned char* buffer, 
+  int put(unsigned long long system_ts, unsigned char* buffer,
 	  int output_sample_rate, unsigned int size);
 
   void bufferPacket(const RTMPPacket& p);
@@ -78,16 +78,16 @@ public:
   void add_to_history(int16_t *, unsigned int);
   unsigned int conceal_loss(unsigned int, unsigned char *);
 
-  /* 
-   * Called by RtmpSession when 
-   * the connection has been released 
+  /*
+   * Called by RtmpSession when
+   * the connection has been released
    * or changed.
    */
   void setSenderPtr(RtmpSender* s);
 
-  /* 
-   * Called by RtmpSession when 
-   * the client has called the play 
+  /*
+   * Called by RtmpSession when
+   * the client has called the play
    * method to propagate the stream ID.
    */
   void setPlayStreamID(unsigned int stream_id);

@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /** @file AmStats.h */
@@ -31,8 +31,8 @@
 #include <sys/types.h>
 #include <math.h>
 #include <string.h>
-/** 
- * \brief math mean implementation 
+/**
+ * \brief math mean implementation
  *
  * The mean of all previously stored values is calculated (no reset).
  */
@@ -61,10 +61,10 @@ class MeanValue
   }
 };
 
-/** 
- * \brief math stddev implementation 
+/**
+ * \brief math stddev implementation
  *
- * The standard deviation of previously stored 
+ * The standard deviation of previously stored
  * values is calculated.
  */
 class StddevValue
@@ -82,7 +82,7 @@ class StddevValue
     {}
 
   void push(double val){
-	
+
     cum_val += val;
     sq_cum_val += val*val;
     n_val++;
@@ -94,7 +94,7 @@ class StddevValue
   }
 };
 
-/** 
+/**
  * \brief math mean implementation (n values)
  *
  * The mean of n previously stored values is calculated

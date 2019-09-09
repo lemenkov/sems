@@ -20,8 +20,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -56,7 +56,7 @@ Monitor* Monitor::instance()
   return _instance;
 }
 
-Monitor::Monitor(const string& name) 
+Monitor::Monitor(const string& name)
   : AmDynInvokeFactory(MOD_NAME), gc_thread(nullptr) {
 }
 
@@ -73,7 +73,7 @@ int Monitor::onLoad() {
 
   if (cfg.getParameter("run_garbage_collector","no") == "yes") {
     gcInterval = cfg.getParameterInt("garbage_collector_interval", 10);
-    DBG("Running garbage collection for monitoring every %u seconds\n", 
+    DBG("Running garbage collection for monitoring every %u seconds\n",
 	gcInterval);
     gc_thread.reset(new MonitorGarbageCollector());
     gc_thread->start();
@@ -87,7 +87,7 @@ int Monitor::onLoad() {
   return 0;
 }
 
-void Monitor::invoke(const string& method, 
+void Monitor::invoke(const string& method,
 		     const AmArg& args, AmArg& ret) {
   if((method == "log") || (method == "set")) {
     log(args,ret);
@@ -137,7 +137,7 @@ void Monitor::invoke(const string& method,
     clear(args,ret);
   } else if(method == "eraseByFilter"){
     listByFilter(args,ret, true);
-  } else if(method == "_list"){ 
+  } else if(method == "_list"){
     ret.push(AmArg("log"));
     ret.push(AmArg("set"));
     ret.push(AmArg("logAdd"));
@@ -167,7 +167,7 @@ void Monitor::invoke(const string& method,
 
 void Monitor::log(const AmArg& args, AmArg& ret) {
   assertArgCStr(args[0]);
-  
+
   LogBucket& bucket = getLogBucket(args[0].asCStr());
   bucket.log_lock.lock();
   try {
@@ -505,7 +505,7 @@ void Monitor::clearFinished() {
     std::map<string, LogInfo>::iterator it=
       logs[i].log.begin();
     while (it != logs[i].log.end()) {
-      if (it->second.finished && 
+      if (it->second.finished &&
 	  it->second.finished <= now) {
 	std::map<string, LogInfo>::iterator d_it = it;
 	it++;
@@ -591,9 +591,9 @@ void Monitor::getAttribute(const AmArg& args, AmArg& ret) {
     }									\
   }
 
-DEF_GET_ATTRIB_FUNC(getAttributeActive,  (!(it->second.finished && 
+DEF_GET_ATTRIB_FUNC(getAttributeActive,  (!(it->second.finished &&
 					    it->second.finished <= now)))
-DEF_GET_ATTRIB_FUNC(getAttributeFinished,(it->second.finished && 
+DEF_GET_ATTRIB_FUNC(getAttributeFinished,(it->second.finished &&
 					  it->second.finished <= now))
 #undef DEF_GET_ATTRIB_FUNC
 
@@ -619,7 +619,7 @@ void Monitor::listByFilter(const AmArg& args, AmArg& ret, bool erase) {
       while (it != logs[i].log.end()) {
 	bool match = true;
 	for (size_t a_i=0;a_i<args.size();a_i++) {
-	  AmArg& p = args.get(a_i);	  
+	  AmArg& p = args.get(a_i);
 	  if (!(it->second.info[p.get(0).asCStr()]==p.get(1))) {
 	    match = false;
 	    break;
@@ -655,18 +655,18 @@ void Monitor::listByRegex(const AmArg& args, AmArg& ret) {
     ERROR("could not compile regex '%s'\n", args[1].asCStr());
     return;
   }
-  
+
   for (int i=0;i<NUM_LOG_BUCKETS;i++) {
     logs[i].log_lock.lock();
     try {
       for (std::map<string, LogInfo>::iterator it=
 	     logs[i].log.begin(); it != logs[i].log.end(); it++) {
-	if (!it->second.info.hasMember(args[0].asCStr())  || 
+	if (!it->second.info.hasMember(args[0].asCStr())  ||
 	    !isArgCStr(it->second.info[args[0].asCStr()]) ||
 	    regexec(&attr_reg,it->second.info[args[0].asCStr()].asCStr(),0,0,0))
 	  continue;
 
-	ret.push(AmArg(it->first.c_str()));  
+	ret.push(AmArg(it->first.c_str()));
       }
     } catch(...) {
       logs[i].log_lock.unlock();
@@ -685,7 +685,7 @@ void Monitor::listFinished(const AmArg& args, AmArg& ret) {
     logs[i].log_lock.lock();
     for (std::map<string, LogInfo>::iterator it=
 	   logs[i].log.begin(); it != logs[i].log.end(); it++) {
-      if (it->second.finished && 
+      if (it->second.finished &&
 	  it->second.finished <= now)
 	ret.push(AmArg(it->first.c_str()));
     }
@@ -713,9 +713,9 @@ LogBucket& Monitor::getLogBucket(const string& call_id) {
   if (call_id.empty())
     return logs[0];
   char c = '\0'; // some distribution...bad luck if all callid start with 00000...
-  for (size_t i=0;i<5 && i<call_id.length();i++) 
+  for (size_t i=0;i<5 && i<call_id.length();i++)
     c = c ^ call_id[i];
-  
+
   return logs[c % NUM_LOG_BUCKETS];
 }
 
@@ -731,8 +731,8 @@ void MonitorGarbageCollector::run() {
 }
 
 void MonitorGarbageCollector::postEvent(AmEvent* e) {
-  AmSystemEvent* sys_ev = dynamic_cast<AmSystemEvent*>(e);  
-  if (sys_ev && 
+  AmSystemEvent* sys_ev = dynamic_cast<AmSystemEvent*>(e);
+  if (sys_ev &&
       sys_ev->sys_event == AmSystemEvent::ServerShutdown) {
     DBG("stopping MonitorGarbageCollector thread\n");
     running.set(false);

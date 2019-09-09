@@ -101,7 +101,7 @@ int read_spex P0()
 {
 	char buf[200];
 	char * s, *t;
-	struct spex	* sp = s_spex;	
+	struct spex	* sp = s_spex;
 
 	while (gets(buf)) {
 
